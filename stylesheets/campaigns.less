@@ -1,0 +1,1354 @@
+// Feinwerk Campaign Manager: link builder and link list. The plugin runs on Matomo 5.0 and newer: no Matomo LESS variables or
+// mixins (5.0 to 5.11 lack them, a LESS error puts Matomo into safe mode), only CSS custom properties with the light
+// values as fallbacks, and a local dark block for the status colours that have no theme variable. Form controls keep
+// Matomo's own look; this file only arranges them.
+
+.fwcmp-builder,
+.fwcmp-list,
+.fwcmp-overview,
+.fwcmp-quality,
+.fwcmp-pages {
+  --fwcmp-text: var(--theme-color-text, #212121);
+  --fwcmp-text-light: var(--theme-color-text-light, #444);
+  --fwcmp-text-lighter: var(--theme-color-text-lighter, #646464);
+  --fwcmp-surface: var(--theme-color-background-contrast, #fff);
+  --fwcmp-tint: var(--theme-color-background-tinyContrast, #f2f2f2);
+  --fwcmp-border: var(--theme-color-border, #ccc);
+  --fwcmp-accent: var(--theme-color-link, #1976d2);
+  --fwcmp-focus: var(--theme-color-focus-ring, #0969da);
+  --fwcmp-code: var(--theme-color-code, #212121);
+  --fwcmp-code-bg: var(--theme-color-code-background, #f5f5f5);
+  --fwcmp-error: #b71c1c;
+  --fwcmp-warning: #8a4b00;
+  --fwcmp-on-accent: #fff;
+
+  color: var(--fwcmp-text);
+}
+
+[data-theme-mode="dark"] .fwcmp-builder,
+[data-theme-mode="dark"] .fwcmp-list,
+[data-theme-mode="dark"] .fwcmp-overview,
+[data-theme-mode="dark"] .fwcmp-quality,
+[data-theme-mode="dark"] .fwcmp-pages {
+  --fwcmp-error: #ef9a9a;
+  --fwcmp-warning: #ffcc80;
+  --fwcmp-on-accent: var(--theme-color-background-base, #151819);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme-mode="auto"] .fwcmp-builder,
+  [data-theme-mode="auto"] .fwcmp-list,
+  [data-theme-mode="auto"] .fwcmp-overview,
+  [data-theme-mode="auto"] .fwcmp-quality,
+  [data-theme-mode="auto"] .fwcmp-pages {
+    --fwcmp-error: #ef9a9a;
+    --fwcmp-warning: #ffcc80;
+    --fwcmp-on-accent: var(--theme-color-background-base, #151819);
+  }
+}
+
+.fwcmp-step {
+  margin: 0 0 24px;
+}
+
+.fwcmp-step__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-step__no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--fwcmp-accent);
+  color: var(--fwcmp-on-accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fwcmp-label {
+  display: block;
+  margin: 8px 0 2px;
+  font-size: 13px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+// the select and the note take the underlined look of Matomo's text fields
+select.fwcmp-input,
+textarea.fwcmp-input {
+  height: auto;
+  min-height: 3rem;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--theme-color-text-lighter, #9e9e9e);
+  border-radius: 0;
+  background: transparent;
+  color: var(--fwcmp-text);
+  font-size: 16px;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid var(--fwcmp-accent);
+  }
+}
+
+select.fwcmp-input option {
+  background: var(--fwcmp-surface);
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fwcmp-note {
+  min-height: 56px;
+  resize: vertical;
+}
+
+.fwcmp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+
+.fwcmp-col {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.fwcmp-col--narrow {
+  flex: 0 1 200px;
+}
+
+// channel tiles
+.fwcmp-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(~"min(100%, 230px)", 1fr));
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.fwcmp-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+  color: var(--fwcmp-text);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--fwcmp-accent);
+  }
+
+  &[aria-pressed="true"] {
+    border-color: var(--fwcmp-accent);
+    box-shadow: inset 0 0 0 1px var(--fwcmp-accent);
+    background: var(--fwcmp-tint);
+  }
+}
+
+.fwcmp-tile__label {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-tile__hint {
+  font-size: 12px;
+  color: var(--fwcmp-text-lighter);
+  overflow-wrap: anywhere;
+}
+
+// one-click values
+.fwcmp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0;
+}
+
+.fwcmp-chips__label {
+  font-size: 12px;
+  color: var(--fwcmp-text-lighter);
+}
+
+.fwcmp-chip {
+  max-width: 100%;
+  padding: 2px 10px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 12px;
+  background: var(--fwcmp-tint);
+  color: var(--fwcmp-text);
+  font-size: 12px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--fwcmp-accent);
+  }
+}
+
+// messages next to a field
+.fwcmp-msgs {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fwcmp-msg {
+  margin: 2px 0;
+  padding: 0 0 0 8px;
+  border-left: 3px solid currentColor;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.fwcmp-msg--error {
+  color: var(--fwcmp-error);
+}
+
+.fwcmp-msg--warning {
+  color: var(--fwcmp-warning);
+}
+
+.fwcmp-msg__fix {
+  margin: 0 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fwcmp-accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fwcmp-hint {
+  margin: 6px 0;
+  font-size: 13px;
+  color: var(--fwcmp-text-lighter);
+}
+
+.fwcmp-more {
+  margin: 0 0 24px;
+
+  > summary {
+    margin: 0 0 4px;
+    color: var(--fwcmp-accent);
+    cursor: pointer;
+  }
+}
+
+// the result
+.fwcmp-result {
+  padding: 16px 0 0;
+  border-top: 1px solid var(--fwcmp-border);
+}
+
+.fwcmp-url {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: var(--fwcmp-code-bg);
+  color: var(--fwcmp-code);
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.fwcmp-placeholder {
+  margin: 0 0 8px;
+  color: var(--fwcmp-text-lighter);
+  font-style: italic;
+}
+
+.fwcmp-actions {
+  margin: 8px 0;
+}
+
+.fwcmp-retry {
+  margin-left: 8px;
+}
+
+// the list
+.fwcmp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 24px;
+  margin: 0 0 12px;
+}
+
+.fwcmp-toolbar__new {
+  margin: 8px 0 4px auto;
+}
+
+.fwcmp-tablewrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.fwcmp-table {
+  width: 100%;
+
+  td {
+    vertical-align: top;
+  }
+
+  tr.is-archived td {
+    color: var(--fwcmp-text-lighter);
+  }
+}
+
+.fwcmp-table__campaign {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-table__note,
+.fwcmp-table__by,
+.fwcmp-table__shared {
+  display: block;
+  max-width: 320px;
+  font-size: 12px;
+  color: var(--fwcmp-text-lighter);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fwcmp-table__target span {
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.fwcmp-list__scope {
+  margin: 0 0 8px;
+}
+
+// visits and conversions as Matomo's metric columns: right-aligned numbers, the basis as a muted line
+.fwcmp-list table.fwcmp-table.entityTable thead th.fwcmp-table__num,
+.fwcmp-list table.fwcmp-table.entityTable tbody td.fwcmp-table__num,
+.fwcmp-pages table.fwcmp-table.entityTable thead th.fwcmp-table__num,
+.fwcmp-pages table.fwcmp-table.entityTable tbody td.fwcmp-table__num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+// Matomo's entityTable aligns every header left with a stronger rule; the number headers follow their numbers
+.fwcmp-list table.fwcmp-table.entityTable thead th.fwcmp-table__num,
+.fwcmp-pages table.fwcmp-table.entityTable thead th.fwcmp-table__num {
+  text-align: right !important;
+}
+
+.fwcmp-table__count {
+  font-variant-numeric: tabular-nums;
+}
+
+.fwcmp-table__basis {
+  display: block;
+  font-size: 12px;
+  color: var(--fwcmp-text-lighter);
+  white-space: normal;
+}
+
+.fwcmp-table__loading {
+  color: var(--fwcmp-text-lighter);
+}
+
+// the label of a number shows only in the stacked rows, where the table header is hidden
+.fwcmp-table__numlabel {
+  display: none;
+}
+
+.fwcmp-table__actions,
+table.fwcmp-table th.fwcmp-table__actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.fwcmp-action {
+  margin: 0 0 0 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 4px;
+  background: var(--fwcmp-surface);
+  color: var(--fwcmp-accent);
+  font-size: 12px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.fwcmp-badge {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  padding: 0 6px;
+  border-radius: 8px;
+  background: var(--fwcmp-tint);
+  color: var(--fwcmp-text-light);
+  font-size: 11px;
+}
+
+// link status (decision 6): draft muted, live in the accent colour, ended muted again
+.fwcmp-badge.fwcmp-badge--live {
+  border: 1px solid var(--fwcmp-accent);
+  background: transparent;
+  color: var(--fwcmp-accent);
+}
+
+// a live link: its saved values as label and value lines, then the fields that still change
+.fwcmp-livecard__values {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 16px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+
+  > div {
+    display: contents;
+  }
+
+  dt {
+    color: var(--fwcmp-text-light);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--fwcmp-text);
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
+  .fwcmp-livecard__values {
+    grid-template-columns: minmax(0, 1fr);
+
+    dd {
+      margin-bottom: 6px;
+    }
+  }
+}
+
+.fwcmp-editing__lock,
+.fwcmp-editing__from {
+  margin-top: 6px;
+}
+
+.fwcmp-editing .fwcmp-editing__new {
+  margin-left: auto;
+}
+
+.fwcmp-editing .fwcmp-linkbutton.fwcmp-editing__live {
+  margin: 0 0 0 4px;
+}
+
+.fwcmp-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-empty {
+  padding: 24px 0;
+  text-align: center;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-builder,
+.fwcmp-list,
+.fwcmp-overview,
+.fwcmp-quality,
+.fwcmp-pages {
+  button:focus-visible,
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--fwcmp-focus);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 600px) {
+  .fwcmp-table__note,
+  .fwcmp-table__by,
+  .fwcmp-table__target span {
+    max-width: 160px;
+  }
+
+  .fwcmp-toolbar__new {
+    margin-left: 0;
+  }
+}
+
+.fwcmp-editing {
+  margin: 0 0 16px;
+}
+
+.fwcmp-editing__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.fwcmp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+// the feedback row (Feinwerk kit, stylesheets/feedback.less) closes the page with some air above it
+.fwcmp-feedback.fwcmp-page-feedback {
+  margin-top: 24px;
+}
+
+// the overview
+.fwcmp-overview__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 0 0 16px;
+}
+
+.fwcmp-overview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fwcmp-overview .fwcmp-linkbutton,
+.fwcmp-linkbutton {
+  margin: 0 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fwcmp-accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fwcmp-checklist {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border: 1px solid var(--fwcmp-border);
+  border-left: 3px solid var(--fwcmp-accent);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+}
+
+// once the required steps are done: the open recommended step as one line
+.fwcmp-checklist--compact {
+  margin-bottom: 16px;
+  padding: 8px 16px;
+}
+
+.fwcmp-checklist__text .fwcmp-badge {
+  margin: 0 6px 0 0;
+  background: var(--fwcmp-tint);
+  color: var(--fwcmp-text);
+  font-weight: 600;
+}
+
+// the group of campaign values only Matomo counted: a heading that opens and closes it
+.fwcmp-disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fwcmp-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.fwcmp-disclosure__mark {
+  display: inline-block;
+  width: 1em;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-phase--reportonly > .fwcmp-hint {
+  margin: -6px 0 12px;
+}
+
+.fwcmp-checklist__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    margin: 4px 0;
+  }
+
+  li.is-done {
+    color: var(--fwcmp-text-lighter);
+  }
+}
+
+.fwcmp-checklist__mark {
+  display: inline-block;
+  width: 1.2em;
+  font-weight: 700;
+  color: var(--fwcmp-accent);
+}
+
+.fwcmp-phase {
+  margin: 0 0 24px;
+}
+
+.fwcmp-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(~"min(100%, 320px)", 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fwcmp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+}
+
+.fwcmp-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.fwcmp-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-card__value {
+  padding: 0 6px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 3px;
+  background: var(--fwcmp-tint);
+  color: var(--fwcmp-text-light);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-card__meta,
+.fwcmp-card__notes {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fwcmp-text-lighter);
+}
+
+.fwcmp-card__notes {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fwcmp-card__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin: 2px 0;
+
+  div {
+    min-width: 0;
+  }
+
+  dt {
+    font-size: 12px;
+    color: var(--fwcmp-text-lighter);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.fwcmp-goal__label {
+  font-size: 13px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-goal__bar {
+  height: 8px;
+  margin: 4px 0 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--fwcmp-tint);
+  box-shadow: inset 0 0 0 1px var(--fwcmp-border);
+}
+
+.fwcmp-goal__fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--fwcmp-accent);
+}
+
+.fwcmp-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+
+  .fwcmp-action {
+    margin: 0;
+    text-decoration: none;
+  }
+}
+
+.fwcmp-overview__archived {
+  margin: 0 0 8px;
+  font-size: 13px;
+
+  .fwcmp-linkbutton {
+    margin: 0;
+  }
+}
+
+// the details form in the side panel
+.fwcmp-details {
+  .fwcmp-input {
+    margin-bottom: 4px;
+  }
+}
+
+// Matomo's Materialize paints every focused button teal (button:focus); the plugin's own buttons keep their colours
+.fwcmp-builder,
+.fwcmp-list,
+.fwcmp-overview,
+.fwcmp-quality,
+.fwcmp-pages {
+  button.fwcmp-action:focus,
+  button.fwcmp-action:hover {
+    background: var(--fwcmp-surface);
+  }
+
+  button.fwcmp-tile:focus,
+  button.fwcmp-chip:focus {
+    background: var(--fwcmp-surface);
+  }
+
+  button.fwcmp-tile[aria-pressed="true"]:focus,
+  button.fwcmp-chip:hover {
+    background: var(--fwcmp-tint);
+  }
+
+  button.fwcmp-linkbutton:focus,
+  button.fwcmp-msg__fix:focus,
+  button.fwcmp-disclosure:focus {
+    background: none;
+  }
+
+  // Morpheus styles textarea:not(.materialize-textarea) with a box and a dark fill: the note keeps the underlined look
+  textarea.fwcmp-input {
+    border: 0;
+    border-bottom: 1px solid var(--theme-color-text-lighter, #9e9e9e);
+    border-radius: 0;
+    background: transparent;
+    color: var(--fwcmp-text);
+    box-shadow: none;
+  }
+}
+
+.fwcmp-checklist__mark {
+  flex: none;
+}
+
+.fwcmp-checklist__text {
+  flex: 1 1 0;
+  min-width: 0;
+
+  a,
+  .fwcmp-linkbutton {
+    margin-left: 6px;
+  }
+}
+
+.fwcmp-checklist__items li {
+  flex-wrap: nowrap;
+}
+
+.fwcmp-overview h4.fwcmp-card__name {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-card .fwcmp-msg--warning::before {
+  content: "\26A0\FE0E\00A0";
+}
+
+.fwcmp-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 0 0 16px;
+  padding: 8px 12px;
+  border: 1px solid var(--fwcmp-border);
+  border-left: 3px solid var(--fwcmp-accent);
+  background: var(--fwcmp-surface);
+}
+
+.fwcmp-details .fwcmp-hint {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  .fwcmp-card__actions .fwcmp-action,
+  .fwcmp-table .fwcmp-action {
+    min-height: 30px;
+    padding: 4px 10px;
+  }
+}
+
+// the list: left-aligned actions (Matomo's entityTable left-aligns every header), and below 1200 px one stacked block
+// per link instead of a table that scrolls sideways (UI review F1; 1200 since the results column, 2026-11-24)
+.fwcmp-list table.fwcmp-table td.fwcmp-table__actions {
+  text-align: left;
+}
+
+@media (max-width: 1200px) {
+  .fwcmp-list .fwcmp-tablewrap {
+    overflow-x: visible;
+  }
+
+  // Matomo's card-table keeps its width (100% + 40px) and its -20px margin; the rows take the 20px back as padding
+  .fwcmp-list table.fwcmp-table.entityTable {
+    display: block;
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable thead {
+    display: none;
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--fwcmp-border);
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr td {
+    display: block;
+    grid-column: 1;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 13px;
+    color: var(--fwcmp-text-light);
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr td.fwcmp-table__main {
+    grid-row: 1;
+    color: var(--fwcmp-text);
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr td.fwcmp-table__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    white-space: normal;
+
+    .fwcmp-action {
+      margin: 0;
+    }
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr td.fwcmp-table__num {
+    text-align: left;
+  }
+
+  .fwcmp-list .fwcmp-table__numlabel {
+    display: inline;
+    margin-right: 6px;
+  }
+
+  .fwcmp-list .fwcmp-table__basis {
+    display: inline;
+    margin-left: 6px;
+  }
+
+  .fwcmp-list .fwcmp-table__note,
+  .fwcmp-list .fwcmp-table__target span {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr td.fwcmp-table__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 6px;
+  }
+
+  // two tiles a row on a phone (UI review W4)
+  .fwcmp-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// links and buttons in the action rows line up (UI review W5)
+.fwcmp-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.fwcmp-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+// the line under Matomo's own Campaign URL Builder (a Matomo card, so light and dark come from Matomo)
+.fwcmp-urlbuilder-note .card-content {
+  padding: 12px 20px;
+}
+
+// Campaigns > Data quality
+.fwcmp-quality__scope {
+  margin: 0 0 16px;
+}
+
+.fwcmp-quality__intro {
+  margin: -4px 0 12px;
+}
+
+.fwcmp-quality__none {
+  margin: 0 0 8px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-variants {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    margin: 4px 0;
+  }
+
+  li.is-suggested .fwcmp-variants__value {
+    font-weight: 700;
+  }
+}
+
+.fwcmp-quality code.fwcmp-variants__value {
+  padding: 0 6px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 3px;
+  background: var(--fwcmp-tint);
+  color: var(--fwcmp-text);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-variants__numbers {
+  font-size: 12px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-quality__tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 24px;
+
+  dd {
+    margin: 0;
+    font-size: 12px;
+    color: var(--fwcmp-text-light);
+  }
+
+  dt {
+    font-size: 13px;
+    color: var(--fwcmp-text-light);
+  }
+}
+
+.fwcmp-quality__tile {
+  padding: 12px 16px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+}
+
+.fwcmp-quality__tiles dd.fwcmp-quality__big {
+  margin: 4px 0 2px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--fwcmp-text);
+}
+
+@media (max-width: 600px) {
+  .fwcmp-quality__tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// a campaign value only Matomo counted lately (no saved link yet): the same chip, dashed
+.fwcmp-chip.fwcmp-chip--counted {
+  border-style: dashed;
+}
+
+// "Als live markieren" asks first (Peter, 2026-11-25): one line with the question and the two buttons
+.fwcmp-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-sent {
+  margin-top: 8px;
+}
+
+.fwcmp-editing__since {
+  font-size: 12px;
+  color: var(--fwcmp-text-light);
+}
+
+// Campaigns > All campaigns and the campaign page
+.fwcmp-pages__scope {
+  margin: 0 0 12px;
+}
+
+.fwcmp-crumbs {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-pages nav.fwcmp-crumbs a {
+  color: var(--fwcmp-accent);
+  text-decoration: underline;
+}
+
+.fwcmp-pages__table .fwcmp-card__value {
+  margin-left: 6px;
+}
+
+.fwcmp-campaign__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+}
+
+.fwcmp-pages h3.fwcmp-campaign__name,
+.fwcmp-pages h3.fwcmp-summary__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-campaign__when {
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-campaign__actions {
+  margin: 8px 0 16px;
+}
+
+.fwcmp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 16px;
+  border-bottom: 1px solid var(--fwcmp-border);
+}
+
+.fwcmp-pages button.fwcmp-tab {
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px 6px 0 0;
+  background: none;
+  color: var(--fwcmp-text-light);
+  font: inherit;
+  cursor: pointer;
+}
+
+.fwcmp-pages button.fwcmp-tab[aria-selected="true"] {
+  border-color: var(--fwcmp-border);
+  border-bottom-color: var(--fwcmp-surface);
+  background: var(--fwcmp-surface);
+  color: var(--fwcmp-text);
+  font-weight: 600;
+}
+
+.fwcmp-pages button.fwcmp-tab:focus {
+  background: none;
+}
+
+.fwcmp-pages button.fwcmp-tab[aria-selected="true"]:focus {
+  background: var(--fwcmp-surface);
+}
+
+.fwcmp-tabpanel h4.fwcmp-step__title {
+  margin-top: 20px;
+}
+
+.fwcmp-campaign__checks {
+  margin-bottom: 8px;
+}
+
+.fwcmp-campaign__chart {
+  min-height: 200px;
+}
+
+.fwcmp-pages h4.fwcmp-campaign__verdict {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fwcmp-text);
+}
+
+.fwcmp-campaign__best {
+  margin: 4px 0;
+}
+
+.fwcmp-campaign__notes {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fwcmp-campaign__analyse {
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+
+// the summary replaces the tabs while it is open
+.fwcmp-pages.is-summary .fwcmp-tabs,
+.fwcmp-pages.is-summary .fwcmp-tabpanel,
+.fwcmp-pages.is-summary .fwcmp-campaign__actions {
+  display: none;
+}
+
+.fwcmp-summary {
+  padding: 16px 20px;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 6px;
+  background: var(--fwcmp-surface);
+}
+
+.fwcmp-summary__bar {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.fwcmp-summary__kicker,
+.fwcmp-summary__footer {
+  font-size: 12px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-summary__lead {
+  margin: 4px 0 16px;
+}
+
+.fwcmp-summary__footer {
+  margin-top: 16px;
+}
+
+
+// the tables of All campaigns and the campaign page stack on narrow screens: one block per row, each value with its
+// column name (the header row is hidden there)
+@media (max-width: 760px) {
+  .fwcmp-pages table.fwcmp-table.entityTable,
+  .fwcmp-pages table.fwcmp-table.entityTable tbody {
+    display: block;
+  }
+
+  .fwcmp-pages table.fwcmp-table.entityTable thead {
+    display: none;
+  }
+
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr {
+    display: block;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--fwcmp-border);
+  }
+
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr td,
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr td.fwcmp-table__num,
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr td.fwcmp-table__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 0 !important;
+    border: 0 !important;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr td::before {
+    content: attr(data-label);
+    flex: none;
+    color: var(--fwcmp-text-light);
+  }
+
+  .fwcmp-pages table.fwcmp-table.entityTable tbody tr td:empty {
+    display: none;
+  }
+
+  .fwcmp-pages .fwcmp-table__value {
+    text-align: right;
+  }
+}
+
+// headers wrap instead of being cut at the table's edge (768 to 1024 px)
+.fwcmp-pages table.fwcmp-table.entityTable thead th {
+  white-space: normal;
+}
+
+// names wrap between words and at hyphens, not inside them
+.fwcmp-pages .fwcmp-table__campaign {
+  overflow-wrap: break-word;
+}
+
+.fwcmp-nowrap {
+  white-space: nowrap;
+}
+
+// printing: the copy of the summary at the top level of the page (CampaignPages beforePrint), dark on white
+@media print {
+  html.fwcmp-printing,
+  html.fwcmp-printing body {
+    background: #fff !important;
+  }
+
+  html.fwcmp-printing body > :not(.fwcmp-print-root) {
+    display: none !important;
+  }
+
+  html.fwcmp-printing .fwcmp-print-root,
+  html.fwcmp-printing .fwcmp-print-root * {
+    visibility: visible;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  html.fwcmp-printing .fwcmp-print-root .fwcmp-summary {
+    position: static;
+    border: 0;
+  }
+
+  html.fwcmp-printing .fwcmp-print-root .fwcmp-summary__bar {
+    display: none !important;
+  }
+
+  html.fwcmp-printing .fwcmp-print-root .fwcmp-quality__tile {
+    border-color: #999 !important;
+  }
+}
+
+// Matomo 6 gives table cells more padding: a table wider than its card scrolls instead of being cut
+.fwcmp-tablewrap {
+  max-width: 100%;
+  overflow-x: auto;
+}

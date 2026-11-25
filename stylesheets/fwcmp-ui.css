@@ -1,0 +1,187 @@
+/*
+ * The side panel of Feinwerk Campaign Manager (vue/src/SidePanel.vue), Data Exploration's house component (5.x copy, UI item 2)
+ * with the fwcmp- prefix. Plain CSS with own custom properties: light values as fallbacks, dark values for
+ * [data-theme-mode="dark"] and for "auto" with a dark system setting; nothing from Matomo's LESS theme (Matomo 5.0 to 6.x).
+ */
+.fwcmp-sidepanel,
+.fwcmp-sidepanel__backdrop {
+    --fwcmp-ui-surface: #fff;
+    --fwcmp-ui-text: #212121;
+    --fwcmp-ui-text-light: #5f6b76;
+    --fwcmp-ui-border: #d0d7de;
+    --fwcmp-ui-hover: #f1f4f7;
+    --fwcmp-ui-accent: #1976d2;
+    --fwcmp-ui-on-accent: #fff;
+    --fwcmp-ui-focus: #1976d2;
+    --fwcmp-ui-disabled: #9aa5b1;
+    --fwcmp-ui-shadow: rgba(0, 0, 0, .22);
+    --fwcmp-ui-backdrop: rgba(0, 0, 0, .35);
+}
+
+[data-theme-mode="dark"] .fwcmp-sidepanel,
+[data-theme-mode="dark"] .fwcmp-sidepanel__backdrop {
+    --fwcmp-ui-surface: #23272b;
+    --fwcmp-ui-text: #e6e8ea;
+    --fwcmp-ui-text-light: #aab4be;
+    --fwcmp-ui-border: #3d464f;
+    --fwcmp-ui-hover: #2d3339;
+    --fwcmp-ui-accent: #6aa9f0;
+    --fwcmp-ui-on-accent: #0b1620;
+    --fwcmp-ui-focus: #8fc0f5;
+    --fwcmp-ui-disabled: #66717c;
+    --fwcmp-ui-shadow: rgba(0, 0, 0, .6);
+    --fwcmp-ui-backdrop: rgba(0, 0, 0, .55);
+}
+
+@media (prefers-color-scheme: dark) {
+    [data-theme-mode="auto"] .fwcmp-sidepanel,
+    [data-theme-mode="auto"] .fwcmp-sidepanel__backdrop {
+        --fwcmp-ui-surface: #23272b;
+        --fwcmp-ui-text: #e6e8ea;
+        --fwcmp-ui-text-light: #aab4be;
+        --fwcmp-ui-border: #3d464f;
+        --fwcmp-ui-hover: #2d3339;
+        --fwcmp-ui-accent: #6aa9f0;
+        --fwcmp-ui-on-accent: #0b1620;
+        --fwcmp-ui-focus: #8fc0f5;
+        --fwcmp-ui-disabled: #66717c;
+        --fwcmp-ui-shadow: rgba(0, 0, 0, .6);
+        --fwcmp-ui-backdrop: rgba(0, 0, 0, .55);
+    }
+}
+
+/* Side panel: from the right, about two thirds of the page wide, the full width on a phone; above Matomo's header and
+   menus. The page behind does not scroll while a panel is open (class on <html>, set by the component). */
+html.fwcmp-sidepanel-open,
+html.fwcmp-sidepanel-open body {
+    overflow: hidden;
+}
+
+.fwcmp-sidepanel__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: var(--fwcmp-ui-backdrop);
+}
+
+.fwcmp-sidepanel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 66vw;
+    min-width: 360px;
+    max-width: 960px;
+    background: var(--fwcmp-ui-surface);
+    color: var(--fwcmp-ui-text);
+    box-shadow: -4px 0 24px var(--fwcmp-ui-shadow);
+    text-align: left;
+}
+
+/* narrow (short forms): at most 560 px; width plus max-width, because Matomo compiles this file with LESS, which
+   would evaluate a CSS min() itself and fail */
+.fwcmp-sidepanel.fwcmp-sidepanel--narrow {
+    width: 560px;
+    min-width: 0;
+    max-width: 100vw;
+}
+
+.fwcmp-sidepanel:focus {
+    outline: none;
+}
+
+@media (max-width: 600px) {
+    .fwcmp-sidepanel,
+    .fwcmp-sidepanel.fwcmp-sidepanel--narrow {
+        width: 100vw;
+        min-width: 0;
+        max-width: none;
+    }
+}
+
+.fwcmp-sidepanel__header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--fwcmp-ui-border);
+}
+
+.fwcmp-sidepanel .fwcmp-sidepanel__title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    margin: 0;
+    color: var(--fwcmp-ui-text);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.fwcmp-sidepanel .fwcmp-sidepanel__close {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--fwcmp-ui-text-light);
+    font-size: 24px;
+    line-height: 32px;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.fwcmp-sidepanel .fwcmp-sidepanel__close:hover,
+.fwcmp-sidepanel .fwcmp-sidepanel__close:focus {
+    background: var(--fwcmp-ui-hover);
+    color: var(--fwcmp-ui-text);
+}
+
+.fwcmp-sidepanel .fwcmp-sidepanel__close:focus-visible {
+    outline: 2px solid var(--fwcmp-ui-focus);
+    outline-offset: -2px;
+}
+
+.fwcmp-sidepanel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 16px 20px;
+}
+
+.fwcmp-sidepanel__footer {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--fwcmp-ui-border);
+    background: var(--fwcmp-ui-surface);
+}
+
+.fwcmp-sidepanel-enter-active,
+.fwcmp-sidepanel-leave-active {
+    transition: transform .2s ease-out;
+}
+
+.fwcmp-sidepanel-enter-from,
+.fwcmp-sidepanel-leave-to {
+    transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fwcmp-sidepanel-enter-active,
+    .fwcmp-sidepanel-leave-active {
+        transition: none;
+    }
+}

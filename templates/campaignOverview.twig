@@ -1,0 +1,8 @@
+<div class="fwcmp-mount"
+     vue-entry="FeinwerkCampaignManager.CampaignOverview"
+     id-site="{{ idSite|e('html_attr') }}"
+     can-write="{{ canWrite ? 'true' : 'false' }}"
+     currency="{{ currency|e('html_attr') }}"
+     marketplace-url="{{ marketplaceUrl|e('html_attr') }}"
+     {% if feedback %}feedback="{{ feedback|json_encode|e('html_attr') }}"{% endif %}
+     {% if promo %}promo="{{ promo|json_encode|e('html_attr') }}"{% endif %}></div>
