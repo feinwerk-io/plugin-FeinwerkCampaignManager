@@ -96,7 +96,7 @@
           class="fwcmp-action"
           @click="panelOpen = true"
         >{{ results.campaign.hasDetails ? tr('EditDetails') : tr('AddDetails') }}</button>
-        <a class="fwcmp-action" :href="analyseUrl('General_Visitors', 'General_Overview')">
+        <a class="fwcmp-action" :href="analyseUrl('General_Visitors', 'Live_VisitorLog')">
           {{ tr('AnalyseInMatomo') }}
         </a>
         <button
@@ -506,6 +506,13 @@ export default defineComponent({
   props: {
     idSite: { type: Number, required: true },
     canWrite: { type: Boolean, default: false },
+    /** the evolution graph's report (MarketingCampaignsReporting.getName while it is active) */
+    evolutionApiMethod: { type: String, default: 'Referrers.getCampaigns' },
+    /**
+     * whether Matomo archives a segment on request here: then the result also links segmented
+     * reports (devices, pages, goals), otherwise only the visitor log (needs no archiving)
+     */
+    segmentReports: { type: Boolean, default: false },
     /** the website's currency code (ISO 4217), for revenue */
     currency: { type: String, default: '' },
     siteName: { type: String, default: '' },
@@ -559,8 +566,9 @@ export default defineComponent({
     tabs(): string[] {
       return TABS;
     },
+    /** the visitor log always; segmented reports only where Matomo archives a segment on request */
     analyseLinks(): typeof ANALYSE_LINKS {
-      return ANALYSE_LINKS;
+      return this.segmentReports ? ANALYSE_LINKS : ANALYSE_LINKS.slice(0, 1);
     },
     checks(): { key: string, done: boolean }[] {
       return this.results ? this.checksFor(this.results) : [];
@@ -693,7 +701,7 @@ export default defineComponent({
         .sort((a, b) => (b.results!.conversions - a.results!.conversions)
           || (b.results!.visits - a.results!.visits));
     },
-    /** Matomo's own evolution graph of the campaign row (Referrers.getCampaigns, label) */
+    /** Matomo's own evolution graph of the campaign row (report: evolutionApiMethod) */
     chartParams(): Record<string, string | number> | null {
       if (!this.results || this.results.series.length === 0) {
         return null;
@@ -701,7 +709,7 @@ export default defineComponent({
       return {
         module: 'CoreHome',
         action: 'getRowEvolutionGraph',
-        apiMethod: 'Referrers.getCampaigns',
+        apiMethod: this.evolutionApiMethod,
         label: this.results.campaign.campaign,
         idSite: this.idSite,
         period: 'day',

@@ -274,14 +274,14 @@ export default defineComponent({
         search: value,
       })}`;
     },
-    /** Matomo's visitor overview with the campaign value as segment */
+    /** Matomo's visitor log with the campaign value as segment (works without segment archiving) */
     analyseUrl(value: string): string {
       // with the campaign referrer type: a website or search engine could carry the same name
       const segment = `referrerType==campaign;referrerName==${encodeURIComponent(value)}`;
       const base = `idSite=${this.idSite}&period=${encodeURIComponent(this.period)}`
         + `&date=${encodeURIComponent(this.date)}`;
       return `?module=CoreHome&action=index&${base}#?${base}`
-        + `&category=General_Visitors&subcategory=General_Overview&segment=${encodeURIComponent(segment)}`;
+        + `&category=General_Visitors&subcategory=Live_VisitorLog&segment=${encodeURIComponent(segment)}`;
     },
     openBuilder(campaign: string) {
       MatomoUrl.updateHash({

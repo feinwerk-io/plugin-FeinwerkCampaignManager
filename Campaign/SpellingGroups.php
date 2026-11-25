@@ -95,7 +95,8 @@ final class SpellingGroups
             foreach ($members as $value) {
                 $n = $values[$value];
                 $rows[] = [
-                    'value' => $value,
+                    // a value of digits only is an int key in PHP: the API answers text, always
+                    'value' => (string) $value,
                     'visits' => (int) $n['visits'],
                     'conversions' => (int) $n['conversions'],
                     'savedLinks' => (int) $n['savedLinks'],

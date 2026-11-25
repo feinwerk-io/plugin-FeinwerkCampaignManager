@@ -76,7 +76,7 @@ days at most). A running campaign without a visit two days after its start gets 
 
 **New campaign** and **Edit details** open a panel for the campaign value, a display name, start and end, a goal and
 notes. **New link** opens the link builder with the campaign filled in, **Analyse in Matomo** opens Matomo's visitor
-overview with the campaign as segment. **First steps** lists what the website still lacks: Matomo goals, a saved link,
+log with the campaign as segment (it shows the visits themselves, so it works without archiving segments). **First steps** lists what the website still lacks: Matomo goals, a saved link,
 campaign details, and the recommended free plugin Marketing Campaigns Reporting. Once the required steps are done, only
 the recommendation stays, as one line, until the plugin is active.
 
@@ -93,11 +93,11 @@ to its end or today, at most 92 days), whatever period is selected:
 - **Preparation:** key data (period, campaign value, goal, notes), a start checklist and the campaign's saved links
   with their status.
 - **Progress:** visits, conversions and revenue against the goal, the share of the time passed, warnings (no visit
-  since the start, a live link with a link ID of its own quiet for 5 days), Matomo's own evolution graph of the campaign and
+  since the start, a live link with a link ID of its own quiet for 5 days), Matomo's own evolution graph of the campaign (of Marketing Campaigns Reporting's campaign report while that plugin is active) and
   the numbers per link.
 - **Result:** reached, exceeded or missed (or an interim result while it runs), the best and the weakest link where
-  links are counted by a link ID of their own, notes and learnings, and links into Matomo's visitor log, devices, pages and
-  goals with the campaign as segment.
+  links are counted by a link ID of their own, notes and learnings, and links into Matomo's visitor log with the campaign as
+  segment (and into devices, pages and goals where Matomo archives segments on request).
 
 **Summary for decision makers** shows the result on one page to print or save as PDF.
 

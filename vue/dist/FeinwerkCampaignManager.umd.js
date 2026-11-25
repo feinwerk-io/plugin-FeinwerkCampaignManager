@@ -763,7 +763,9 @@ function fetchSuggestions(idSite, field) {
     idSite,
     field,
     limit: 100
-  }, QUIET);
+  }, QUIET).then(rows => (rows || []).map(s => Object.assign(Object.assign({}, s), {}, {
+    value: `${s.value}`
+  })));
 }
 /**
  * the dry run of addLink (of updateLink with the edited link's idLink); errors come back in the
@@ -2651,121 +2653,121 @@ let loadCount = 0;
 LinkListvue_type_script_lang_ts.render = LinkListvue_type_template_id_5f7e8e58_render
 
 /* harmony default export */ var LinkList = (LinkListvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignOverview.vue?vue&type=template&id=03db6d0f
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignOverview.vue?vue&type=template&id=1bd454de
 
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_1 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_1 = {
   class: "fwcmp-overview"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_2 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_2 = {
   class: "fwcmp-overview__bar"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_3 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_3 = {
   class: "fwcmp-hint fwcmp-overview__scope"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_4 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_4 = {
   key: 0,
   class: "fwcmp-overview__actions"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_5 = ["aria-label"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_6 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_5 = ["aria-label"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_6 = {
   key: 0,
   class: "fwcmp-step__title"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_7 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_7 = {
   class: "fwcmp-checklist__items"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_8 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_8 = {
   class: "fwcmp-checklist__mark",
   "aria-hidden": "true"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_9 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_9 = {
   class: "fwcmp-sr-only"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_10 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_10 = {
   class: "fwcmp-checklist__text"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_11 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_11 = {
   key: 0,
   class: "fwcmp-badge"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_12 = ["href"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_13 = ["href"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_14 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_12 = ["href"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_13 = ["href"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_14 = {
   key: 3,
   class: "fwcmp-notice",
   role: "status"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_15 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_15 = {
   key: 4,
   class: "fwcmp-empty"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_16 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_16 = {
   key: 0,
   class: "fwcmp-empty__actions"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_17 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_17 = {
   key: 0,
   class: "fwcmp-step__title"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_18 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_18 = {
   class: "fwcmp-step__title"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_19 = ["aria-expanded"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_20 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_19 = ["aria-expanded"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_20 = {
   class: "fwcmp-disclosure__mark",
   "aria-hidden": "true"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_21 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_21 = {
   class: "fwcmp-hint"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_22 = ["id"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_23 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_22 = ["id"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_23 = {
   class: "fwcmp-card__head"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_24 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_24 = {
   class: "fwcmp-card__name"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_25 = ["href"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_26 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_25 = ["href"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_26 = {
   key: 0,
   class: "fwcmp-card__value"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_27 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_27 = {
   class: "fwcmp-card__meta"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_28 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_28 = {
   class: "fwcmp-card__numbers"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_29 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_29 = {
   key: 0,
   class: "fwcmp-goal"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_30 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_30 = {
   class: "fwcmp-goal__label"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_31 = ["aria-valuenow", "aria-label"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_32 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_31 = ["aria-valuenow", "aria-label"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_32 = {
   key: 0,
   class: "fwcmp-hint"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_33 = ["title"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_34 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_33 = ["title"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_34 = {
   class: "fwcmp-card__actions"
 };
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_35 = ["aria-label", "onClick"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_36 = ["aria-label", "onClick"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_37 = ["href", "aria-label"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_38 = ["disabled", "aria-label", "onClick"];
-const CampaignOverviewvue_type_template_id_03db6d0f_hoisted_39 = {
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_35 = ["aria-label", "onClick"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_36 = ["aria-label", "onClick"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_37 = ["href", "aria-label"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_38 = ["disabled", "aria-label", "onClick"];
+const CampaignOverviewvue_type_template_id_1bd454de_hoisted_39 = {
   class: "fwcmp-overview__archived"
 };
-function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $props, $setup, $data, $options) {
+function CampaignOverviewvue_type_template_id_1bd454de_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_ActivityIndicator = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("ActivityIndicator");
   const _component_Alert = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("Alert");
   const _component_CampaignDetailsPanel = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("CampaignDetailsPanel");
   const _component_FeedbackBar = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("FeedbackBar");
   const _component_PromoLine = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("PromoLine");
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), _ctx.rows.length > 0 || _ctx.showArchived ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_4, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), _ctx.rows.length > 0 || _ctx.showArchived ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_4, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
     key: 0,
     type: "button",
     class: "btn",
@@ -2780,19 +2782,19 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
       'fwcmp-checklist--compact': _ctx.checklist && _ctx.checklist.complete
     }]),
     "aria-label": _ctx.tr('ChecklistTitle')
-  }, [_ctx.checklist && !_ctx.checklist.complete ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("h3", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistTitle')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_7, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.checklistItems, item => {
+  }, [_ctx.checklist && !_ctx.checklist.complete ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("h3", CampaignOverviewvue_type_template_id_1bd454de_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistTitle')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", CampaignOverviewvue_type_template_id_1bd454de_hoisted_7, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.checklistItems, item => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
       key: item.key,
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])({
         'is-done': item.done
       })
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_8, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? '✓' : '○'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? _ctx.tr('Done') : _ctx.tr('Open')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_10, [!item.required && !item.done ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Recommended')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? _ctx.tr(`Checklist_${item.key}`) : _ctx.tr(`ChecklistTodo_${item.key}`)) + " ", 1), !item.done && item.key === 'goals' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_1bd454de_hoisted_8, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? '✓' : '○'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_1bd454de_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? _ctx.tr('Done') : _ctx.tr('Open')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_1bd454de_hoisted_10, [!item.required && !item.done ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignOverviewvue_type_template_id_1bd454de_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Recommended')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.done ? _ctx.tr(`Checklist_${item.key}`) : _ctx.tr(`ChecklistTodo_${item.key}`)) + " ", 1), !item.done && item.key === 'goals' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
       key: 1,
       href: _ctx.goalsUrl
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistGoalsAction')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_12)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !item.done && item.key === 'marketing_campaigns_reporting' && _ctx.marketplaceUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistGoalsAction')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_12)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !item.done && item.key === 'marketing_campaigns_reporting' && _ctx.marketplaceUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
       key: 2,
       href: _ctx.marketplaceUrl
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistMcrAction')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_13)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !item.done && item.key === 'marketing_campaigns_reporting' && !_ctx.marketplaceUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistMcrAction')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_13)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !item.done && item.key === 'marketing_campaigns_reporting' && !_ctx.marketplaceUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 3
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ChecklistMcrAskSuperUser')), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !item.done && item.key === 'saved_link' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
       key: 4,
@@ -2805,7 +2807,7 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
       class: "fwcmp-linkbutton",
       onClick: _cache[3] || (_cache[3] = $event => _ctx.openPanel(null))
     }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewCampaign')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])], 2);
-  }), 128))])], 10, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_5)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+  }), 128))])], 10, CampaignOverviewvue_type_template_id_1bd454de_hoisted_5)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
     loading: _ctx.loading
   }, null, 8, ["loading"]), _ctx.error ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_Alert, {
     key: 1,
@@ -2823,12 +2825,12 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
   }, {
     default: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withCtx"])(() => [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.actionError), 1)]),
     _: 1
-  })) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.notice ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_14, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.notice.text) + " ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+  })) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.notice ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_14, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.notice.text) + " ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
     ref: "undo",
     type: "button",
     class: "fwcmp-linkbutton",
     onClick: _cache[5] || (_cache[5] = (...args) => _ctx.undoArchive && _ctx.undoArchive(...args))
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Undo')), 513)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !_ctx.loading && !_ctx.error && _ctx.rows.length === 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_15, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.emptyText), 1), !_ctx.showArchived ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_16, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Undo')), 513)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !_ctx.loading && !_ctx.error && _ctx.rows.length === 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_15, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.emptyText), 1), !_ctx.showArchived ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_16, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
     type: "button",
     class: "btn",
     onClick: _cache[6] || (_cache[6] = $event => _ctx.openBuilder(''))
@@ -2843,26 +2845,26 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(["fwcmp-phase", {
         'fwcmp-phase--reportonly': group.phase === 'report'
       }])
-    }, [group.phase !== 'report' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("h3", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_17, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`Phase_${group.phase}`)) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(group.rows.length) + ") ", 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, [group.phase !== 'report' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("h3", CampaignOverviewvue_type_template_id_1bd454de_hoisted_17, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`Phase_${group.phase}`)) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(group.rows.length) + ") ", 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 1
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_18, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", CampaignOverviewvue_type_template_id_1bd454de_hoisted_18, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
       type: "button",
       class: "fwcmp-disclosure",
       "aria-expanded": _ctx.reportOnlyOpen ? 'true' : 'false',
       "aria-controls": "fwcmp-reportonly-cards",
       onClick: _cache[8] || (_cache[8] = $event => _ctx.reportOnlyToggled = !_ctx.reportOnlyOpen)
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_20, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.reportOnlyOpen ? '▾' : '▸'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('OnlyCountedGroup')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(group.rows.length) + ") ", 1)], 8, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_19)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_21, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('OnlyCountedHelp')), 1)], 64)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignOverviewvue_type_template_id_1bd454de_hoisted_20, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.reportOnlyOpen ? '▾' : '▸'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('OnlyCountedGroup')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(group.rows.length) + ") ", 1)], 8, CampaignOverviewvue_type_template_id_1bd454de_hoisted_19)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_21, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('OnlyCountedHelp')), 1)], 64)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", {
       id: group.phase === 'report' ? 'fwcmp-reportonly-cards' : undefined,
       class: "fwcmp-cards"
     }, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(group.rows, row => {
       return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
         key: row.campaign,
         class: "fwcmp-card"
-      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_23, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_24, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
+      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_23, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignOverviewvue_type_template_id_1bd454de_hoisted_24, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
         href: _ctx.campaignPageUrl(row.campaign)
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.name || row.campaign), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_25)]), row.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_26, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.cardMeta(row)), 1), row.activeLinks > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.name || row.campaign), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_25)]), row.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignOverviewvue_type_template_id_1bd454de_hoisted_26, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.cardMeta(row)), 1), row.activeLinks > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
         key: 0
-      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.linksText(row)), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_28, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.visits)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.conversions)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(row.period.revenue)), 1)])]), row.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_29, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText(row)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", {
+      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.linksText(row)), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignOverviewvue_type_template_id_1bd454de_hoisted_28, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.visits)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.conversions)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(row.period.revenue)), 1)])]), row.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_29, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText(row)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", {
         class: "fwcmp-goal__bar",
         role: "progressbar",
         "aria-valuenow": Math.min(100, _ctx.percent(row)),
@@ -2874,7 +2876,7 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
         style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
           width: `${Math.min(100, _ctx.percent(row))}%`
         })
-      }, null, 4)], 8, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_31), !row.goal.complete ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_32, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalPartial', _ctx.day(row.goal.from))), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(row.warnings, w => {
+      }, null, 4)], 8, CampaignOverviewvue_type_template_id_1bd454de_hoisted_31), !row.goal.complete ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_32, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalPartial', _ctx.day(row.goal.from))), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(row.warnings, w => {
         return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
           key: w,
           class: "fwcmp-msg fwcmp-msg--warning"
@@ -2883,31 +2885,31 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
         key: 1,
         class: "fwcmp-card__notes",
         title: row.notes
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.notes), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_33)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_34, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.notes), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_33)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignOverviewvue_type_template_id_1bd454de_hoisted_34, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
         key: 0,
         type: "button",
         class: "fwcmp-action",
         "aria-label": _ctx.tr(row.hasDetails ? 'EditDetailsOf' : 'AddDetailsOf', _ctx.label(row)),
         onClick: $event => _ctx.openPanel(row)
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.hasDetails ? _ctx.tr('EditDetails') : _ctx.tr('AddDetails')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_35)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.hasDetails ? _ctx.tr('EditDetails') : _ctx.tr('AddDetails')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_35)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
         type: "button",
         class: "fwcmp-action",
         "aria-label": _ctx.tr('NewLinkFor', _ctx.label(row)),
         onClick: $event => _ctx.openBuilder(row.campaign)
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_36), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_36), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
         class: "fwcmp-action",
         href: _ctx.analyseUrl(row),
         "aria-label": _ctx.tr('AnalyseInMatomoOf', _ctx.label(row))
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_37), _ctx.canWrite && row.hasDetails ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_37), _ctx.canWrite && row.hasDetails ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
         key: 1,
         type: "button",
         class: "fwcmp-action",
         disabled: _ctx.busy === row.campaign,
         "aria-label": _ctx.archiveLabel(row),
         onClick: $event => _ctx.toggleArchived(row)
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.phase === 'archived' ? _ctx.tr('Restore') : _ctx.tr('Archive')), 9, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_38)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
-    }), 128))], 8, CampaignOverviewvue_type_template_id_03db6d0f_hoisted_22), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], group.phase !== 'report' || _ctx.reportOnlyOpen]])], 2);
-  }), 128)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", CampaignOverviewvue_type_template_id_03db6d0f_hoisted_39, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.phase === 'archived' ? _ctx.tr('Restore') : _ctx.tr('Archive')), 9, CampaignOverviewvue_type_template_id_1bd454de_hoisted_38)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
+    }), 128))], 8, CampaignOverviewvue_type_template_id_1bd454de_hoisted_22), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], group.phase !== 'report' || _ctx.reportOnlyOpen]])], 2);
+  }), 128)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", CampaignOverviewvue_type_template_id_1bd454de_hoisted_39, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
     type: "button",
     class: "fwcmp-linkbutton",
     onClick: _cache[9] || (_cache[9] = (...args) => _ctx.toggleShowArchived && _ctx.toggleShowArchived(...args))
@@ -2932,7 +2934,7 @@ function CampaignOverviewvue_type_template_id_03db6d0f_render(_ctx, _cache, $pro
     "dismiss-label": _ctx.tr('PromoDismiss')
   }, null, 8, ["promo", "dismiss-label"])]);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/CampaignOverview.vue?vue&type=template&id=03db6d0f
+// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/CampaignOverview.vue?vue&type=template&id=1bd454de
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignDetailsPanel.vue?vue&type=template&id=925e9a34
 
@@ -3819,11 +3821,16 @@ function CampaignOverviewvue_type_script_lang_ts_lang() {
       const target = row.goal.metric === 'revenue' ? this.money(row.goal.target) : this.number(row.goal.target);
       return this.tr(`GoalProgress_${row.goal.metric}`, value, target, `${this.percent(row)}`, this.day(row.goal.from));
     },
+    /**
+     * Matomo's visitor log with the campaign as segment: it reads the visits themselves, so it
+     * works where Matomo does not archive segments on request (most instances; a segmented
+     * report would stay empty there)
+     */
     analyseUrl(row) {
       // with the campaign referrer type: a website or search engine could carry the same name
       const segment = `referrerType==campaign;referrerName==${encodeURIComponent(row.campaign)}`;
       const base = `idSite=${this.idSite}&period=${encodeURIComponent(this.period)}` + `&date=${encodeURIComponent(this.date)}`;
-      return `?module=CoreHome&action=index&${base}#?${base}` + `&category=General_Visitors&subcategory=General_Overview&segment=${encodeURIComponent(segment)}`;
+      return `?module=CoreHome&action=index&${base}#?${base}` + `&category=General_Visitors&subcategory=Live_VisitorLog&segment=${encodeURIComponent(segment)}`;
     },
     /** the campaign's page under All campaigns */
     campaignPageUrl(campaign) {
@@ -3892,114 +3899,114 @@ function CampaignOverviewvue_type_script_lang_ts_lang() {
 
 
 
-CampaignOverviewvue_type_script_lang_ts.render = CampaignOverviewvue_type_template_id_03db6d0f_render
+CampaignOverviewvue_type_script_lang_ts.render = CampaignOverviewvue_type_template_id_1bd454de_render
 
 /* harmony default export */ var CampaignOverview = (CampaignOverviewvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/DataQuality.vue?vue&type=template&id=62d287c6
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/DataQuality.vue?vue&type=template&id=7d50052c
 
-const DataQualityvue_type_template_id_62d287c6_hoisted_1 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_1 = {
   class: "fwcmp-quality"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_2 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_2 = {
   class: "fwcmp-hint fwcmp-quality__scope"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_3 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_3 = {
   class: "fwcmp-quality__tiles"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_4 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_4 = {
   class: "fwcmp-quality__tile"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_5 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_5 = {
   class: "fwcmp-quality__big"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_6 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_6 = {
   class: "fwcmp-quality__tile"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_7 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_7 = {
   class: "fwcmp-quality__big"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_8 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_8 = {
   class: "fwcmp-quality__tile"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_9 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_9 = {
   class: "fwcmp-quality__big"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_10 = ["aria-label"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_11 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_10 = ["aria-label"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_11 = {
   class: "fwcmp-step__title"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_12 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_12 = {
   class: "fwcmp-hint fwcmp-quality__intro"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_13 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_13 = {
   key: 0,
   class: "fwcmp-quality__none"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_14 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_14 = {
   key: 1,
   class: "fwcmp-cards"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_15 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_15 = {
   class: "fwcmp-variants"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_16 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_16 = {
   class: "fwcmp-variants__value"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_17 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_17 = {
   key: 0,
   class: "fwcmp-badge fwcmp-badge--live"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_18 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_18 = {
   class: "fwcmp-variants__numbers"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_19 = ["href"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_20 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_19 = ["href"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_20 = {
   class: "fwcmp-card__actions"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_21 = ["aria-label", "onClick"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_22 = ["aria-label"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_23 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_21 = ["aria-label", "onClick"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_22 = ["aria-label"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_23 = {
   class: "fwcmp-step__title"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_24 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_24 = {
   class: "fwcmp-hint fwcmp-quality__intro"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_25 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_25 = {
   key: 0,
   class: "fwcmp-quality__none"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_26 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_26 = {
   key: 1,
   class: "fwcmp-cards"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_27 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_27 = {
   class: "fwcmp-card__head"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_28 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_28 = {
   class: "fwcmp-variants__value"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_29 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_29 = {
   key: 0,
   class: "fwcmp-msg fwcmp-msg--warning"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_30 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_30 = {
   class: "fwcmp-card__meta"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_31 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_31 = {
   class: "fwcmp-card__actions"
 };
-const DataQualityvue_type_template_id_62d287c6_hoisted_32 = ["aria-label", "onClick"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_33 = ["href", "aria-label"];
-const DataQualityvue_type_template_id_62d287c6_hoisted_34 = {
+const DataQualityvue_type_template_id_7d50052c_hoisted_32 = ["aria-label", "onClick"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_33 = ["href", "aria-label"];
+const DataQualityvue_type_template_id_7d50052c_hoisted_34 = {
   key: 2,
   class: "fwcmp-hint"
 };
-function DataQualityvue_type_template_id_62d287c6_render(_ctx, _cache, $props, $setup, $data, $options) {
+function DataQualityvue_type_template_id_7d50052c_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_ActivityIndicator = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("ActivityIndicator");
   const _component_Alert = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("Alert");
   const _component_FeedbackBar = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("FeedbackBar");
   const _component_PromoLine = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("PromoLine");
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
     loading: _ctx.loading
   }, null, 8, ["loading"]), _ctx.error ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_Alert, {
     key: 0,
@@ -4013,50 +4020,50 @@ function DataQualityvue_type_template_id_62d287c6_render(_ctx, _cache, $props, $
     _: 1
   })) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.issues ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 1
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", DataQualityvue_type_template_id_62d287c6_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ExplainedShare')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_62d287c6_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.explainedPercent), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.explainedText), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_6, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedTitle')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_62d287c6_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.issues.counts.unexplained)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(_ctx.issues.counts.unexplainedVisits, 'OneVisit', 'VisitsCount')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_8, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsTitle')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_62d287c6_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.issues.counts.variants)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CountedApart')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", DataQualityvue_type_template_id_7d50052c_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('ExplainedShare')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_7d50052c_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.explainedPercent), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.explainedText), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_6, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedTitle')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_7d50052c_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.issues.counts.unexplained)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(_ctx.issues.counts.unexplainedVisits, 'OneVisit', 'VisitsCount')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_8, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsTitle')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", DataQualityvue_type_template_id_7d50052c_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.issues.counts.variants)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CountedApart')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", {
     class: "fwcmp-phase",
     "aria-label": _ctx.tr('VariantsTitle')
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", DataQualityvue_type_template_id_62d287c6_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsTitle')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.issues.counts.variants) + ") ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_12, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsIntro')), 1), !_ctx.issues.variants.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_13, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsNone')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("ul", DataQualityvue_type_template_id_62d287c6_hoisted_14, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.issues.variants, group => {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", DataQualityvue_type_template_id_7d50052c_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsTitle')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.issues.counts.variants) + ") ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_12, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsIntro')), 1), !_ctx.issues.variants.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_13, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('VariantsNone')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("ul", DataQualityvue_type_template_id_7d50052c_hoisted_14, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.issues.variants, group => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
       key: group.suggested,
       class: "fwcmp-card"
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", DataQualityvue_type_template_id_62d287c6_hoisted_15, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(group.values, v => {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", DataQualityvue_type_template_id_7d50052c_hoisted_15, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(group.values, v => {
       return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
         key: v.value,
         class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])({
           'is-suggested': v.value === group.suggested
         })
-      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", DataQualityvue_type_template_id_62d287c6_hoisted_16, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.value), 1), v.value === group.suggested ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DataQualityvue_type_template_id_62d287c6_hoisted_17, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Recommended')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", DataQualityvue_type_template_id_62d287c6_hoisted_18, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(v.visits, 'OneVisit', 'VisitsCount')), 1), v.savedLinks > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", DataQualityvue_type_template_id_7d50052c_hoisted_16, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.value), 1), v.value === group.suggested ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DataQualityvue_type_template_id_7d50052c_hoisted_17, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Recommended')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", DataQualityvue_type_template_id_7d50052c_hoisted_18, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(v.visits, 'OneVisit', 'VisitsCount')), 1), v.savedLinks > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
         key: 0
       }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", "), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
         href: _ctx.listUrl(v.value)
-      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.linksText(v.savedLinks)), 9, DataQualityvue_type_template_id_62d287c6_hoisted_19)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])], 2);
-    }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_20, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+      }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.linksText(v.savedLinks)), 9, DataQualityvue_type_template_id_7d50052c_hoisted_19)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])], 2);
+    }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_20, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
       key: 0,
       type: "button",
       class: "fwcmp-action",
       "aria-label": _ctx.tr('NewLinkFor', group.suggested),
       onClick: $event => _ctx.openBuilder(group.suggested)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, DataQualityvue_type_template_id_62d287c6_hoisted_21)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
-  }), 128))]))], 8, DataQualityvue_type_template_id_62d287c6_hoisted_10), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, DataQualityvue_type_template_id_7d50052c_hoisted_21)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
+  }), 128))]))], 8, DataQualityvue_type_template_id_7d50052c_hoisted_10), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", {
     class: "fwcmp-phase",
     "aria-label": _ctx.tr('UnexplainedTitle')
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", DataQualityvue_type_template_id_62d287c6_hoisted_23, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedTitle')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.issues.counts.unexplained) + ") ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_24, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedIntro')), 1), !_ctx.issues.unexplained.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_25, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedNone')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("ul", DataQualityvue_type_template_id_62d287c6_hoisted_26, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.issues.unexplained, row => {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", DataQualityvue_type_template_id_7d50052c_hoisted_23, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedTitle')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.issues.counts.unexplained) + ") ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_24, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedIntro')), 1), !_ctx.issues.unexplained.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_25, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedNone')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("ul", DataQualityvue_type_template_id_7d50052c_hoisted_26, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.issues.unexplained, row => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
       key: row.value,
       class: "fwcmp-card"
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", DataQualityvue_type_template_id_62d287c6_hoisted_28, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.value), 1)]), _ctx.spellingOf[row.value] ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_29, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('SpellingOf', _ctx.spellingOf[row.value])), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(row.visits, 'OneVisit', 'VisitsCount')) + ", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(row.conversions, 'OneConversion', 'ConversionsCount')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_31, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", DataQualityvue_type_template_id_7d50052c_hoisted_28, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.value), 1)]), _ctx.spellingOf[row.value] ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_29, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('SpellingOf', _ctx.spellingOf[row.value])), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(row.visits, 'OneVisit', 'VisitsCount')) + ", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.countText(row.conversions, 'OneConversion', 'ConversionsCount')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_31, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
       key: 0,
       type: "button",
       class: "fwcmp-action",
       "aria-label": _ctx.tr('NewLinkFor', row.value),
       onClick: $event => _ctx.openBuilder(row.value)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, DataQualityvue_type_template_id_62d287c6_hoisted_32)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NewLink')), 9, DataQualityvue_type_template_id_7d50052c_hoisted_32)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
       class: "fwcmp-action",
       href: _ctx.analyseUrl(row.value),
       "aria-label": _ctx.tr('AnalyseInMatomoOf', row.value)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, DataQualityvue_type_template_id_62d287c6_hoisted_33)])]);
-  }), 128))])), _ctx.hiddenUnexplained > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_62d287c6_hoisted_34, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedMore', `${_ctx.hiddenUnexplained}`, _ctx.number(_ctx.hiddenVisits))), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, DataQualityvue_type_template_id_62d287c6_hoisted_22)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.feedback ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_FeedbackBar, {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, DataQualityvue_type_template_id_7d50052c_hoisted_33)])]);
+  }), 128))])), _ctx.hiddenUnexplained > 0 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DataQualityvue_type_template_id_7d50052c_hoisted_34, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('UnexplainedMore', `${_ctx.hiddenUnexplained}`, _ctx.number(_ctx.hiddenVisits))), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, DataQualityvue_type_template_id_7d50052c_hoisted_22)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.feedback ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_FeedbackBar, {
     key: 2,
     class: "fwcmp-page-feedback",
     "id-site": _ctx.idSite,
@@ -4068,7 +4075,7 @@ function DataQualityvue_type_template_id_62d287c6_render(_ctx, _cache, $props, $
     "dismiss-label": _ctx.tr('PromoDismiss')
   }, null, 8, ["promo", "dismiss-label"])]);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/DataQuality.vue?vue&type=template&id=62d287c6
+// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/DataQuality.vue?vue&type=template&id=7d50052c
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/DataQuality.vue?vue&type=script&lang=ts
 
@@ -4212,12 +4219,12 @@ function DataQualityvue_type_script_lang_ts_lang() {
         search: value
       }))}`;
     },
-    /** Matomo's visitor overview with the campaign value as segment */
+    /** Matomo's visitor log with the campaign value as segment (works without segment archiving) */
     analyseUrl(value) {
       // with the campaign referrer type: a website or search engine could carry the same name
       const segment = `referrerType==campaign;referrerName==${encodeURIComponent(value)}`;
       const base = `idSite=${this.idSite}&period=${encodeURIComponent(this.period)}` + `&date=${encodeURIComponent(this.date)}`;
-      return `?module=CoreHome&action=index&${base}#?${base}` + `&category=General_Visitors&subcategory=General_Overview&segment=${encodeURIComponent(segment)}`;
+      return `?module=CoreHome&action=index&${base}#?${base}` + `&category=General_Visitors&subcategory=Live_VisitorLog&segment=${encodeURIComponent(segment)}`;
     },
     openBuilder(campaign) {
       external_CoreHome_["MatomoUrl"].updateHash(Object.assign(Object.assign({}, external_CoreHome_["MatomoUrl"].hashParsed.value), {}, {
@@ -4235,236 +4242,236 @@ function DataQualityvue_type_script_lang_ts_lang() {
 
 
 
-DataQualityvue_type_script_lang_ts.render = DataQualityvue_type_template_id_62d287c6_render
+DataQualityvue_type_script_lang_ts.render = DataQualityvue_type_template_id_7d50052c_render
 
 /* harmony default export */ var DataQuality = (DataQualityvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignPages.vue?vue&type=template&id=10fbf0f2
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignPages.vue?vue&type=template&id=3ae2e576
 
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_1 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_1 = {
   class: "fwcmp-hint fwcmp-pages__scope"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_2 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_2 = {
   key: 0,
   class: "fwcmp-empty"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_3 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_3 = {
   key: 1,
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_4 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_4 = {
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_5 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_5 = {
   class: "entityTable dataTable fwcmp-table fwcmp-pages__table"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_6 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_6 = {
   class: "fwcmp-table__num"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_7 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_7 = {
   class: "fwcmp-table__num"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_8 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_9 = ["href", "aria-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_10 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_8 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_9 = ["href", "aria-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_10 = {
   key: 0,
   class: "fwcmp-card__value"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_11 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_12 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_13 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_14 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_15 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_16 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_17 = ["aria-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_18 = ["href"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_19 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_11 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_12 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_13 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_14 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_15 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_16 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_17 = ["aria-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_18 = ["href"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_19 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
   "aria-hidden": "true"
 }, " › ", -1);
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_20 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_20 = {
   class: "fwcmp-campaign__head"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_21 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_21 = {
   class: "fwcmp-campaign__name"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_22 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_22 = {
   key: 0,
   class: "fwcmp-card__value"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_23 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_23 = {
   class: "fwcmp-badge"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_24 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_24 = {
   class: "fwcmp-campaign__when"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_25 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_25 = {
   class: "fwcmp-card__actions fwcmp-campaign__actions"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_26 = ["href"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_27 = ["aria-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_28 = ["id", "aria-selected", "aria-controls", "tabindex", "onClick"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_29 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_26 = ["href"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_27 = ["aria-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_28 = ["id", "aria-selected", "aria-controls", "tabindex", "onClick"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_29 = {
   id: "fwcmp-panel-prepare",
   role: "tabpanel",
   "aria-labelledby": "fwcmp-tab-prepare",
   class: "fwcmp-tabpanel"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_30 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_30 = {
   class: "fwcmp-step__title"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_31 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_31 = {
   class: "fwcmp-livecard__values"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_32 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_32 = {
   key: 0
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_33 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_33 = {
   class: "fwcmp-step__title"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_34 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_34 = {
   class: "fwcmp-checklist__items fwcmp-campaign__checks"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_35 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_35 = {
   class: "fwcmp-checklist__mark",
   "aria-hidden": "true"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_36 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_36 = {
   class: "fwcmp-sr-only"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_37 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_37 = {
   class: "fwcmp-checklist__text"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_38 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_38 = {
   class: "fwcmp-step__title"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_39 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_39 = {
   key: 0,
   class: "fwcmp-quality__none"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_40 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_40 = {
   key: 1,
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_41 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_41 = {
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_42 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_42 = {
   class: "entityTable dataTable fwcmp-table"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_43 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_43 = {
   class: "fwcmp-table__actions"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_44 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_45 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_46 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_47 = ["title"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_48 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_49 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_50 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_51 = ["aria-label", "onClick"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_52 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_44 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_45 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_46 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_47 = ["title"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_48 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_49 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_50 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_51 = ["aria-label", "onClick"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_52 = {
   id: "fwcmp-panel-progress",
   role: "tabpanel",
   "aria-labelledby": "fwcmp-tab-progress",
   class: "fwcmp-tabpanel"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_53 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_53 = {
   class: "fwcmp-hint"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_54 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_54 = {
   class: "fwcmp-quality__tiles fwcmp-campaign__tiles"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_55 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_55 = {
   class: "fwcmp-quality__tile"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_56 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_56 = {
   class: "fwcmp-quality__big"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_57 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_57 = {
   class: "fwcmp-quality__tile"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_58 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_58 = {
   class: "fwcmp-quality__big"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_59 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_59 = {
   class: "fwcmp-quality__tile"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_60 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_60 = {
   class: "fwcmp-quality__big"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_61 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_61 = {
   key: 0,
   class: "fwcmp-goal"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_62 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_62 = {
   class: "fwcmp-goal__label"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_63 = ["aria-valuenow", "aria-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_64 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_63 = ["aria-valuenow", "aria-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_64 = {
   key: 1,
   class: "fwcmp-campaign__chart"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_65 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_65 = {
   class: "fwcmp-step__title"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_66 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_66 = {
   key: 2,
   class: "fwcmp-quality__none"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_67 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_67 = {
   key: 3,
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_68 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_68 = {
   class: "fwcmp-tablewrap"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_69 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_69 = {
   class: "entityTable dataTable fwcmp-table"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_70 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_70 = {
   class: "fwcmp-table__num"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_71 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_71 = {
   class: "fwcmp-table__num"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_72 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_73 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_72 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_73 = {
   key: 0,
   class: "fwcmp-table__note"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_74 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_75 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_76 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_74 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_75 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_76 = {
   class: "fwcmp-table__value"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_77 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_77 = {
   key: 0,
   class: "fwcmp-table__basis"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_78 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_79 = ["data-label"];
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_80 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_78 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_79 = ["data-label"];
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_80 = {
   id: "fwcmp-panel-result",
   role: "tabpanel",
   "aria-labelledby": "fwcmp-tab-result",
   class: "fwcmp-tabpanel"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_81 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_81 = {
   class: "fwcmp-campaign__verdict"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_82 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_82 = {
   key: 0,
   class: "fwcmp-hint"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_83 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_83 = {
   class: "fwcmp-quality__tiles fwcmp-campaign__tiles"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_84 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_84 = {
   class: "fwcmp-quality__tile"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_85 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_85 = {
   class: "fwcmp-quality__big"
 };
-const CampaignPagesvue_type_template_id_10fbf0f2_hoisted_86 = {
+const CampaignPagesvue_type_template_id_3ae2e576_hoisted_86 = {
   class: "fwcmp-quality__tile"
 };
 const _hoisted_87 = {
@@ -4547,7 +4554,7 @@ const _hoisted_112 = {
 const _hoisted_113 = {
   class: "fwcmp-summary__footer"
 };
-function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props, $setup, $data, $options) {
+function CampaignPagesvue_type_template_id_3ae2e576_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_ActivityIndicator = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("ActivityIndicator");
   const _component_Alert = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("Alert");
   const _component_WidgetLoader = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("WidgetLoader");
@@ -4573,7 +4580,7 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
     _: 1
   })) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), !_ctx.campaign && _ctx.rows ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 1
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_1, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), !_ctx.rows.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignsTable')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_5, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldCampaign')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignPeriod')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalMetric')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Links')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.rows, row => {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_1, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.scopeText), 1), !_ctx.rows.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignsTable')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_3ae2e576_hoisted_5, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldCampaign')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignPeriod')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_3ae2e576_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_3ae2e576_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalMetric')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Links')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.rows, row => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("tr", {
       key: row.campaign
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
@@ -4583,33 +4590,33 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
       href: _ctx.pageUrl(row.campaign),
       class: "fwcmp-table__campaign",
       "aria-label": _ctx.tr('OpenCampaign', _ctx.label(row))
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.label(row)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_9), row.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_10, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_8), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.label(row)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_9), row.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignPagesvue_type_template_id_3ae2e576_hoisted_10, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_8), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('LinkStatusHead')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`CampaignPhase_${row.phase}`)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_11), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`CampaignPhase_${row.phase}`)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_11), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('CampaignPeriod')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tablePeriodText(row)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_12), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tablePeriodText(row)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_12), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__num",
       "data-label": _ctx.tr('Visits')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.visits)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_13), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.visits)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_13), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__num",
       "data-label": _ctx.tr('Conversions')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.conversions)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_14), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(row.period.conversions)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_14), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-nowrap",
       "data-label": _ctx.tr('GoalMetric')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.goal ? `${_ctx.percent(row)} %` : ''), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_15), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.goal ? `${_ctx.percent(row)} %` : ''), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_15), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('Links')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.statesText(row)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_16)]);
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.statesText(row)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_16)]);
   }), 128))])])), [[_directive_content_table]])])]))], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.campaign ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("nav", {
     key: 2,
     class: "fwcmp-crumbs",
     "aria-label": _ctx.tr('AllCampaigns')
   }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
     href: _ctx.pageUrl('')
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AllCampaigns')), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_18), CampaignPagesvue_type_template_id_10fbf0f2_hoisted_19, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results ? _ctx.label(_ctx.results.campaign) : _ctx.campaign), 1)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_17)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.campaign && _ctx.results ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AllCampaigns')), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_18), CampaignPagesvue_type_template_id_3ae2e576_hoisted_19, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results ? _ctx.label(_ctx.results.campaign) : _ctx.campaign), 1)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_17)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.campaign && _ctx.results ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 3
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_20, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_21, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.label(_ctx.results.campaign)), 1), _ctx.results.campaign.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_22, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_23, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`CampaignPhase_${_ctx.results.campaign.phase}`)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_24, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.periodText(_ctx.results.campaign)), 1), _ctx.dayOf ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_20, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", CampaignPagesvue_type_template_id_3ae2e576_hoisted_21, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.label(_ctx.results.campaign)), 1), _ctx.results.campaign.name ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("code", CampaignPagesvue_type_template_id_3ae2e576_hoisted_22, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.campaign), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_23, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`CampaignPhase_${_ctx.results.campaign.phase}`)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_24, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.periodText(_ctx.results.campaign)), 1), _ctx.dayOf ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 0
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.dayOf), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_25, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.dayOf), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_25, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
     key: 0,
     type: "button",
     class: "fwcmp-action",
@@ -4621,8 +4628,8 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
     onClick: _cache[2] || (_cache[2] = $event => _ctx.panelOpen = true)
   }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.hasDetails ? _ctx.tr('EditDetails') : _ctx.tr('AddDetails')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
     class: "fwcmp-action",
-    href: _ctx.analyseUrl('General_Visitors', 'General_Overview')
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_26), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+    href: _ctx.analyseUrl('General_Visitors', 'Live_VisitorLog')
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_26), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
     ref: "summaryButton",
     type: "button",
     class: "fwcmp-action",
@@ -4643,33 +4650,33 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
       tabindex: _ctx.tab === t ? 0 : -1,
       onClick: $event => _ctx.selectTab(t),
       onKeydown: [_cache[4] || (_cache[4] = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withKeys"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withModifiers"])($event => _ctx.moveTab(1), ["prevent"]), ["right"])), _cache[5] || (_cache[5] = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withKeys"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withModifiers"])($event => _ctx.moveTab(-1), ["prevent"]), ["left"]))]
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`Tab_${t}`)), 41, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_28);
-  }), 128))], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_27), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_29, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('KeyData')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_31, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignPeriod')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.periodText(_ctx.results.campaign)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignValue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.campaign), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalMetric')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalTargetText), 1)]), _ctx.results.campaign.notes ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_32, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Note')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.notes), 1)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_33, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('StartChecklist')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_34, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.checks, c => {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`Tab_${t}`)), 41, CampaignPagesvue_type_template_id_3ae2e576_hoisted_28);
+  }), 128))], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_27), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_3ae2e576_hoisted_29, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_3ae2e576_hoisted_30, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('KeyData')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_3ae2e576_hoisted_31, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignPeriod')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.periodText(_ctx.results.campaign)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignValue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.campaign), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('GoalMetric')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalTargetText), 1)]), _ctx.results.campaign.notes ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_32, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Note')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.notes), 1)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_3ae2e576_hoisted_33, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('StartChecklist')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", CampaignPagesvue_type_template_id_3ae2e576_hoisted_34, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.checks, c => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
       key: c.key,
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])({
         'is-done': c.done
       })
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_35, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? '✓' : '○'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_36, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? _ctx.tr('Done') : _ctx.tr('Open')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_37, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? _ctx.tr(`Check_${c.key}`) : _ctx.tr(`Check_${c.key}_todo`)), 1)], 2);
-  }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_38, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignLinks')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.links.length) + ")", 1), !_ctx.results.links.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_39, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignLinks')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_40, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_41, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_42, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Channel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldContent')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldTargetUrl')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('StartDate')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_43, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Actions')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.results.links, item => {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_35, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? '✓' : '○'), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_36, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? _ctx.tr('Done') : _ctx.tr('Open')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_37, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(c.done ? _ctx.tr(`Check_${c.key}`) : _ctx.tr(`Check_${c.key}_todo`)), 1)], 2);
+  }), 128))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_3ae2e576_hoisted_38, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('CampaignLinks')) + " (" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.links.length) + ")", 1), !_ctx.results.links.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_39, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignLinks')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_40, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_41, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_3ae2e576_hoisted_42, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Channel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldContent')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('FieldTargetUrl')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('StartDate')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_3ae2e576_hoisted_43, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Actions')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.results.links, item => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("tr", {
       key: item.link.idLink
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('Channel')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.channel(item.link)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_44), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.channel(item.link)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_44), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('FieldContent')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail(item.link)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_45), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail(item.link)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_45), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__target",
       "data-label": _ctx.tr('FieldTargetUrl')
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
       title: item.link.url
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.shortTarget(item.link.targetUrl)), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_47)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_46), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.shortTarget(item.link.targetUrl)), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_47)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_46), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('StartDate')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.link.startDate ? _ctx.day(item.link.startDate) : ''), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_48), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.link.startDate ? _ctx.day(item.link.startDate) : ''), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_48), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('LinkStatusHead')
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(`fwcmp-badge fwcmp-badge--${item.link.status}`)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`LinkStatus_${item.link.status}`)), 3)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_49), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`LinkStatus_${item.link.status}`)), 3)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_49), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__actions",
       "data-label": _ctx.tr('Actions')
     }, [_ctx.canWrite ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
@@ -4678,8 +4685,8 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
       class: "fwcmp-action",
       "aria-label": _ctx.tr('EditLinkOf', item.link.values.campaign),
       onClick: $event => _ctx.openLink(item.link.idLink)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Edit')), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_51)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_50)]);
-  }), 128))])])), [[_directive_content_table]])])]))], 512), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], _ctx.tab === 'prepare']]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_52, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_53, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.windowText), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_54, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_55, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_56, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.visits)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('visits')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_57, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_58, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.conversions)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('conversions')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_59, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_60, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(_ctx.results.totals.revenue)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('revenue')), 1)])]), _ctx.results.campaign.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_61, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_62, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText), 1), _ctx.timeShare !== null ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Edit')), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_51)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_50)]);
+  }), 128))])])), [[_directive_content_table]])])]))], 512), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], _ctx.tab === 'prepare']]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_3ae2e576_hoisted_52, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_53, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.windowText), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_3ae2e576_hoisted_54, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_55, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_3ae2e576_hoisted_56, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.visits)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('visits')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_57, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_3ae2e576_hoisted_58, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.conversions)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('conversions')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_59, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_3ae2e576_hoisted_60, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(_ctx.results.totals.revenue)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalOf('revenue')), 1)])]), _ctx.results.campaign.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_61, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_62, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText), 1), _ctx.timeShare !== null ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 0
   }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(", " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('TimePassed', `${_ctx.timeShare} %`)), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", {
     class: "fwcmp-goal__bar",
@@ -4693,33 +4700,33 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
     style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
       width: `${Math.min(100, _ctx.percent(_ctx.results.campaign))}%`
     })
-  }, null, 4)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_63)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.warnings, w => {
+  }, null, 4)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_63)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.warnings, w => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
       key: w,
       class: "fwcmp-msg fwcmp-msg--warning"
     }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(w), 1);
-  }), 128)), _ctx.tab === 'progress' && _ctx.chartParams ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_64, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_WidgetLoader, {
+  }), 128)), _ctx.tab === 'progress' && _ctx.chartParams ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_64, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_WidgetLoader, {
     "widget-params": _ctx.chartParams,
     "widget-name": _ctx.tr('VisitsPerDay')
-  }, null, 8, ["widget-params", "widget-name"])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_65, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PerLink')), 1), !_ctx.results.links.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_66, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignLinks')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_67, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_68, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_69, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Channel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_70, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_71, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LastVisit')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.results.links, item => {
+  }, null, 8, ["widget-params", "widget-name"])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_3ae2e576_hoisted_65, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PerLink')), 1), !_ctx.results.links.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_66, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoCampaignLinks')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_67, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_68, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])((Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("table", CampaignPagesvue_type_template_id_3ae2e576_hoisted_69, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Channel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LinkStatusHead')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_3ae2e576_hoisted_70, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", CampaignPagesvue_type_template_id_3ae2e576_hoisted_71, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('LastVisit')), 1)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.results.links, item => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("tr", {
       key: item.link.idLink
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('Channel')
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.channel(item.link)) + " ", 1), _ctx.detail(item.link) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_73, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail(item.link)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_72), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.channel(item.link)) + " ", 1), _ctx.detail(item.link) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_73, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail(item.link)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_72), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('LinkStatusHead')
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(`fwcmp-badge fwcmp-badge--${item.link.status}`)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`LinkStatus_${item.link.status}`)), 3)], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_74), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`LinkStatus_${item.link.status}`)), 3)], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_74), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__num",
       "data-label": _ctx.tr('Visits')
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_76, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.results ? _ctx.number(item.results.visits) : '-') + " ", 1), item.results && (item.results.basis !== 'link_id' || item.results.sharedWith > 1) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_77, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`ResultsBasisShort_${item.results.basis}`)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])], 8, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_75), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_76, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.results ? _ctx.number(item.results.visits) : '-') + " ", 1), item.results && (item.results.basis !== 'link_id' || item.results.sharedWith > 1) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", CampaignPagesvue_type_template_id_3ae2e576_hoisted_77, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr(`ResultsBasisShort_${item.results.basis}`)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])], 8, CampaignPagesvue_type_template_id_3ae2e576_hoisted_75), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       class: "fwcmp-table__num",
       "data-label": _ctx.tr('Conversions')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.results ? _ctx.number(item.results.conversions) : '-'), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_78), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.results ? _ctx.number(item.results.conversions) : '-'), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_78), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", {
       "data-label": _ctx.tr('LastVisit')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.lastVisitDay ? _ctx.day(item.lastVisitDay) : ''), 9, CampaignPagesvue_type_template_id_10fbf0f2_hoisted_79)]);
-  }), 128))])])), [[_directive_content_table]])])]))], 512), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], _ctx.tab === 'progress']]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_80, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_81, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.verdict), 1), _ctx.results.campaign.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_82, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_83, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_84, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_85, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.visits)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_10fbf0f2_hoisted_86, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", _hoisted_87, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.conversions)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_88, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", _hoisted_89, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(_ctx.results.totals.revenue)), 1)])]), _ctx.ownLinks.length > 1 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(item.lastVisitDay ? _ctx.day(item.lastVisitDay) : ''), 9, CampaignPagesvue_type_template_id_3ae2e576_hoisted_79)]);
+  }), 128))])])), [[_directive_content_table]])])]))], 512), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], _ctx.tab === 'progress']]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("section", CampaignPagesvue_type_template_id_3ae2e576_hoisted_80, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", CampaignPagesvue_type_template_id_3ae2e576_hoisted_81, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.verdict), 1), _ctx.results.campaign.goal ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_82, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.goalText), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dl", CampaignPagesvue_type_template_id_3ae2e576_hoisted_83, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_84, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Visits')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", CampaignPagesvue_type_template_id_3ae2e576_hoisted_85, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.visits)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", CampaignPagesvue_type_template_id_3ae2e576_hoisted_86, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Conversions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", _hoisted_87, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.number(_ctx.results.totals.conversions)), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_88, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dt", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('Revenue')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("dd", _hoisted_89, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.money(_ctx.results.totals.revenue)), 1)])]), _ctx.ownLinks.length > 1 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
     key: 1
   }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_90, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('BestLink', _ctx.linkSummary(_ctx.ownLinks[0]))), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_91, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('WeakestLink', _ctx.linkSummary(_ctx.ownLinks[_ctx.ownLinks.length - 1]))), 1)], 64)) : _ctx.results.links.length > 1 ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_92, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PerLinkNeedsMcr')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", _hoisted_93, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NotesAndLearnings')), 1), _ctx.results.campaign.notes ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_94, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.results.campaign.notes), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_95, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('NoNotes')), 1)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h4", _hoisted_96, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('AnalyseInMatomo')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", _hoisted_97, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.analyseLinks, a => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
@@ -4765,7 +4772,7 @@ function CampaignPagesvue_type_template_id_10fbf0f2_render(_ctx, _cache, $props,
     "dismiss-label": _ctx.tr('PromoDismiss')
   }, null, 8, ["promo", "dismiss-label"])], 2);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/CampaignPages.vue?vue&type=template&id=10fbf0f2
+// CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/CampaignPages.vue?vue&type=template&id=3ae2e576
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkCampaignManager/vue/src/CampaignPages.vue?vue&type=script&lang=ts
 
@@ -4820,6 +4827,19 @@ let CampaignPagesvue_type_script_lang_ts_loadCount = 0;
       required: true
     },
     canWrite: {
+      type: Boolean,
+      default: false
+    },
+    /** the evolution graph's report (MarketingCampaignsReporting.getName while it is active) */
+    evolutionApiMethod: {
+      type: String,
+      default: 'Referrers.getCampaigns'
+    },
+    /**
+     * whether Matomo archives a segment on request here: then the result also links segmented
+     * reports (devices, pages, goals), otherwise only the visitor log (needs no archiving)
+     */
+    segmentReports: {
       type: Boolean,
       default: false
     },
@@ -4888,8 +4908,9 @@ let CampaignPagesvue_type_script_lang_ts_loadCount = 0;
     tabs() {
       return TABS;
     },
+    /** the visitor log always; segmented reports only where Matomo archives a segment on request */
     analyseLinks() {
-      return ANALYSE_LINKS;
+      return this.segmentReports ? ANALYSE_LINKS : ANALYSE_LINKS.slice(0, 1);
     },
     checks() {
       return this.results ? this.checksFor(this.results) : [];
@@ -5025,7 +5046,7 @@ let CampaignPagesvue_type_script_lang_ts_loadCount = 0;
       }
       return this.results.links.filter(l => l.results && l.results.basis === 'link_id' && l.results.sharedWith === 1).sort((a, b) => b.results.conversions - a.results.conversions || b.results.visits - a.results.visits);
     },
-    /** Matomo's own evolution graph of the campaign row (Referrers.getCampaigns, label) */
+    /** Matomo's own evolution graph of the campaign row (report: evolutionApiMethod) */
     chartParams() {
       if (!this.results || this.results.series.length === 0) {
         return null;
@@ -5033,7 +5054,7 @@ let CampaignPagesvue_type_script_lang_ts_loadCount = 0;
       return {
         module: 'CoreHome',
         action: 'getRowEvolutionGraph',
-        apiMethod: 'Referrers.getCampaigns',
+        apiMethod: this.evolutionApiMethod,
         label: this.results.campaign.campaign,
         idSite: this.idSite,
         period: 'day',
@@ -5288,7 +5309,7 @@ let CampaignPagesvue_type_script_lang_ts_loadCount = 0;
 
 
 
-CampaignPagesvue_type_script_lang_ts.render = CampaignPagesvue_type_template_id_10fbf0f2_render
+CampaignPagesvue_type_script_lang_ts.render = CampaignPagesvue_type_template_id_3ae2e576_render
 
 /* harmony default export */ var CampaignPages = (CampaignPagesvue_type_script_lang_ts);
 // CONCATENATED MODULE: ./plugins/FeinwerkCampaignManager/vue/src/index.ts

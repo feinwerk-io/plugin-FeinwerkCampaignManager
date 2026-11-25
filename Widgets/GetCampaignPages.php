@@ -10,10 +10,12 @@
 namespace Piwik\Plugins\FeinwerkCampaignManager\Widgets;
 
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugins\FeinwerkCampaignManager\Categories\CampaignsCategory;
 use Piwik\Plugins\FeinwerkCampaignManager\Categories\CampaignPagesSubcategory;
 use Piwik\Plugins\FeinwerkCampaignManager\Feedback\FeedbackSettings;
+use Piwik\Plugins\FeinwerkCampaignManager\Model\InstanceContext;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
 
@@ -46,6 +48,10 @@ class GetCampaignPages extends Widget
             'currency' => (string) \Piwik\Site::getCurrencyFor($idSite),
             // Matomo stores site names HTML-escaped; Vue escapes again when it renders
             'siteName' => Common::unsanitizeInputValue((string) \Piwik\Site::getNameFor($idSite)),
+            // the report of the campaign's evolution graph (Marketing Campaigns Reporting replaces Matomo's own)
+            'evolutionApiMethod' => StaticContainer::get(InstanceContext::class)->evolutionApiMethod(),
+            // segmented reports (devices, pages, goals) only where Matomo archives a segment on request
+            'segmentReports' => StaticContainer::get(InstanceContext::class)->segmentReportsOnRequest(),
             'feedback' => FeedbackSettings::forPage(),
             // the kit's tip line after the feedback row (admins and super users, never in embeds)
             'promo' => WidgetProps::promo($idSite),

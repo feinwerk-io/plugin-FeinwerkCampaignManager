@@ -9,6 +9,7 @@
 
 namespace Piwik\Plugins\FeinwerkCampaignManager\Model;
 
+use Piwik\ArchiveProcessor\Rules;
 use Piwik\Config;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\FeinwerkCampaignManager\Link\Fields;
@@ -36,6 +37,31 @@ class InstanceContext
     public function isMcrActive(): bool
     {
         return Manager::getInstance()->isPluginActivated(self::MCR);
+    }
+
+    /**
+     * The report whose row evolution graph shows a campaign: Matomo's own campaign report, or with Marketing Campaigns
+     * Reporting active its campaign name report, because that plugin takes Referrers.getCampaigns out of Matomo's report
+     * list (event Report.filterReports) and the graph then fails ("not found in the list of available reports"). The API
+     * method Referrers.getCampaigns itself keeps working, so the numbers still come from it.
+     */
+    /**
+     * Whether Matomo archives an ad-hoc segment (one in the URL, not saved as pre-processed) when a report asks for it:
+     * with browser archiving on, or with browser_archiving_disabled_enforce = 0. Most instances archive by cron only;
+     * there a segmented report stays empty, while the visitor log (raw visits) always works. False on any doubt.
+     */
+    public function segmentReportsOnRequest(): bool
+    {
+        try {
+            return Rules::isRequestAuthorizedToArchive() || Rules::isBrowserArchivingAvailableForSegments();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    public function evolutionApiMethod(): string
+    {
+        return $this->isMcrActive() ? 'MarketingCampaignsReporting.getName' : 'Referrers.getCampaigns';
     }
 
     public function parameterSets(): ParameterSets

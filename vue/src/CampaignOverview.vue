@@ -519,13 +519,18 @@ export default defineComponent({
         this.day(row.goal.from),
       );
     },
+    /**
+     * Matomo's visitor log with the campaign as segment: it reads the visits themselves, so it
+     * works where Matomo does not archive segments on request (most instances; a segmented
+     * report would stay empty there)
+     */
     analyseUrl(row: CampaignRow): string {
       // with the campaign referrer type: a website or search engine could carry the same name
       const segment = `referrerType==campaign;referrerName==${encodeURIComponent(row.campaign)}`;
       const base = `idSite=${this.idSite}&period=${encodeURIComponent(this.period)}`
         + `&date=${encodeURIComponent(this.date)}`;
       return `?module=CoreHome&action=index&${base}#?${base}`
-        + `&category=General_Visitors&subcategory=General_Overview&segment=${encodeURIComponent(segment)}`;
+        + `&category=General_Visitors&subcategory=Live_VisitorLog&segment=${encodeURIComponent(segment)}`;
     },
     /** the campaign's page under All campaigns */
     campaignPageUrl(campaign: string): string {

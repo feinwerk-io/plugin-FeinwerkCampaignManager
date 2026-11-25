@@ -36,6 +36,15 @@ class SpellingGroupsTest extends TestCase
         $this->assertSame('black-friday-2026', $groups[1]['suggested']);
     }
 
+    /** a value of digits only is an int array key in PHP; the rows carry it as text (the UI calls string methods) */
+    public function test_valuesOfDigitsOnlyStayText(): void
+    {
+        $groups = SpellingGroups::of(['2025' => self::n(5, 1), '20-25' => self::n(2)]);
+        $this->assertCount(1, $groups);
+        $this->assertSame('2025', $groups[0]['suggested']);
+        $this->assertSame(['2025', '20-25'], array_column($groups[0]['values'], 'value'));
+    }
+
     public function test_savedLinksDecideBeforeVisits(): void
     {
         $groups = SpellingGroups::of(['Herbst-Aktion' => self::n(50), 'herbst aktion' => self::n(5, 3)]);

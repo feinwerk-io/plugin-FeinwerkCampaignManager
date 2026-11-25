@@ -133,9 +133,9 @@ export function fetchTemplates(idSite: number): Promise<Template[]> {
 }
 
 export function fetchSuggestions(idSite: number, field: FieldKey): Promise<Suggestion[]> {
-  return AjaxHelper.fetch({
+  return AjaxHelper.fetch<Suggestion[]>({
     method: `${MODULE}.getSuggestions`, idSite, field, limit: 100,
-  }, QUIET);
+  }, QUIET).then((rows) => (rows || []).map((s) => ({ ...s, value: `${s.value}` })));
 }
 
 /**

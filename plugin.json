@@ -1,7 +1,7 @@
 {
     "name": "FeinwerkCampaignManager",
     "description": "Build clean campaign links for every website, keep them in one list and see visits and conversions per campaign.",
-    "version": "5.0.1",
+    "version": "5.0.2",
     "theme": false,
     "require": {
         "matomo": ">=5.0.0,<7.0.0-b1",

@@ -501,6 +501,8 @@ class API extends \Piwik\Plugin\API
         }
         if ($field === Fields::CAMPAIGN && count($out) < $limit) {
             foreach (StaticContainer::get(Suggestions::class)->countedCampaigns($idSite, array_map('strval', array_keys($known))) as $value => $visits) {
+                // a campaign value of digits only ("2025") comes back as an int array key: the API answers text
+                $value = (string) $value;
                 if ($matches($value)) {
                     $out[] = ['value' => $value, 'links' => 0, 'source' => 'report', 'visits' => $visits];
                 }

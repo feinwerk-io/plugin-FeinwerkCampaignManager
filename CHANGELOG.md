@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.2
+
+- With Marketing Campaigns Reporting active, a campaign page no longer fails with an error: its evolution graph uses
+  that plugin's campaign report, because the plugin replaces Matomo's own.
+- The link builder works again when a campaign value consists of digits only (for example 2025).
+- "Analyse in Matomo" opens Matomo's visitor log with the campaign as segment, which works without archiving segments.
+  The result of a campaign links devices, pages and goals only where Matomo archives segments on request.
+
 ## 5.0.1
 
 - Listed on the Matomo Marketplace: the plugin's website link in Matomo leads to its page on plugins.feinwerk.io, with
