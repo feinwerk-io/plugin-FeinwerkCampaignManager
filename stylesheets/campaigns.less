@@ -7,7 +7,9 @@
 .fwcmp-list,
 .fwcmp-overview,
 .fwcmp-quality,
-.fwcmp-pages {
+.fwcmp-pages,
+.fwcmp-platform,
+.fwcmp-platformstatus {
   --fwcmp-text: var(--theme-color-text, #212121);
   --fwcmp-text-light: var(--theme-color-text-light, #444);
   --fwcmp-text-lighter: var(--theme-color-text-lighter, #646464);
@@ -29,7 +31,9 @@
 [data-theme-mode="dark"] .fwcmp-list,
 [data-theme-mode="dark"] .fwcmp-overview,
 [data-theme-mode="dark"] .fwcmp-quality,
-[data-theme-mode="dark"] .fwcmp-pages {
+[data-theme-mode="dark"] .fwcmp-pages,
+[data-theme-mode="dark"] .fwcmp-platform,
+[data-theme-mode="dark"] .fwcmp-platformstatus {
   --fwcmp-error: #ef9a9a;
   --fwcmp-warning: #ffcc80;
   --fwcmp-on-accent: var(--theme-color-background-base, #151819);
@@ -40,7 +44,9 @@
   [data-theme-mode="auto"] .fwcmp-list,
   [data-theme-mode="auto"] .fwcmp-overview,
   [data-theme-mode="auto"] .fwcmp-quality,
-  [data-theme-mode="auto"] .fwcmp-pages {
+  [data-theme-mode="auto"] .fwcmp-pages,
+  [data-theme-mode="auto"] .fwcmp-platform,
+  [data-theme-mode="auto"] .fwcmp-platformstatus {
     --fwcmp-error: #ef9a9a;
     --fwcmp-warning: #ffcc80;
     --fwcmp-on-accent: var(--theme-color-background-base, #151819);
@@ -1351,4 +1357,139 @@ table.fwcmp-table th.fwcmp-table__actions {
 .fwcmp-tablewrap {
   max-width: 100%;
   overflow-x: auto;
+}
+
+// the connection to Feinwerk Campaigns: the admin page and the small status above each Campaigns page
+.fwcmp-platform__line {
+  margin: 0 0 8px;
+}
+
+.fwcmp-platform__sent {
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-platform__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 16px 0 0;
+}
+
+.fwcmp-platform__form {
+  display: inline-block;
+  margin: 12px 0 0;
+}
+
+.fwcmp-platform__actions .fwcmp-platform__form {
+  margin: 0;
+}
+
+.fwcmp-platformstatus {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 10px;
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--fwcmp-text-light);
+}
+
+.fwcmp-platformstatus a {
+  color: var(--fwcmp-accent);
+}
+
+// the connected link builder (PlatformLinkPanel)
+.fwcmp-platformlink {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--fwcmp-border);
+}
+
+.fwcmp-platformlink__campaign label {
+  display: block;
+  margin: 8px 0 4px;
+}
+
+.fwcmp-platformlink__matches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fwcmp-platformlink__matches .fwcmp-chip[aria-pressed="true"] {
+  border-color: var(--fwcmp-accent);
+  font-weight: 600;
+}
+
+// the link type: the shared segmented switch with a visible label; labels may wrap inside a segment at phone width
+.fwcmp-platformlink__types {
+  margin: 12px 0 8px;
+}
+
+.fwcmp-platformlink__types .fwcmp-label {
+  display: block;
+  margin: 0 0 4px;
+}
+
+.fwcmp-platformlink__types .fwcmp-segmented {
+  --fwcmp-segmented-height: auto;
+  --fwcmp-segmented-wrap: normal;
+}
+
+.fwcmp-platformlink__types .fwcmp-segmented .fwcmp-segmented__option {
+  min-width: min-content;
+  min-height: 32px;
+  padding: 6px 12px;
+}
+
+.fwcmp-chip__hint {
+  color: var(--fwcmp-text-lighter);
+  font-weight: normal;
+}
+
+.fwcmp-platformlink__result {
+  margin-top: 12px;
+}
+
+.fwcmp-platformlink__short,
+.fwcmp-platformlink__qr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 8px 0;
+}
+
+.fwcmp-table__platform {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.fwcmp-table__platform code {
+  color: var(--fwcmp-code);
+  background: var(--fwcmp-code-bg);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+// filled buttons with long labels ("Mit Feinwerk Campaigns verbinden", "In Feinwerk Campaigns erstellen") wrap inside the
+// button at phone width instead of running out of it (UI review F4: Matomo 5 gives .btn a fixed height of 36px)
+.fwcmp-platform .btn,
+.fwcmp-builder .btn {
+  height: auto;
+  min-height: 36px;
+  padding: 9px 16px;
+  line-height: 18px;
+  white-space: normal;
+}
+
+.fwcmp-platformlink__connect {
+  margin-left: 6px;
 }

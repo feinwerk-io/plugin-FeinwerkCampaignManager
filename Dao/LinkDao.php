@@ -41,6 +41,18 @@ class LinkDao
         return Common::prefixTable(self::TABLE);
     }
 
+    /**
+     * The columns of a link made in Feinwerk Campaigns (connected mode, Updates/5.1.0.php): its id there, its campaign
+     * there, the short link, whether it has a dynamic QR code, and its page in the app. All empty for local links.
+     */
+    public const PLATFORM_COLUMNS = [
+        'platform_link_id' => 'VARCHAR(40) NULL',
+        'platform_campaign_id' => 'VARCHAR(40) NULL',
+        'short_url' => 'VARCHAR(255) NULL',
+        'platform_qr' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'platform_app_url' => 'VARCHAR(255) NULL',
+    ];
+
     public function install(): void
     {
         // createTable ignores "table exists", so install() can run again
@@ -71,6 +83,11 @@ class LinkDao
             `live_at` DATETIME NULL,
             `live_since` DATE NULL,
             `live_reason` VARCHAR(10) NULL,
+            `platform_link_id` VARCHAR(40) NULL,
+            `platform_campaign_id` VARCHAR(40) NULL,
+            `short_url` VARCHAR(255) NULL,
+            `platform_qr` TINYINT(1) NOT NULL DEFAULT 0,
+            `platform_app_url` VARCHAR(255) NULL,
             PRIMARY KEY (`idlink`),
             UNIQUE KEY `fw_site_fingerprint` (`idsite`, `fingerprint`),
             KEY `fw_site_campaign` (`idsite`, `campaign`(150))

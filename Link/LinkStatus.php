@@ -25,6 +25,8 @@ final class LinkStatus
     public const REASON_MANUAL = 'manual';
     public const REASON_START = 'start';
     public const REASON_VISIT = 'visit';
+    /** made live in Feinwerk Campaigns (connected mode: the platform's links redirect at once) */
+    public const REASON_PLATFORM = 'platform';
 
     /** days before a link's creation that must be free of visits before a shared campaign row may make it live */
     public const QUIET_DAYS_BEFORE = 30;

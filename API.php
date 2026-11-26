@@ -24,6 +24,9 @@ use Piwik\Plugins\FeinwerkCampaignManager\Model\CampaignResults;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\CampaignService;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\InstanceContext;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\LinkLiveDetector;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformConfig;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformError;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformService;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\LinkPresenter;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\LinkResults;
 use Piwik\Plugins\FeinwerkCampaignManager\Model\LinkService;
@@ -59,22 +62,336 @@ class API extends \Piwik\Plugin\API
     public const SUGGESTION_FIELDS = [Fields::CAMPAIGN, Fields::SOURCE, Fields::MEDIUM, Fields::KEYWORD, Fields::CONTENT, Fields::GROUP, Fields::PLACEMENT];
 
     /**
-     * Tells whether this Matomo is connected to the Feinwerk Campaigns platform and which platform features work.
-     * Use it to explain why short links or QR codes are not available.
+     * Tells whether this Matomo is connected to the Feinwerk Campaigns platform, in which state, and which platform
+     * features work now. Use it to explain why short links or QR codes are not available. Asks the platform at most
+     * every 5 minutes and makes no call at all while not connected. Connecting needs a person in a browser (sign-in,
+     * consent): send a super user to connectUrl.
      *
-     * @return array{mode: string, connected: bool, reason: string, features: array{shortLinks: bool, qrCodes: bool}}
-     *         mode: standalone (no connection; this version has no connection yet) or connected; reason: why platform
-     *         features are off (not_connected) or '' when connected; features: what works right now
+     * @return array{mode: string, connected: bool, state: string, reason: string, workspace: ?array{id: string,
+     *               name: string}, person: ?array{name: string, role: string}, trial: ?array{endsAt: string,
+     *               daysLeft: int}, canBuy: bool, links: array{app: ?string, buy: ?string}, features: array{shortLinks:
+     *               bool, qrCodes: bool}, canConnect: bool, connectUrl: ?string, checkedAt: string}
+     *         mode: disabled ([FeinwerkCampaignManager] platform = 0), standalone (not connected) or connected;
+     *         connected: platform features can be used now; state: none, trial, active, expired (trial ended
+     *         unpurchased), lost (token revoked, or the person who connected lost access), blocked, unknown (no answer
+     *         yet); reason: why platform features are off, '' when they work: platform_disabled, not_connected,
+     *         trial_ended, connection_lost, access_lost, blocked, unreachable, internet_disabled; person: who approved
+     *         the connection (super users only); trial: end (ISO 8601 UTC) and whole days left; links: the workspace in
+     *         the platform and its buy dialog (absolute URLs of the platform); canConnect: whether this user may
+     *         (re)connect; connectUrl: the admin page for it, relative to Matomo (super users only); checkedAt: when
+     *         the platform was last asked (Y-m-d H:i:s UTC)
      */
     public function getConnectionStatus(): array
     {
         Piwik::checkUserHasSomeViewAccess();
+        $lang = self::userLanguage() === 'de' ? 'de' : 'en';
+        $status = StaticContainer::get(PlatformService::class)->status($lang, Date::now()->getDatetime());
+        $superUser = Piwik::hasUserSuperUserAccess();
+        $connected = $status['mode'] === 'connected' && $status['reason'] === '';
+
         return [
-            'mode' => 'standalone',
-            'connected' => false,
-            'reason' => 'not_connected',
-            'features' => ['shortLinks' => false, 'qrCodes' => false],
+            'mode' => $status['mode'],
+            'connected' => $connected,
+            'state' => $status['state'],
+            'reason' => $status['reason'],
+            'workspace' => $status['workspace'],
+            'person' => $superUser ? $status['person'] : null,
+            'trial' => $status['trial'],
+            'canBuy' => $superUser && $status['canBuy'],
+            'links' => ['app' => $status['links']['app'], 'buy' => $superUser ? $status['links']['buy'] : null],
+            'features' => $status['features'],
+            'canConnect' => $superUser && $status['mode'] !== 'disabled' && !PlatformConfig::isWordPress(),
+            'connectUrl' => $superUser && $status['mode'] !== 'disabled' ? 'index.php?module=FeinwerkCampaignManager&action=platform' : null,
+            'checkedAt' => $status['checkedAt'],
         ];
+    }
+
+    /**
+     * Ends the connection to Feinwerk Campaigns: revokes the token on the platform (when it answers) and removes it
+     * from this Matomo in any case. Saved links and campaign details stay. Super users only.
+     *
+     * @return array the connection status afterwards, as getConnectionStatus
+     */
+    public function disconnectPlatform(): array
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        StaticContainer::get(PlatformService::class)->disconnect();
+
+        return $this->getConnectionStatus();
+    }
+
+    /**
+     * The naming convention of the connected Feinwerk Campaigns workspace and the workspace website this Matomo
+     * website maps to: parameter names, fields with their value lists, channels and ad networks, as the connected
+     * link builder uses them. Needs write access to the website and a working connection (HTTP 409 with the reason
+     * otherwise, see getConnectionStatus).
+     *
+     * @param int $idSite website id (required)
+     * @return array{website: array{id: string, name: string, url: string, match: string}, convention: array} website: match
+     *         is site (tied to this Matomo site) or domain; convention: as the
+     *         platform answers it (parameters.style, parameters.names per field, fields with key, label, type, required,
+     *         values; channels with key, label, source, medium; networks with key, label, values)
+     */
+    public function getPlatformConvention($idSite = null): array
+    {
+        $idSite = $this->idSite($idSite);
+        // write access, like the builder that uses it: each call reaches the platform on the connection's rate limit
+        Piwik::checkUserHasWriteAccess($idSite);
+        $lang = self::platformLanguage();
+        $service = StaticContainer::get(PlatformService::class);
+        try {
+            return ['website' => $this->platformWebsite($idSite), 'convention' => $service->convention($lang)];
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+    }
+
+    /**
+     * Searches the campaigns of the connected Feinwerk Campaigns workspace that belong to this website's workspace
+     * website, for the connected link builder's campaign picker. Needs write access to the website, a working connection
+     * and a matching website (HTTP 409 with the reason otherwise).
+     *
+     * @param int $idSite website id (required)
+     * @param string $query part of the campaign name or parameter, case-insensitive (optional, all when empty)
+     * @param int $limit at most this many, 1 to 100 (default 20)
+     * @return list<array{id: string, name: string, parameter: string, status: string, startsOn: ?string,
+     *               endsOn: ?string, appUrl: ?string}> id: the platform's campaign id (for addPlatformLink); parameter:
+     *               the campaign value in the link; status: as the platform says (draft, preparing, ready, live, paused,
+     *               ended)
+     */
+    public function getPlatformCampaigns($idSite = null, string $query = '', $limit = 20): array
+    {
+        $idSite = $this->idSite($idSite);
+        // write access, like the builder that uses it: each call reaches the platform on the connection's rate limit
+        Piwik::checkUserHasWriteAccess($idSite);
+        $limit = $this->intParam('limit', $limit, 1, 100);
+        try {
+            // only the campaigns of this site's workspace website: a view user of one site never sees the others
+            $website = $this->platformWebsite($idSite);
+            $rows = StaticContainer::get(PlatformService::class)->campaignsOfWebsite(self::platformLanguage(), trim($query), $website['id'], $limit);
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+        return array_map([self::class, 'platformCampaign'], $rows);
+    }
+
+    /**
+     * Creates a campaign draft in the connected Feinwerk Campaigns workspace for this website, for the connected link
+     * builder (a platform link always belongs to a platform campaign). The same name and parameter again returns the
+     * existing campaign (existed: true). Needs write access and a working connection.
+     *
+     * @param int $idSite website id (required)
+     * @param string $name the campaign's name, e.g. "Herbstaktion" (required, at most 255 characters)
+     * @param string $parameter the campaign value in links (optional; the workspace's pattern builds it from the name
+     *                          when empty, and a given one must fit that pattern)
+     * @param string $startDate first day, YYYY-MM-DD (optional)
+     * @param string $endDate last day, YYYY-MM-DD (optional)
+     * @return array{campaign: array, existed: bool} campaign: as getPlatformCampaigns lists it
+     */
+    public function addPlatformCampaign($idSite = null, string $name = '', string $parameter = '', string $startDate = '', string $endDate = ''): array
+    {
+        $idSite = $this->idSite($idSite);
+        Piwik::checkUserHasWriteAccess($idSite);
+        $name = trim($name);
+        if ($name === '' || mb_strlen($name, 'UTF-8') > 255) {
+            throw new InvalidInputException($this->messages()->invalidValue('name', $name, ['1 to 255 characters']));
+        }
+        foreach (['startDate' => $startDate, 'endDate' => $endDate] as $param => $date) {
+            if (trim($date) !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($date))) {
+                throw new InvalidInputException($this->messages()->invalidDate($param, $date));
+            }
+        }
+        try {
+            $website = $this->platformWebsite($idSite);
+            $answer = StaticContainer::get(PlatformService::class)->createCampaign(
+                self::platformLanguage(), $website['id'], $name, trim($parameter), trim($startDate), trim($endDate)
+            );
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+        return ['campaign' => self::platformCampaign($answer['campaign']), 'existed' => $answer['existed']];
+    }
+
+    /**
+     * Builds and checks a link with the connected workspace's convention, without saving it anywhere (the dry run of
+     * addPlatformLink). Needs write access to the website and a working connection; it counts against the platform's
+     * rate limit (120 requests per minute for the whole connection), so call it on demand, not per keystroke.
+     *
+     * @param int $idSite website id (required)
+     * @param string $targetUrl where the link leads, a full http or https URL of this website (required)
+     * @param string $platformCampaignId the platform campaign's id from getPlatformCampaigns or addPlatformCampaign
+     *                                   (required)
+     * @param string $source source, from the convention's list where it has one (see getPlatformConvention)
+     * @param string $medium medium, from the convention's list where it has one
+     * @param string $content content (optional)
+     * @param string $keyword keyword or term (optional)
+     * @param string $channel a channel key or ad network key of the convention (optional), e.g. newsletter or google
+     * @param string $placement placement (optional)
+     * @param bool $shortLink also make a short link (default 0)
+     * @param bool $dynamicQr also make a dynamic QR code, needs shortLink (default 0)
+     * @return array{url: string, params: list<array{key: string, name: string, value: string}>, errors: array,
+     *               warnings: list<string>} as the platform answers: the link, its parameters, errors per field
+     */
+    public function previewPlatformLink($idSite = null, string $targetUrl = '', string $platformCampaignId = '', string $source = '', string $medium = '', string $content = '', string $keyword = '', string $channel = '', string $placement = '', $shortLink = 0, $dynamicQr = 0): array
+    {
+        $idSite = $this->idSite($idSite);
+        // write access, like the builder that uses it: each call reaches the platform on the connection's rate limit
+        Piwik::checkUserHasWriteAccess($idSite);
+        try {
+            $body = $this->platformLinkBody($idSite, $targetUrl, $platformCampaignId, $source, $medium, $content, $keyword, $channel, $placement, $shortLink, $dynamicQr);
+            return StaticContainer::get(PlatformService::class)->previewLink(self::platformLanguage(), $body);
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+    }
+
+    /**
+     * Creates a link in the connected Feinwerk Campaigns workspace, with a short link and a dynamic QR code when asked,
+     * and keeps it in this website's list of saved links (live from now on: its short link and QR code redirect at
+     * once). The same link again returns the existing one (existed: true). Needs write access and a working connection.
+     *
+     * @param int $idSite website id (required)
+     * @param string $targetUrl see previewPlatformLink (required)
+     * @param string $platformCampaignId see previewPlatformLink (required)
+     * @param string $source see previewPlatformLink
+     * @param string $medium see previewPlatformLink
+     * @param string $content see previewPlatformLink
+     * @param string $keyword see previewPlatformLink
+     * @param string $channel see previewPlatformLink
+     * @param string $placement see previewPlatformLink
+     * @param bool $shortLink see previewPlatformLink
+     * @param bool $dynamicQr see previewPlatformLink
+     * @param string $note a note for the team, kept in this Matomo only (optional, at most 2000 characters)
+     * @param string $startDate first day of use, YYYY-MM-DD, kept in this Matomo only (optional)
+     * @param string $endDate last day of use, YYYY-MM-DD, kept in this Matomo only (optional)
+     * @return array{link: array, existed: bool} link: as getLink, with platform (id, campaignId, shortUrl, qr, appUrl);
+     *         its QR code downloads from platform.qrUrl through this Matomo (add &format=svg, png, pdf or eps)
+     */
+    public function addPlatformLink($idSite = null, string $targetUrl = '', string $platformCampaignId = '', string $source = '', string $medium = '', string $content = '', string $keyword = '', string $channel = '', string $placement = '', $shortLink = 0, $dynamicQr = 0, string $note = '', string $startDate = '', string $endDate = ''): array
+    {
+        $idSite = $this->idSite($idSite);
+        Piwik::checkUserHasWriteAccess($idSite);
+        $service = StaticContainer::get(PlatformService::class);
+        $lang = self::platformLanguage();
+        // everything that can fail here is checked before the platform creates the link, which is live at once there
+        $this->service()->platformExtras($note, $startDate, $endDate);
+        try {
+            $body = $this->platformLinkBody($idSite, $targetUrl, $platformCampaignId, $source, $medium, $content, $keyword, $channel, $placement, $shortLink, $dynamicQr);
+            $body['status'] = 'live';
+            $convention = $service->convention($lang);
+            $answer = $service->createLink($lang, $body);
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+        $names = (array) ($convention['parameters']['names'] ?? []);
+        $style = (string) ($convention['parameters']['style'] ?? 'own');
+        try {
+            $saved = $this->service()->addFromPlatform($idSite, $answer['link'], $names, $style, $note, $startDate, $endDate, Piwik::getCurrentUserLogin(), Date::now()->getDatetime());
+        } catch (\InvalidArgumentException $e) {
+            // the platform answered without a usable link URL
+            throw $this->platformError(new PlatformError(PlatformError::BAD_ANSWER, 200));
+        }
+
+        return ['link' => LinkPresenter::link($saved['row']), 'existed' => $answer['existed'] || $saved['existed']];
+    }
+
+    /**
+     * @return array<string, mixed> the body of the platform's POST /links and /links/preview
+     * @throws PlatformError
+     */
+    private function platformLinkBody(int $idSite, string $targetUrl, string $platformCampaignId, string $source, string $medium, string $content, string $keyword, string $channel, string $placement, $shortLink, $dynamicQr): array
+    {
+        $targetUrl = trim($targetUrl);
+        if ($targetUrl === '' || !preg_match('#^https?://#i', $targetUrl)) {
+            throw new InvalidInputException($this->messages()->invalidValue('targetUrl', $targetUrl, ['https://...', 'http://...']));
+        }
+        $platformCampaignId = trim($platformCampaignId);
+        if ($platformCampaignId === '' || !preg_match('/^[A-Za-z0-9]{1,40}$/', $platformCampaignId)) {
+            throw new InvalidInputException($this->messages()->invalidValue('platformCampaignId', $platformCampaignId, ['an id from getPlatformCampaigns']));
+        }
+        $short = self::flag('shortLink', $shortLink);
+        $qr = self::flag('dynamicQr', $dynamicQr);
+        if ($qr && !$short) {
+            throw new InvalidInputException($this->messages()->invalidValue('dynamicQr', '1', ['0 without shortLink=1']));
+        }
+        $values = array_filter([
+            'source' => trim($source), 'medium' => trim($medium), 'content' => trim($content), 'term' => trim($keyword),
+        ], static fn(string $v): bool => $v !== '');
+        $website = $this->platformWebsite($idSite);
+
+        return [
+            'website_id' => $website['id'],
+            'target_url' => $targetUrl,
+            'campaign_id' => $platformCampaignId,
+            'values' => (object) $values,
+            'channel' => trim($channel) !== '' ? trim($channel) : null,
+            'placement' => trim($placement) !== '' ? trim($placement) : null,
+            'short_link' => $short,
+            'dynamic_qr' => $qr,
+        ];
+    }
+
+    /** 0 or 1 (also false, true, "0", "1"), else HTTP 400 naming the parameter */
+    private static function flag(string $param, $value): bool
+    {
+        if ($value === true || $value === 1 || $value === '1' || $value === 'true') {
+            return true;
+        }
+        if ($value === false || $value === 0 || $value === '0' || $value === 'false' || $value === '' || $value === null) {
+            return false;
+        }
+        throw new InvalidInputException((new Messages())->invalidValue($param, (string) $value, ['0', '1']));
+    }
+
+    /** a platform campaign as the API answers it */
+    private static function platformCampaign(array $c): array
+    {
+        return [
+            'id' => (string) ($c['id'] ?? ''),
+            'name' => (string) ($c['name'] ?? ''),
+            'parameter' => (string) ($c['parameter'] ?? ''),
+            'status' => (string) ($c['status'] ?? ''),
+            'startsOn' => isset($c['starts_on']) ? (string) $c['starts_on'] : null,
+            'endsOn' => isset($c['ends_on']) ? (string) $c['ends_on'] : null,
+            'appUrl' => PlatformConfig::appLink($c['app_url'] ?? null),
+        ];
+    }
+
+    /**
+     * The workspace website of a Matomo website, or a 409 naming the workspace.
+     *
+     * @return array{id: string, name: string, url: string}
+     * @throws PlatformError
+     */
+    private function platformWebsite(int $idSite): array
+    {
+        $service = StaticContainer::get(PlatformService::class);
+        $urls = (array) \Piwik\Plugins\SitesManager\API::getInstance()->getSiteUrlsFromId($idSite);
+        $website = $service->website($idSite, $urls, self::platformLanguage());
+        if ($website === null) {
+            throw new PlatformError('no_website', 0);
+        }
+        return $website;
+    }
+
+    private function platformError(PlatformError $e): \Exception
+    {
+        $connection = (new \Piwik\Plugins\FeinwerkCampaignManager\Platform\Store())->connection();
+        return $this->messages()->platform($e, $connection !== null ? $connection->workspaceName : '');
+    }
+
+    private static function platformLanguage(): string
+    {
+        return self::userLanguage() === 'de' ? 'de' : 'en';
+    }
+
+    private static function userLanguage(): string
+    {
+        try {
+            return (string) StaticContainer::get(\Piwik\Translation\Translator::class)->getCurrentLanguage();
+        } catch (\Throwable $e) {
+            return '';
+        }
     }
 
     /**

@@ -78,13 +78,25 @@ export interface Link {
   liveAt: string | null;
   /** the website's day it went live (YYYY-MM-DD) */
   liveSince: string | null;
-  /** manual (marked live), start (first day of use reached) or visit (first visit counted) */
-  liveReason: 'manual' | 'start' | 'visit' | null;
+  /**
+   * manual (marked live), start (first day of use reached), visit (first visit counted) or platform
+   * (made live in Feinwerk Campaigns)
+   */
+  liveReason: 'manual' | 'start' | 'visit' | 'platform' | null;
   createdBy: string;
   createdAt: string;
   updatedBy: string;
   updatedAt: string;
   archivedAt: string | null;
+  /** the link in Feinwerk Campaigns (connected mode), null for links made here */
+  platform: {
+    id: string;
+    campaignId: string | null;
+    shortUrl: string | null;
+    qr: boolean;
+    qrUrl: string | null;
+    appUrl: string | null;
+  } | null;
 }
 
 export interface LinkPage {
@@ -431,5 +443,138 @@ export function fetchCampaignResults(
 ): Promise<CampaignResults> {
   return AjaxHelper.fetch({
     method: `${MODULE}.getCampaignResults`, idSite, campaign, segment,
+  }, QUIET);
+}
+
+/** the connection to Feinwerk Campaigns (API getConnectionStatus); never carries the token */
+export interface ConnectionStatus {
+  mode: 'disabled' | 'standalone' | 'connected';
+  connected: boolean;
+  state: string;
+  reason: string;
+  workspace: { id: string; name: string } | null;
+  person: { name: string; role: string } | null;
+  trial: { endsAt: string; daysLeft: number } | null;
+  canBuy: boolean;
+  links: { app: string | null; buy: string | null };
+  features: { shortLinks: boolean; qrCodes: boolean };
+  canConnect: boolean;
+  connectUrl: string | null;
+  checkedAt: string;
+}
+
+let statusOnce: Promise<ConnectionStatus> | null = null;
+
+/** read once per page load: the status line and the builder share it */
+export function fetchConnectionStatus(fresh = false): Promise<ConnectionStatus> {
+  if (!statusOnce || fresh) {
+    statusOnce = AjaxHelper.fetch<ConnectionStatus>({ method: `${MODULE}.getConnectionStatus` }, QUIET);
+    statusOnce.catch(() => {
+      statusOnce = null;
+    });
+  }
+  return statusOnce;
+}
+
+export function disconnectPlatform(): Promise<ConnectionStatus> {
+  return AjaxHelper.post<ConnectionStatus>({ method: `${MODULE}.disconnectPlatform` }, {}, QUIET);
+}
+
+export interface PlatformField {
+  key: string;
+  label: string;
+  type: string;
+  required: boolean;
+  values: { value: string; label: string }[];
+}
+
+export interface PlatformConvention {
+  website: { id: string; name: string; url: string; match: string };
+  convention: {
+    parameters: { style: string; names: Record<string, string> };
+    fields: PlatformField[];
+    channels: { key: string; label: string; source: string | null; medium: string }[];
+    networks: { key: string; label: string; values: Record<string, string> }[];
+  };
+}
+
+export interface PlatformCampaign {
+  id: string;
+  name: string;
+  parameter: string;
+  status: string;
+  startsOn: string | null;
+  endsOn: string | null;
+  appUrl: string | null;
+}
+
+export function fetchPlatformConvention(idSite: number): Promise<PlatformConvention> {
+  return AjaxHelper.fetch<PlatformConvention>({
+    method: `${MODULE}.getPlatformConvention`, idSite,
+  }, QUIET);
+}
+
+export function fetchPlatformCampaigns(idSite: number, query: string): Promise<PlatformCampaign[]> {
+  return AjaxHelper.fetch<PlatformCampaign[]>({
+    method: `${MODULE}.getPlatformCampaigns`, idSite, query, limit: 8,
+  }, QUIET);
+}
+
+export function addPlatformCampaign(
+  idSite: number,
+  name: string,
+): Promise<{ campaign: PlatformCampaign; existed: boolean }> {
+  return AjaxHelper.post({ method: `${MODULE}.addPlatformCampaign`, idSite }, { name }, QUIET);
+}
+
+export interface PlatformLinkInput {
+  targetUrl: string;
+  platformCampaignId: string;
+  source: string;
+  medium: string;
+  content: string;
+  keyword: string;
+  channel: string;
+  placement: string;
+  shortLink: boolean;
+  dynamicQr: boolean;
+  note: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface PlatformPreview {
+  url: string;
+  params: { key: string; name: string; value: string }[];
+  errors: Record<string, string[] | string>;
+  warnings: string[];
+}
+
+export function previewPlatformLink(
+  idSite: number,
+  input: PlatformLinkInput,
+): Promise<PlatformPreview> {
+  return AjaxHelper.post({ method: `${MODULE}.previewPlatformLink`, idSite }, {
+    targetUrl: input.targetUrl,
+    platformCampaignId: input.platformCampaignId,
+    source: input.source,
+    medium: input.medium,
+    content: input.content,
+    keyword: input.keyword,
+    channel: input.channel,
+    placement: input.placement,
+    shortLink: input.shortLink ? '1' : '0',
+    dynamicQr: input.dynamicQr ? '1' : '0',
+  }, QUIET);
+}
+
+export function addPlatformLink(
+  idSite: number,
+  input: PlatformLinkInput,
+): Promise<{ link: Link; existed: boolean }> {
+  return AjaxHelper.post({ method: `${MODULE}.addPlatformLink`, idSite }, {
+    ...input,
+    shortLink: input.shortLink ? '1' : '0',
+    dynamicQr: input.dynamicQr ? '1' : '0',
   }, QUIET);
 }

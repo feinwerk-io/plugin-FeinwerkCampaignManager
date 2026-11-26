@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.1.0
+
+- Connection to Feinwerk Campaigns (optional): a super user connects this Matomo to a workspace under Administration,
+  Platform, Feinwerk Campaigns. Connected, the link builder creates links in the workspace with its campaigns and naming
+  convention, with a short link and a dynamic QR code; it asks first, because the link is live at once. The links are
+  kept in the list of saved links, where Copy takes the short link, and the QR code downloads as SVG, PNG, PDF or EPS.
+  Each page shows the connection and opens the workspace; a lost or blocked connection says so. Without a connection
+  the link builder shows short link and QR code as needing one, and nothing is sent anywhere. `platform = 0` hides
+  everything about it. Uninstalling the plugin ends the connection.
+
 ## 5.0.2
 
 - With Marketing Campaigns Reporting active, a campaign page no longer fails with an error: its evolution graph uses

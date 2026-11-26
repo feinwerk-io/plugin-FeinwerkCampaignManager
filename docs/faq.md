@@ -24,11 +24,15 @@ A new link is a draft and can change freely. It is live once you mark it live, i
 
 __Where is my data stored?__
 
-Saved links and campaign details stay in your Matomo database. Campaign Manager sends nothing to the Feinwerk Campaigns platform; the only thing that leaves your Matomo is a feedback vote when someone clicks a thumb.
+Saved links and campaign details stay in your Matomo database. Without a connection to Feinwerk Campaigns, the only thing that leaves your Matomo is a feedback vote when someone clicks a thumb. Connected, your Matomo server calls the platform with the connection's access key to read the workspace's convention and campaigns and to create campaigns, links, short links and QR codes; no visitor data is sent.
 
 __Which Matomo versions and permissions does Campaign Manager need?__
 
 Matomo 5.0 or later and Matomo 6, light and dark mode, in English, German, French, Spanish and Italian. With view access to a website you can build and copy links and see the numbers; saving and changing them needs write access.
+
+__Can I connect it to Feinwerk Campaigns?__
+
+Yes, optionally. A super user connects this Matomo to a workspace of the Feinwerk Campaigns platform under Administration, Platform, Feinwerk Campaigns. Connected, the link builder creates links in the workspace with its campaigns and naming convention, with a short link and a dynamic QR code. Without a connection everything else works the same.
 
 __Can I use it through the API or an AI assistant?__
 

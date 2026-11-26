@@ -184,4 +184,36 @@ class Messages
     {
         return mb_strlen($value, 'UTF-8') > 80 ? mb_substr($value, 0, 80, 'UTF-8') . '...' : $value;
     }
+
+    /** a PlatformError as the API's exception, with a message people can act on */
+    public function platform(\Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformError $e, string $workspace = ''): \Piwik\Plugins\FeinwerkCampaignManager\Http\PlatformException
+    {
+        $reason = $e->error;
+        [$key, $status] = match ($reason) {
+            'not_connected' => ['FeinwerkCampaignManager_PlatformNotConnectedApi', 409],
+            'platform_disabled' => ['FeinwerkCampaignManager_PlatformDisabled', 409],
+            'trial_ended', 'expired' => ['FeinwerkCampaignManager_PlatformExpired', 409],
+            'lost', 'unauthorized', 'access_lost' => ['FeinwerkCampaignManager_PlatformLost', 409],
+            'blocked' => ['FeinwerkCampaignManager_PlatformBlocked', 409],
+            'workspace_ended' => ['FeinwerkCampaignManager_PlatformWorkspaceEnded', 409],
+            'no_website' => ['FeinwerkCampaignManager_PlatformNoWebsite', 409],
+            'internet_disabled' => ['FeinwerkCampaignManager_PlatformInternetDisabled', 502],
+            'unreachable', 'bad_answer', 'server_error', 'unavailable' => ['FeinwerkCampaignManager_PlatformUnreachable', 502],
+            'rate_limited' => ['FeinwerkCampaignManager_PlatformRateLimited', 429],
+            default => ['', 400],
+        };
+        if ($key === '') {
+            $text = $e->getMessage();
+            foreach ($e->fields as $field => $messages) {
+                $text .= ' ' . $field . ': ' . implode(' ', $messages);
+            }
+            return new \Piwik\Plugins\FeinwerkCampaignManager\Http\PlatformException($reason, Piwik::translate('FeinwerkCampaignManager_ApiErrorPlatform', [$reason, trim($text)]), $e->status >= 400 && $e->status < 500 ? 400 : 502);
+        }
+        $message = match ($reason) {
+            'no_website' => Piwik::translate($key, [$workspace]),
+            'rate_limited' => Piwik::translate($key, [(string) max(1, $e->retryAfter)]),
+            default => Piwik::translate($key),
+        };
+        return new \Piwik\Plugins\FeinwerkCampaignManager\Http\PlatformException($reason, $reason . ': ' . $message, $status);
+    }
 }

@@ -10,3 +10,5 @@ export { default as LinkList } from './LinkList.vue';
 export { default as CampaignOverview } from './CampaignOverview.vue';
 export { default as DataQuality } from './DataQuality.vue';
 export { default as CampaignPages } from './CampaignPages.vue';
+export { default as PlatformConnection } from './PlatformConnection.vue';
+export { default as PlatformStatus } from './PlatformStatus.vue';

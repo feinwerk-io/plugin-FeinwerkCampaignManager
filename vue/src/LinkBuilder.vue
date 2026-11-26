@@ -328,7 +328,9 @@
           </button>
         </Alert>
         <pre v-if="shownUrl" class="fwcmp-url">{{ shownUrl }}</pre>
-        <div v-else class="fwcmp-placeholder">{{ tr('LinkAppearsHere') }}</div>
+        <div v-else class="fwcmp-placeholder">
+          {{ platformReady && !editing ? tr('PlatformLinkAppearsHere') : tr('LinkAppearsHere') }}
+        </div>
         <ul v-if="otherWarnings.length" class="fwcmp-msgs">
           <li
             v-for="m in otherWarnings"
@@ -345,14 +347,17 @@
         </div>
         <div class="fwcmp-actions">
           <!-- one filled button per screen: Save for writers, Copy for view-only users -->
+          <!-- connected: the preview carries the platform's placeholder link ID, so only the
+               created link is copied (in the panel below) -->
           <button
+            v-if="!(platformReady && !editing)"
             type="button"
             :class="canWrite ? 'btn btn-outline' : 'btn'"
             :disabled="!shownUrl"
             @click="copyLink"
           >{{ copyLabel }}</button>
           <SaveButton
-            v-if="canWrite"
+            v-if="canWrite && !(platformReady && !editing)"
             :value="editing ? tr('SaveChanges') : tr('SaveLink')"
             :disabled="!canSave"
             :saving="saving"
@@ -394,6 +399,54 @@
         </Alert>
         <Alert v-if="saveError" severity="danger">{{ saveError }}</Alert>
       </section>
+      <!-- connected to Feinwerk Campaigns: the same values as a platform link -->
+      <PlatformLinkPanel
+        v-if="platform && platform.connected && canWrite && !editing"
+        :id-site="idSite"
+        :form="form"
+        :features="platform.features"
+        :app-url="platform.links.app || ''"
+        :channel-key="activeTemplate ? activeTemplate.key : ''"
+        @set-field="setField"
+        @ready="platformReady = $event"
+        @preview="platformPreview = $event"
+      />
+      <!-- not connected: short link and QR code locked, with the neutral line (decision 1 of
+           2026-11-23, in 5.1.0 by Peter's "ja" of 2026-11-26); no benefit copy, not promotion -->
+      <section
+        v-else-if="platform && platform.mode === 'standalone' && canWrite && !editing"
+        class="fwcmp-step fwcmp-platformlink fwcmp-platformlink--locked"
+      >
+        <div class="fwcmp-platformlink__types">
+          <span class="fwcmp-label" aria-hidden="true">{{ tr('PlatformLinkType') }}</span>
+          <SegmentedSwitch
+            model-value="link"
+            :options="lockedTypes"
+            :label="tr('PlatformLinkType')"
+          />
+        </div>
+        <div class="fwcmp-hint">
+          {{ tr('PlatformNeedsConnection') }}
+          <a
+            v-if="platform.canConnect && platform.connectUrl"
+            class="fwcmp-platformlink__connect"
+            :href="platform.connectUrl"
+          >{{ tr('PlatformConnectShort') }}</a>
+          <template v-else-if="platform.connectUrl">{{ tr('PlatformWordPress') }}</template>
+          <template v-else>{{ tr('PlatformSuperUserConnects') }}</template>
+        </div>
+      </section>
+      <!-- connected, but the platform cannot be used now (lost, blocked, trial ended) -->
+      <div
+        v-else-if="platform && platform.mode === 'connected' && !platform.connected && !editing"
+        class="fwcmp-hint fwcmp-platformlink__off"
+      >
+        {{ platformReasonText }}
+        <a
+          v-if="platform.connectUrl"
+          :href="platform.connectUrl"
+        >{{ tr(canReconnect(platform.reason) ? 'PlatformReconnect' : 'PlatformDetails') }}</a>
+      </div>
       <FeedbackBar
         v-if="feedback"
         class="fwcmp-page-feedback"
@@ -422,6 +475,8 @@ import { SaveButton } from 'CorePluginsAdmin';
 import {
   addLink,
   CheckMessage,
+  ConnectionStatus,
+  fetchConnectionStatus,
   fetchLink,
   fetchParameterSets,
   fetchSuggestions,
@@ -439,6 +494,9 @@ import {
   updateLinkDetails,
 } from './api';
 import copyText from './clipboard';
+import PlatformLinkPanel from './PlatformLinkPanel.vue';
+import SegmentedSwitch, { SegmentedOption } from './SegmentedSwitch.vue';
+import { canReconnect, REASON_TEXT } from './platformReason';
 import FeedbackBar, { FeedbackSettings } from './FeedbackBar.vue';
 import PromoLine, { PromoVariables } from './PromoLine.vue';
 import plainText from './plainText';
@@ -506,6 +564,12 @@ interface State {
   loading: boolean;
   loadError: string;
   missingLink: boolean;
+  /** the connection to Feinwerk Campaigns (getConnectionStatus), null until read or on failure */
+  platform: ConnectionStatus | null;
+  /** the connected panel can create links for this website: it replaces the local Save */
+  platformReady: boolean;
+  /** the platform's preview of the link the panel would create */
+  platformPreview: string;
   ready: boolean;
   parameterSets: ParameterSets;
   templates: Template[];
@@ -554,17 +618,22 @@ export default defineComponent({
     promo: { type: Object as PropType<PromoVariables | null>, default: null },
   },
   components: {
+    PlatformLinkPanel,
     ActivityIndicator,
     Alert,
     FeedbackBar,
     PromoLine,
     SaveButton,
+    SegmentedSwitch,
   },
   data(): State {
     return {
       loading: true,
       loadError: '',
       missingLink: false,
+      platform: null,
+      platformReady: false,
+      platformPreview: '',
       ready: false,
       parameterSets: {
         sets: [],
@@ -605,6 +674,12 @@ export default defineComponent({
   },
   created() {
     this.load();
+    // makes no outbound call while not connected; a failed read leaves the builder as it is
+    fetchConnectionStatus().then((status) => {
+      this.platform = status;
+    }).catch(() => {
+      this.platform = null;
+    });
   },
   beforeUnmount() {
     if (this.timer) {
@@ -627,6 +702,20 @@ export default defineComponent({
     },
   },
   computed: {
+    /** not connected: the link types shown locked (decision 1) */
+    lockedTypes(): SegmentedOption[] {
+      return ['link', 'short', 'qr'].map((t) => ({
+        value: t,
+        label: this.tr(`PlatformLinkType_${t}`),
+        disabled: t !== 'link',
+        title: t !== 'link' ? this.tr('PlatformNeedsConnection') : undefined,
+      }));
+    },
+    /** connected but not usable now: the admin page's sentence for the reason (UI review F2) */
+    platformReasonText(): string {
+      const key = this.platform ? REASON_TEXT[this.platform.reason] : '';
+      return this.tr(key || 'PlatformUnavailableHere');
+    },
     targetPlaceholder(): string {
       return this.siteUrl ? `${this.siteUrl.replace(/\/+$/, '')}/` : '';
     },
@@ -670,6 +759,10 @@ export default defineComponent({
     shownUrl(): string {
       if (this.locked) {
         return this.editingUrl;
+      }
+      // connected: the link the workspace would create, never a local one nobody saves
+      if (this.platformReady && !this.editing) {
+        return this.platformPreview;
       }
       return this.result && this.result.url ? this.result.url : '';
     },
@@ -732,6 +825,7 @@ export default defineComponent({
     },
   },
   methods: {
+    canReconnect,
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },
@@ -746,6 +840,13 @@ export default defineComponent({
     },
     templateHint(t: Template): string {
       return [t.source, t.medium].filter((v) => v !== '').join(' / ');
+    },
+    /** a value from the connected panel (a campaign's parameter, a value of a workspace list) */
+    setField(change: { field: string; value: string }) {
+      const allowed = ['campaign', 'source', 'medium', 'content', 'keyword'];
+      if (allowed.includes(change.field)) {
+        (this.form as unknown as Record<string, string>)[change.field] = change.value;
+      }
     },
     load() {
       this.loading = true;
@@ -873,7 +974,12 @@ export default defineComponent({
           });
         }
       });
+      // connected, the campaign value comes from the workspace: no "did you mean" to drop it
+      const fromWorkspace = field === 'campaign' && this.platformReady && !this.editing;
       this.result.warnings.forEach((m) => {
+        if (fromWorkspace && typeof m.details.known === 'string' && m.details.known !== '') {
+          return;
+        }
         if (m.field === field && !this.isMcrNotice(m)) {
           out.push({
             code: m.code,

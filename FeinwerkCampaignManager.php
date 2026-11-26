@@ -36,6 +36,14 @@ class FeinwerkCampaignManager extends \Piwik\Plugin
 
     public function uninstall()
     {
+        // the platform connection goes too: revoked there (best effort), token and pending start removed here
+        try {
+            \Piwik\Container\StaticContainer::get(\Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformService::class)->disconnect();
+        } catch (\Throwable $e) {
+            // the local token is removed below anyway
+        }
+        Option::delete(\Piwik\Plugins\FeinwerkCampaignManager\Platform\Store::CONNECTION);
+        Option::delete(\Piwik\Plugins\FeinwerkCampaignManager\Platform\Store::PENDING);
         (new LinkDao())->uninstall();
         (new CampaignDao())->uninstall();
         Option::deleteLike(PluginFeedback::THROTTLE_OPTION_PREFIX . '%');

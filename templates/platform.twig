@@ -1,0 +1,14 @@
+{# Administration > Platform > Feinwerk Campaigns: the connection (Controller::platform). The Vue component reads the
+   status through FeinwerkCampaignManager.getConnectionStatus and disconnects through disconnectPlatform; connecting is a
+   POST to connectStart with the nonce (a person in a browser, never through the API). Super users only. #}
+{% extends 'admin.twig' %}
+
+{% set title %}{{ 'FeinwerkCampaignManager_PlatformTitle'|translate }}{% endset %}
+
+{% block content %}
+<div class="fwcmp-mount"
+     vue-entry="FeinwerkCampaignManager.PlatformConnection"
+     connect-action="{{ connectAction|e('html_attr') }}"
+     connect-nonce="{{ connectNonce|e('html_attr') }}"
+     word-press="{{ wordPress ? 'true' : 'false' }}"></div>
+{% endblock %}

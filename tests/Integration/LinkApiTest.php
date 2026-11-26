@@ -445,12 +445,13 @@ class LinkApiTest extends IntegrationTestCase
         $this->assertSame('email', $templates[0]['medium']);
     }
 
-    public function test_getConnectionStatus_isStandalone(): void
+    public function test_getConnectionStatus_isStandaloneWithoutAConnection(): void
     {
-        $this->assertSame(
-            ['mode' => 'standalone', 'connected' => false, 'reason' => 'not_connected', 'features' => ['shortLinks' => false, 'qrCodes' => false]],
-            self::api()->getConnectionStatus()
-        );
+        $status = self::api()->getConnectionStatus();
+        $this->assertSame('standalone', $status['mode']);
+        $this->assertFalse($status['connected']);
+        $this->assertSame('not_connected', $status['reason']);
+        $this->assertSame(['shortLinks' => false, 'qrCodes' => false], $status['features']);
     }
 
     public function test_deletingAWebsite_deletesItsLinks(): void

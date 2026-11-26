@@ -128,6 +128,22 @@
                   class="fwcmp-table__note"
                   :title="link.note"
                 >{{ link.note }}</span>
+                <!-- made in Feinwerk Campaigns: short link and QR code (through this Matomo) -->
+                <span v-if="link.platform" class="fwcmp-table__platform">
+                  <code v-if="link.platform.shortUrl">{{ link.platform.shortUrl }}</code>
+                  <a
+                    v-if="link.platform.qrUrl"
+                    :href="`${link.platform.qrUrl}&format=svg`"
+                    download
+                    :aria-label="tr('PlatformLinkQrOf', link.values.campaign)"
+                  >{{ tr('PlatformLinkQrShort') }}</a>
+                  <a
+                    v-if="link.platform.appUrl"
+                    :href="link.platform.appUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >{{ tr('PlatformOpenLink') }}</a>
+                </span>
                 <span class="fwcmp-table__by" :title="dateTime(link.updatedAt)">
                   {{ date(link.updatedAt) }} · {{ link.updatedBy }}
                 </span>
@@ -166,7 +182,7 @@
                 <button
                   type="button"
                   class="fwcmp-action"
-                  :title="copyFailed === link.idLink ? tr('CopyFailed') : tr('CopyLink')"
+                  :title="copyFailed === link.idLink ? tr('CopyFailed') : copyTitle(link)"
                   :aria-label="tr('CopyLinkOf', link.values.campaign)"
                   @click="copy(link)"
                 >{{ copyLabel(link) }}</button>
@@ -507,8 +523,15 @@ export default defineComponent({
       }
       return this.copyFailed === link.idLink ? this.tr('CopyFailedShort') : this.tr('Copy');
     },
+    /** a link made in Feinwerk Campaigns is shared by its short link (Peter, 2026-11-26) */
+    copyTarget(link: Link): string {
+      return link.platform && link.platform.shortUrl ? link.platform.shortUrl : link.url;
+    },
+    copyTitle(link: Link): string {
+      return link.platform && link.platform.shortUrl ? this.tr('PlatformLinkCopyShort') : this.tr('CopyLink');
+    },
     copy(link: Link) {
-      copyText(link.url).then(() => {
+      copyText(this.copyTarget(link)).then(() => {
         this.copied = link.idLink;
         this.copyFailed = 0;
         this.sent = this.canWrite && !link.archived && link.status === 'draft'

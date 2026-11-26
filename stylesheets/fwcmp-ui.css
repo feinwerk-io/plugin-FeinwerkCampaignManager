@@ -1,8 +1,9 @@
 /*
- * The side panel of Feinwerk Campaign Manager (vue/src/SidePanel.vue), Data Exploration's house component (5.x copy, UI item 2)
- * with the fwcmp- prefix. Plain CSS with own custom properties: light values as fallbacks, dark values for
+ * The side panel (vue/src/SidePanel.vue) and the segmented switch (vue/src/SegmentedSwitch.vue) of Feinwerk Campaign Manager,
+ * Data Exploration's house components with the fwcmp- prefix. Plain CSS with own custom properties: light values as fallbacks, dark values for
  * [data-theme-mode="dark"] and for "auto" with a dark system setting; nothing from Matomo's LESS theme (Matomo 5.0 to 6.x).
  */
+.fwcmp-segmented,
 .fwcmp-sidepanel,
 .fwcmp-sidepanel__backdrop {
     --fwcmp-ui-surface: #fff;
@@ -18,6 +19,7 @@
     --fwcmp-ui-backdrop: rgba(0, 0, 0, .35);
 }
 
+[data-theme-mode="dark"] .fwcmp-segmented,
 [data-theme-mode="dark"] .fwcmp-sidepanel,
 [data-theme-mode="dark"] .fwcmp-sidepanel__backdrop {
     --fwcmp-ui-surface: #23272b;
@@ -34,6 +36,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
+    [data-theme-mode="auto"] .fwcmp-segmented,
     [data-theme-mode="auto"] .fwcmp-sidepanel,
     [data-theme-mode="auto"] .fwcmp-sidepanel__backdrop {
         --fwcmp-ui-surface: #23272b;
@@ -48,6 +51,75 @@
         --fwcmp-ui-shadow: rgba(0, 0, 0, .6);
         --fwcmp-ui-backdrop: rgba(0, 0, 0, .55);
     }
+}
+
+/* Segmented switch: one frame, thin dividers, the chosen option filled with the accent. Height and font size can be set
+   by the place that uses it (--fwcmp-segmented-height, --fwcmp-segmented-font). */
+.fwcmp-segmented {
+    display: inline-flex;
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--fwcmp-ui-border);
+    border-radius: 4px;
+    background: var(--fwcmp-ui-surface);
+    vertical-align: middle;
+}
+
+.fwcmp-segmented .fwcmp-segmented__option {
+    flex: 0 1 auto;
+    min-width: 0;
+    height: var(--fwcmp-segmented-height, 32px);
+    margin: 0;
+    padding: 0 12px;
+    overflow: hidden;
+    border: 0;
+    border-left: 1px solid var(--fwcmp-ui-border);
+    border-radius: 0;
+    background: transparent;
+    color: var(--fwcmp-ui-text);
+    font-family: inherit;
+    font-size: var(--fwcmp-segmented-font, 14px);
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    text-transform: none;
+    white-space: var(--fwcmp-segmented-wrap, nowrap);
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.fwcmp-segmented .fwcmp-segmented__option:first-child {
+    border-left: 0;
+}
+
+/* Materialize colours a focused button teal after a click: the switch keeps its own colours */
+.fwcmp-segmented .fwcmp-segmented__option:focus {
+    background: transparent;
+}
+
+.fwcmp-segmented .fwcmp-segmented__option:hover:not(:disabled) {
+    background: var(--fwcmp-ui-hover);
+}
+
+.fwcmp-segmented .fwcmp-segmented__option--active,
+.fwcmp-segmented .fwcmp-segmented__option--active:focus,
+.fwcmp-segmented .fwcmp-segmented__option--active:hover:not(:disabled) {
+    background: var(--fwcmp-ui-accent);
+    color: var(--fwcmp-ui-on-accent);
+    font-weight: 600;
+}
+
+.fwcmp-segmented .fwcmp-segmented__option:focus-visible {
+    outline: 2px solid var(--fwcmp-ui-focus);
+    outline-offset: -3px;
+}
+
+.fwcmp-segmented .fwcmp-segmented__option--active:focus-visible {
+    outline-color: var(--fwcmp-ui-on-accent);
+}
+
+.fwcmp-segmented .fwcmp-segmented__option:disabled {
+    color: var(--fwcmp-ui-disabled);
+    cursor: not-allowed;
 }
 
 /* Side panel: from the right, about two thirds of the page wide, the full width on a phone; above Matomo's header and

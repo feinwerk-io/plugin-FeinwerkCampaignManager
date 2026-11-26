@@ -20,6 +20,7 @@ use Piwik\Plugins\FeinwerkCampaignManager\Link\LinkCheck;
 use Piwik\Plugins\FeinwerkCampaignManager\Link\LinkCode;
 use Piwik\Plugins\FeinwerkCampaignManager\Link\LinkStatus;
 use Piwik\Plugins\FeinwerkCampaignManager\Link\ValueNormalizer;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformConfig;
 
 /**
  * Checks, saves, changes and archives the saved links of a website. Access is checked by the API before any call.
@@ -75,6 +76,83 @@ class LinkService
     public function findSame(int $idSite, CheckedLink $link): ?array
     {
         return $link->url === null ? null : $this->dao->findByFingerprint($idSite, Fingerprint::of($idSite, $link->url));
+    }
+
+    /**
+     * Keeps a link made in Feinwerk Campaigns in the website's list, so it shows with its numbers and status like the
+     * others: its URL as the platform built it, the values read back from that URL with the workspace's parameter
+     * names, live from now on (the platform made it live), and its id, campaign, short link, QR code and app page. The
+     * same URL saved before gets the platform's details added.
+     *
+     * @param array $link the platform's link object (contract §4)
+     * @param array<string, string> $names the workspace's parameter names per field (convention parameters.names)
+     * @return array{row: array, existed: bool}
+     */
+    public function addFromPlatform(int $idSite, array $link, array $names, string $style, string $note, string $startDate, string $endDate, string $login, string $now): array
+    {
+        $url = (string) ($link['url'] ?? '');
+        $target = (string) ($link['target_url'] ?? '');
+        if (!preg_match('#^https?://#i', $url) || !preg_match('#^https?://#i', $target)) {
+            throw new \InvalidArgumentException('link');
+        }
+        [$startDate, $endDate, $note] = $this->platformExtras($note, $startDate, $endDate);
+        $query = [];
+        parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+        $read = static fn(string $field): string => isset($names[$field], $query[$names[$field]]) && is_string($query[$names[$field]])
+            ? $query[$names[$field]] : '';
+        $values = [
+            Fields::CAMPAIGN => $read('campaign'), Fields::SOURCE => $read('source'), Fields::MEDIUM => $read('medium'),
+            Fields::KEYWORD => $read('term'), Fields::CONTENT => $read('content'),
+            Fields::ID => (string) ($link['tracking_id'] ?? '') ?: $read('id'),
+            Fields::GROUP => '', Fields::PLACEMENT => (string) ($link['placement'] ?? ''),
+        ];
+        $platform = [
+            'platform_link_id' => substr((string) ($link['id'] ?? ''), 0, 40),
+            'platform_campaign_id' => ($link['campaign_id'] ?? null) === null ? null : substr((string) $link['campaign_id'], 0, 40),
+            // stored only as https short links and links into the platform: both end up in a browser's href
+            'short_url' => PlatformConfig::shortLink($link['short_url'] ?? null),
+            'platform_qr' => is_array($link['qr'] ?? null) ? 1 : 0,
+            'platform_app_url' => PlatformConfig::appLink($link['app_url'] ?? null),
+        ];
+        $fingerprint = Fingerprint::of($idSite, $url);
+        $same = $this->dao->findByFingerprint($idSite, $fingerprint);
+        if ($same !== null) {
+            $this->dao->update($idSite, (int) $same['idlink'], $platform + ['updated_by' => $login, 'updated_at' => $now]);
+            return ['row' => $this->get($idSite, (int) $same['idlink']), 'existed' => true];
+        }
+        $row = [
+            'idsite' => $idSite,
+            'fingerprint' => $fingerprint,
+            'target_url' => $target,
+            'url' => $url,
+            'parameter_set' => substr($style !== '' ? $style : 'own', 0, 10),
+            'campaign_id_generated' => 0,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'note' => $note,
+            'created_by' => $login,
+            'created_at' => $now,
+            'updated_by' => $login,
+            'updated_at' => $now,
+            'archived_at' => null,
+            // the platform makes the link live at once (its short link and QR code redirect from now on)
+            'live_at' => $now,
+            'live_since' => $this->today->forSite($idSite),
+            'live_reason' => LinkStatus::REASON_PLATFORM,
+        ] + $platform;
+        foreach (LinkDao::VALUE_COLUMNS as $field => $column) {
+            $row[$column] = mb_substr($values[$field] ?? '', 0, 255, 'UTF-8');
+        }
+        try {
+            $idLink = $this->dao->insert($row);
+        } catch (\Exception $e) {
+            $same = Db::get()->isErrNo($e, '1062') ? $this->dao->findByFingerprint($idSite, $fingerprint) : null;
+            if ($same === null) {
+                throw $e;
+            }
+            return ['row' => $same, 'existed' => true];
+        }
+        return ['row' => $this->get($idSite, $idLink), 'existed' => false];
     }
 
     /**
@@ -308,6 +386,18 @@ class LinkService
     }
 
     /** @return array{0: ?string, 1: ?string} */
+    /**
+     * Note and dates of a platform link, checked before the platform is asked (a link created there is live at once).
+     *
+     * @return array{0: ?string, 1: ?string, 2: ?string} start date, end date, note
+     * @throws InvalidInputException naming the parameter
+     */
+    public function platformExtras(string $note, string $startDate, string $endDate): array
+    {
+        [$startDate, $endDate] = $this->dates($startDate, $endDate);
+        return [$startDate, $endDate, $this->note($note)];
+    }
+
     private function dates(string $start, string $end): array
     {
         $start = trim($start);

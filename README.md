@@ -142,6 +142,23 @@ use, then the most visits) and **New link** with it. **Without a saved link** li
 in the period that no saved link and no campaign details explain, most visits first, with **New link** and
 **Analyse in Matomo**.
 
+### Connection to Feinwerk Campaigns (optional)
+
+A super user connects this Matomo to a workspace of the Feinwerk Campaigns platform under *Administration › Platform ›
+Feinwerk Campaigns*: sign in there (or create an account), choose the workspace, confirm. Connected, the link builder
+gets a second step **Create in Feinwerk Campaigns**: pick or create a campaign of the workspace, add a short link and a
+dynamic QR code, and the link is made in the workspace with its naming convention, live at once and also kept in the
+list of saved links here, with its short link and the QR code as SVG, PNG, PDF or EPS. Each page shows **Open in
+Feinwerk Campaigns**. **Disconnect** on the same admin page ends the connection; saved links and campaign details stay.
+Without a connection the plugin works as described above and contacts nobody. To hide everything about the connection:
+
+```ini
+[FeinwerkCampaignManager]
+platform = 0
+```
+
+In Matomo for WordPress the connection is not available yet.
+
 ### Website option
 
 **Save campaign values in lower case** (on by default; Administration › Websites › Manage, in the website's form):
@@ -168,6 +185,12 @@ Send changes as POST requests.
 | `getQualityIssues` | Spelling variants and campaign values without a saved link for a period | `method=FeinwerkCampaignManager.getQualityIssues&idSite=1&period=month&date=today` |
 | `getSetupChecklist` | What the website still lacks for campaign work (required steps and the recommended Marketing Campaigns Reporting) | `method=FeinwerkCampaignManager.getSetupChecklist&idSite=1` |
 | `getConnectionStatus` | Whether this Matomo is connected to the Feinwerk Campaigns platform and which platform features work | `method=FeinwerkCampaignManager.getConnectionStatus` |
+| `disconnectPlatform` | Ends the connection to Feinwerk Campaigns (super users); saved links and their short links stay | `method=FeinwerkCampaignManager.disconnectPlatform` |
+| `getPlatformConvention` | The workspace website this Matomo site belongs to and its naming convention (connected, write access) | `method=FeinwerkCampaignManager.getPlatformConvention&idSite=1` |
+| `getPlatformCampaigns` | The workspace campaigns of this site's website, with search (connected, write access) | `method=FeinwerkCampaignManager.getPlatformCampaigns&idSite=1&query=autumn&limit=20` |
+| `addPlatformCampaign` | Creates a campaign draft in the workspace, or returns the existing one (connected, write access) | `method=FeinwerkCampaignManager.addPlatformCampaign&idSite=1&name=Autumn%20sale&startDate=2026-10-01` |
+| `previewPlatformLink` | Builds and checks a link with the workspace's convention without creating it (connected, write access) | `method=FeinwerkCampaignManager.previewPlatformLink&idSite=1&targetUrl=https%3A%2F%2Fexample.com%2F&platformCampaignId=CAMP1&source=newsletter&medium=email&shortLink=1` |
+| `addPlatformLink` | Creates the link in the workspace, live at once, with a short link and QR code when asked, and keeps it in the saved links (connected, write access) | `method=FeinwerkCampaignManager.addPlatformLink&idSite=1&targetUrl=https%3A%2F%2Fexample.com%2F&platformCampaignId=CAMP1&source=newsletter&medium=email&shortLink=1&dynamicQr=1` |
 | `getParameterSets` | The parameter names a link can use here and which ones Matomo stores | `method=FeinwerkCampaignManager.getParameterSets&idSite=1` |
 | `getTemplates` | The channel templates of the builder | `method=FeinwerkCampaignManager.getTemplates&idSite=1` |
 | `previewLink` | Builds and checks a link without saving it | `method=FeinwerkCampaignManager.previewLink&idSite=1&targetUrl=https%3A%2F%2Fexample.com%2F&campaign=autumn-sale&source=newsletter&medium=email` |
@@ -186,8 +209,17 @@ and read back with `getParameterSets` (`lowercaseValues`).
 
 ## Your data
 
-Saved links and campaign details stay in your Matomo database (tables `fw_campaigns_link` and `fw_campaigns_campaign`). Nothing goes to the Feinwerk Campaigns platform.
-The only thing that leaves your Matomo is a feedback vote when someone clicks a thumb (next section).
+Saved links and campaign details stay in your Matomo database (tables `fw_campaigns_link` and `fw_campaigns_campaign`).
+Without a connection to Feinwerk Campaigns, the only thing that leaves your Matomo is a feedback vote when someone clicks
+a thumb (next section).
+
+When a super user connects, their browser sends the Feinwerk Campaigns platform the address of this Matomo, a return
+address, a check value and, to prefill sign-in or sign-up, their e-mail address and the websites of this Matomo (id,
+name and addresses). After the confirmation your Matomo server keeps the connection's access key (in Matomo's options
+table, never in the browser) and calls the platform with it only: for the connection's status, the workspace's websites,
+naming convention and campaigns, to create campaigns and links with short links and QR codes, and to download QR codes.
+No visitor data and no Matomo access token go to the platform. What the platform keeps is described in its privacy
+policy (section on the Matomo plugin).
 
 ## Feedback and support
 

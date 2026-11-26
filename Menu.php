@@ -10,16 +10,35 @@
 namespace Piwik\Plugins\FeinwerkCampaignManager;
 
 use Piwik\Menu\MenuAdmin;
+use Piwik\Piwik;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformConfig;
 use Piwik\Plugins\FeinwerkCampaignManager\ConnectorInstaller\ConnectorInstaller;
 
 /**
- * Only the Feinwerk kit's Connector installer entry; the plugin's pages are report pages (Categories/).
+ * The admin entries: the connection to Feinwerk Campaigns and the Feinwerk kit's Connector installer; the plugin's
+ * campaign pages are report pages (Categories/).
  */
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureAdminMenu(MenuAdmin $menu)
     {
         $this->addConnectorInstaller($menu);
+        $this->addPlatform($menu);
+    }
+
+    /**
+     * Administration > Platform > Feinwerk Campaigns: the connection, for super users (Peter's decision 1 of 2026-11-23:
+     * product, not promotion; platform = 0 hides it).
+     */
+    private function addPlatform(MenuAdmin $menu): void
+    {
+        try {
+            if (Piwik::hasUserSuperUserAccess() && PlatformConfig::enabled()) {
+                $menu->addPlatformItem('FeinwerkCampaignManager_PlatformMenu', $this->urlForAction('platform'), 40);
+            }
+        } catch (\Throwable $e) {
+            // never breaks Matomo's menu
+        }
     }
 
     /**

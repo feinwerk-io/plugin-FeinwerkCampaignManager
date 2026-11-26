@@ -12,6 +12,7 @@ namespace Piwik\Plugins\FeinwerkCampaignManager\Model;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\FeinwerkCampaignManager\Dao\LinkDao;
 use Piwik\Plugins\FeinwerkCampaignManager\Link\LinkStatus;
+use Piwik\Plugins\FeinwerkCampaignManager\Platform\PlatformConfig;
 
 /**
  * The API shape of a saved link: raw values, ISO 8601 UTC times, stable keys.
@@ -23,7 +24,10 @@ class LinkPresenter
      *               values: array<string, string>, campaignIdGenerated: bool, startDate: ?string, endDate: ?string,
      *               note: ?string, archived: bool, status: string, liveAt: ?string, liveSince: ?string,
      *               liveReason: ?string, createdBy: string,
-     *               createdAt: string, updatedBy: string, updatedAt: string, archivedAt: ?string}
+     *               createdAt: string, updatedBy: string, updatedAt: string, archivedAt: ?string,
+     *               platform: ?array{id: string, campaignId: ?string, shortUrl: ?string, qr: bool, qrUrl: ?string,
+     *               appUrl: ?string}}
+     *         platform: the link in Feinwerk Campaigns (connected mode), null for links made here
      */
     public static function link(array $row, ?string $today = null): array
     {
@@ -54,6 +58,20 @@ class LinkPresenter
             'updatedBy' => (string) $row['updated_by'],
             'updatedAt' => self::time($row['updated_at']),
             'archivedAt' => $row['archived_at'] === null ? null : self::time($row['archived_at']),
+            // platform = 0 hides everything about the platform (Peter's decision 1 of 2026-11-23)
+            'platform' => empty($row['platform_link_id']) || !self::platformShown() ? null : [
+                'id' => (string) $row['platform_link_id'],
+                'campaignId' => ($row['platform_campaign_id'] ?? null) === null ? null : (string) $row['platform_campaign_id'],
+                // a short link keeps redirecting while the workspace has it, connected or not
+                'shortUrl' => PlatformConfig::shortLink($row['short_url'] ?? null),
+                'qr' => !empty($row['platform_qr']),
+                // the QR code downloads through this Matomo with the connection's token (never in the browser), so only
+                // while the connection works
+                'qrUrl' => empty($row['platform_qr']) || !self::platformWorks() ? null
+                    : 'index.php?module=FeinwerkCampaignManager&action=platformQr&idSite=' . (int) $row['idsite']
+                    . '&idLink=' . (int) $row['idlink'],
+                'appUrl' => PlatformConfig::appLink($row['platform_app_url'] ?? null),
+            ],
         ];
     }
 
@@ -80,5 +98,37 @@ class LinkPresenter
     private static function time($datetime): string
     {
         return str_replace(' ', 'T', (string) $datetime) . 'Z';
+    }
+
+    /** @var bool|null per request: whether the connection works now (a local read, Connection::isConnected) */
+    private static ?bool $works = null;
+
+    /** @var bool|null per request: whether the platform is switched on (config, read once for a whole list) */
+    private static ?bool $shown = null;
+
+    private static function platformShown(): bool
+    {
+        if (PlatformConfig::$enabledOverride !== null) {
+            return PlatformConfig::$enabledOverride;
+        }
+        if (self::$shown === null) {
+            self::$shown = PlatformConfig::enabled();
+        }
+        return self::$shown;
+    }
+
+    private static function platformWorks(): bool
+    {
+        if (self::$works === null) {
+            self::$works = \Piwik\Plugins\FeinwerkCampaignManager\Platform\Connection::isConnected();
+        }
+        return self::$works;
+    }
+
+    /** for tests and after connecting or disconnecting in the same request */
+    public static function forgetPlatformState(): void
+    {
+        self::$works = null;
+        self::$shown = null;
     }
 }

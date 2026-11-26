@@ -1,0 +1,30 @@
+{# The connect start (Controller::connectStart, contract §1.1): a form that sends the connect request to Feinwerk
+   Campaigns by POST, so no e-mail address lands in a URL, log or referrer. It submits itself; the button stays for
+   browsers without JavaScript. Matomo's page CSP has no form-action rule (checked at 5.0 and 6.0). #}
+{% extends 'admin.twig' %}
+
+{% set title %}{{ 'FeinwerkCampaignManager_PlatformTitle'|translate }}{% endset %}
+
+{% block content %}
+<div class="card">
+    <div class="card-content">
+        <h2 class="card-title">{{ title }}</h2>
+        <p>{{ 'FeinwerkCampaignManager_PlatformRedirecting'|translate }}</p>
+        <form id="fwcmp-connect-form" method="post" action="{{ connectForm.action|e('html_attr') }}">
+            {% for field in connectForm.fields %}
+                <input type="hidden" name="{{ field[0]|e('html_attr') }}" value="{{ field[1]|e('html_attr') }}">
+            {% endfor %}
+            <button type="submit" class="btn">{{ 'FeinwerkCampaignManager_PlatformContinue'|translate }}</button>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    (function () {
+        var form = document.getElementById('fwcmp-connect-form');
+        if (form && !form.getAttribute('data-sent')) {
+            form.setAttribute('data-sent', '1');
+            form.submit();
+        }
+    })();
+</script>
+{% endblock %}

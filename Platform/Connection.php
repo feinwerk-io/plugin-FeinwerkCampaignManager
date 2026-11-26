@@ -15,13 +15,24 @@ namespace Piwik\Plugins\FeinwerkCampaignManager\Platform;
  * connected, connected), always through class_exists() and inside catch (\Throwable). Stable name and signature;
  * announce any change to the plugin sessions and PluginLead first.
  *
- * The standalone version has no connection, so the answer is false until the connected mode ships.
+ * isConnected() is a local read of the stored connection (Store, PlatformService): never an HTTP call, never an
+ * exception. True while a connection exists whose last known platform state lets it work (trial, active, or not asked
+ * yet); false without one, with platform = 0, and for an expired trial, a revoked token or a blocked organisation,
+ * where the plugin falls back to its standalone mode.
  */
 final class Connection
 {
     public static function isConnected(): bool
     {
-        return false;
+        try {
+            if (!PlatformConfig::enabled()) {
+                return false;
+            }
+            $connection = (new Store())->connection();
+            return $connection !== null && $connection->works();
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**
