@@ -173,7 +173,7 @@ Send changes as POST requests.
 
 | Method | What it does | Example |
 |---|---|---|
-| `getCampaigns` | The campaigns by phase with numbers for a period, goal progress and warnings | `method=FeinwerkCampaignManager.getCampaigns&idSite=1&period=month&date=today` |
+| `getCampaigns` | The campaigns by phase with numbers for a period, goal progress and warnings; while connected also the campaigns of the Feinwerk Campaigns workspace for this website | `method=FeinwerkCampaignManager.getCampaigns&idSite=1&period=month&date=today` |
 | `getCampaign` | One campaign as getCampaigns lists it | `method=FeinwerkCampaignManager.getCampaign&idSite=1&campaign=autumn-sale&period=month&date=today` |
 | `addCampaign` | Saves details for a campaign value, or returns the saved ones | `method=FeinwerkCampaignManager.addCampaign&idSite=1&campaign=autumn-sale&name=Autumn%20sale&startDate=2026-10-01&goalMetric=visits&goalTarget=5000` |
 | `updateCampaign` | Changes the given details; an empty value clears one | `method=FeinwerkCampaignManager.updateCampaign&idSite=1&campaign=autumn-sale&endDate=2026-10-31` |

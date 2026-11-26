@@ -184,4 +184,42 @@ class OverviewTest extends TestCase
 
         $this->assertSame(['herbst' => self::n(5, 1, 10.0, [1 => ['conversions' => 1, 'revenue' => 10.0]])], $numbers->all());
     }
+
+    /** while connected the workspace campaigns of the site's website join the overview (Peter, 2026-11-26: "Q2 ja") */
+    public function test_build_takesTheWorkspaceCampaigns(): void
+    {
+        $ws = static fn(string $name, string $status, ?string $start = null, ?string $end = null): array => [
+            'id' => 'C' . $name, 'name' => $name, 'status' => $status, 'startsOn' => $start, 'endsOn' => $end,
+            'appUrl' => 'https://app.campaigns.feinwerk.io/w/W1/c/C' . $name,
+        ];
+        $workspace = [
+            'herbst' => $ws('Herbst 2026', 'live', '2026-11-01'),
+            'winter' => $ws('Winter', 'draft'),
+            'sommer' => $ws('Sommer', 'ended'),
+            'fruehling' => $ws('Frühling', 'ready', '2026-12-01', '2026-12-31'),
+            'lokal' => $ws('Name im Arbeitsbereich', 'live', '2026-10-01'),
+        ];
+        $details = ['lokal' => self::details(['name' => 'Eigener Name', 'goalMetric' => 'visits', 'goalTarget' => 10.0])];
+        $daily = ['2026-11-15' => ['lokal' => self::n(4)]];
+        $rows = Overview::build($details, [], ['herbst' => self::n(12)], $daily, self::TODAY, 'active', [], $workspace);
+        $byKey = array_column($rows, null, 'campaign');
+
+        $this->assertSame(['workspace', 'workspace', 'workspace', 'workspace', 'details'], array_map(static fn($k) => $byKey[$k]['source'], ['herbst', 'winter', 'sommer', 'fruehling', 'lokal']));
+        $this->assertSame([Phase::RUNNING, Phase::PREPARING, Phase::ENDED, Phase::PREPARING], array_map(static fn($k) => $byKey[$k]['phase'], ['herbst', 'winter', 'sommer', 'fruehling']), 'dates first, else the status');
+        $this->assertSame(['Herbst 2026', '2026-11-01', 12], [$byKey['herbst']['name'], $byKey['herbst']['startDate'], $byKey['herbst']['period']['visits']]);
+        $this->assertFalse($byKey['herbst']['hasDetails'], 'no local details yet');
+        $this->assertNull($byKey['herbst']['goal']);
+        $this->assertSame(['CWinter', 'draft'], [$byKey['winter']['platform']['id'], $byKey['winter']['platform']['status']]);
+        $this->assertStringStartsWith('https://app.campaigns.feinwerk.io/', $byKey['winter']['platform']['appUrl']);
+
+        // local details win; their missing start comes from the workspace, so the goal counts from it
+        $this->assertSame(['Eigener Name', '2026-10-01', Phase::RUNNING], [$byKey['lokal']['name'], $byKey['lokal']['startDate'], $byKey['lokal']['phase']]);
+        $this->assertTrue($byKey['lokal']['hasDetails']);
+        $this->assertSame(4.0, $byKey['lokal']['goal']['value']);
+        $this->assertSame('Name im Arbeitsbereich', $byKey['lokal']['platform']['name']);
+
+        // without the workspace nothing of it remains
+        $this->assertSame(['lokal'], array_column(Overview::build($details, [], [], $daily, self::TODAY, 'active'), 'campaign'));
+        $this->assertNull(Overview::build($details, [], [], $daily, self::TODAY, 'active')[0]['platform']);
+    }
 }

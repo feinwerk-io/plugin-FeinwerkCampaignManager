@@ -10,9 +10,10 @@
 namespace Piwik\Plugins\FeinwerkCampaignManager\Campaign;
 
 /**
- * The campaign overview: every campaign with details, with active saved links, or with visits in the selected period
- * (those only up to REPORT_ONLY_MAX), with its phase, numbers, goal progress and warnings. Pure: the caller reads the
- * details, the links and Matomo's archived reports and passes "today" in.
+ * The campaign overview: every campaign with details, of the connected workspace's website, with active saved links, or
+ * with visits in the selected period (those only up to REPORT_ONLY_MAX), with its phase, numbers, goal progress and
+ * warnings. Pure: the caller reads the details, the workspace campaigns, the links and Matomo's archived reports and
+ * passes "today" in.
  */
 final class Overview
 {
@@ -24,6 +25,12 @@ final class Overview
     /** a running campaign without a visit this many days after its start gets the warning */
     public const QUIET_DAYS = 2;
     public const STATUSES = ['active', 'archived', 'all'];
+
+    /** the phase of a workspace campaign without dates, by its status in Feinwerk Campaigns */
+    private const WORKSPACE_PHASES = [
+        'draft' => Phase::PREPARING, 'preparing' => Phase::PREPARING, 'ready' => Phase::PREPARING,
+        'live' => Phase::RUNNING, 'paused' => Phase::RUNNING, 'ended' => Phase::ENDED,
+    ];
 
     /**
      * The days to read from Matomo: the last RECENT_DAYS, widened to the earliest start of a non-archived campaign that
@@ -52,9 +59,13 @@ final class Overview
      * @param array<string, array<string, array>> $daily YYYY-MM-DD => key => numbers, for the days of window()
      * @param string $status active, archived or all
      * @param array<string, array{draft: int, live: int, ended: int}> $linkStates key => active saved links per status
+     * @param array<string, array{id: string, name: string, status: string, startsOn: ?string, endsOn: ?string, appUrl: ?string}> $workspace
+     *        key => the campaign of the connected workspace's website with that campaign value (Peter, 2026-11-26: "Q2 ja");
+     *        its name and dates stand in where the details have none, its status gives the phase of a campaign without
+     *        dates and details
      * @return list<array> see API::getCampaigns
      */
-    public static function build(array $details, array $links, array $period, array $daily, string $today, string $status, array $linkStates = []): array
+    public static function build(array $details, array $links, array $period, array $daily, string $today, string $status, array $linkStates = [], array $workspace = []): array
     {
         [$from] = self::window($details, $today);
         $recentFrom = self::addDays($today, -(self::RECENT_DAYS - 1));
@@ -62,6 +73,11 @@ final class Overview
         $keys = [];
         foreach ($details as $key => $d) {
             $keys[(string) $key] = 'details';
+        }
+        foreach ($workspace as $key => $w) {
+            if (!isset($keys[(string) $key])) {
+                $keys[(string) $key] = 'workspace';
+            }
         }
         foreach ($links as $key => $count) {
             if ($count > 0 && !isset($keys[(string) $key])) {
@@ -82,13 +98,18 @@ final class Overview
         $rows = [];
         foreach ($keys as $key => $source) {
             $key = (string) $key;
-            $d = $details[$key] ?? null;
+            $local = $details[$key] ?? null;
+            $w = $workspace[$key] ?? null;
+            $d = self::withWorkspace($local, $w);
             $archived = $d !== null && !empty($d['archived']);
             if (($status === 'active' && $archived) || ($status === 'archived' && !$archived)) {
                 continue;
             }
             $recentVisits = self::sum($daily, $key, $recentFrom, $today, 'visits', null);
-            $phase = Phase::of($d, $today, $recentVisits, (int) ($links[$key] ?? 0));
+            $phase = $local === null && $w !== null && $d['startDate'] === null && $d['endDate'] === null
+                && isset(self::WORKSPACE_PHASES[$w['status']])
+                ? self::WORKSPACE_PHASES[$w['status']]
+                : Phase::of($d, $today, $recentVisits, (int) ($links[$key] ?? 0));
             $p = $period[$key] ?? ['visits' => 0, 'conversions' => 0, 'revenue' => 0.0];
 
             $warnings = [];
@@ -104,7 +125,7 @@ final class Overview
                 'name' => $d['name'] ?? null,
                 'phase' => $phase,
                 'source' => $source,
-                'hasDetails' => $d !== null,
+                'hasDetails' => $local !== null,
                 'activeLinks' => (int) ($links[$key] ?? 0),
                 'linkStates' => $linkStates[$key] ?? ['draft' => 0, 'live' => 0, 'ended' => 0],
                 'startDate' => $start,
@@ -112,8 +133,9 @@ final class Overview
                 'notes' => $d['notes'] ?? null,
                 'period' => ['visits' => (int) $p['visits'], 'conversions' => (int) $p['conversions'], 'revenue' => round((float) $p['revenue'], 2)],
                 'recentVisits' => $recentVisits,
-                'goal' => $d !== null ? self::goal($d, $daily, $key, $from, $today) : null,
+                'goal' => $local !== null ? self::goal($d, $daily, $key, $from, $today) : null,
                 'warnings' => $warnings,
+                'platform' => $w === null ? null : ['id' => $w['id'], 'name' => $w['name'], 'status' => $w['status'], 'appUrl' => $w['appUrl']],
             ];
         }
 
@@ -123,6 +145,24 @@ final class Overview
                 <=> [array_search($b['phase'], Phase::ORDER, true), $b['source'] === 'report' ? 1 : 0, -$b['period']['visits'], -$b['recentVisits'], $b['campaign']];
         });
         return $rows;
+    }
+
+    /**
+     * The details a row works with: the local ones, their missing name and dates taken from the workspace campaign; a
+     * workspace campaign without local details stands alone (never archived: the platform lists no archived ones).
+     */
+    private static function withWorkspace(?array $local, ?array $w): ?array
+    {
+        if ($w === null) {
+            return $local;
+        }
+        if ($local === null) {
+            return ['name' => $w['name'] !== '' ? $w['name'] : null, 'startDate' => $w['startsOn'], 'endDate' => $w['endsOn'], 'archived' => false];
+        }
+        $local['name'] = ($local['name'] ?? null) ?: ($w['name'] !== '' ? $w['name'] : null);
+        $local['startDate'] = $local['startDate'] ?? $w['startsOn'];
+        $local['endDate'] = $local['endDate'] ?? $w['endsOn'];
+        return $local;
     }
 
     /** goal progress from the start (or the window's first day) to the end or today; null without a goal or start */

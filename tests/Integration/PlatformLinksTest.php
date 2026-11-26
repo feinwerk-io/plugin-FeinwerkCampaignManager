@@ -359,6 +359,82 @@ class PlatformLinksTest extends IntegrationTestCase
         $this->assertSame(1, API::getInstance()->getLinks(1)['total']);
     }
 
+    /** while connected the overview shows the workspace campaigns of the site's website (Peter, 2026-11-26: "Q2 ja") */
+    public function test_theOverviewShowsTheWorkspaceCampaigns(): void
+    {
+        self::$platform->answer(200, self::WEBSITES);
+        self::$platform->answer(200, ['data' => [
+            ['id' => 'CAMP1', 'name' => 'Herbst', 'parameter' => '2026_herbst', 'status' => 'draft', 'website_ids' => ['WEB1'],
+                'app_url' => PlatformConfig::DEFAULT_URL . '/w/W1/c/CAMP1'],
+            ['id' => 'CAMP2', 'name' => 'Sommer Sale', 'parameter' => 'Sommer_Sale', 'status' => 'live', 'website_ids' => ['WEB1'],
+                'starts_on' => '2026-06-01', 'ends_on' => '2026-06-30', 'app_url' => 'javascript:alert(1)'],
+        ], 'next_cursor' => null]);
+        $rows = array_column(API::getInstance()->getCampaigns(1, 'day', '2026-11-20'), null, 'campaign');
+        $this->assertSame(['workspace', 'preparing', 'Herbst', false], [$rows['2026_herbst']['source'], $rows['2026_herbst']['phase'],
+            $rows['2026_herbst']['name'], $rows['2026_herbst']['hasDetails']]);
+        $this->assertSame(['CAMP1', 'draft', PlatformConfig::DEFAULT_URL . '/w/W1/c/CAMP1'], [$rows['2026_herbst']['platform']['id'],
+            $rows['2026_herbst']['platform']['status'], $rows['2026_herbst']['platform']['appUrl']]);
+        $this->assertSame(['ended', '2026-06-01', null], [$rows['sommer_sale']['phase'], $rows['sommer_sale']['startDate'],
+            $rows['sommer_sale']['platform']['appUrl']], 'keyed like the details, dates first, only links into the platform');
+        $this->assertStringContainsString('website_id=WEB1', self::$platform->calls[1][1]);
+
+        $calls = count(self::$platform->calls);
+        API::getInstance()->getCampaigns(1, 'month', '2026-11-20');
+        $this->assertSame('CAMP1', API::getInstance()->getCampaign(1, '2026_HERBST', 'day', '2026-11-20')['platform']['id']);
+        $this->assertCount($calls, self::$platform->calls, 'cached: page views add no platform calls');
+
+        // another site of this Matomo that maps to no website: no workspace campaigns
+        $this->assertSame([], array_filter(API::getInstance()->getCampaigns(3, 'day', '2026-11-20'), static fn($r) => $r['platform'] !== null));
+    }
+
+    /** "Neue Kampagne" while connected: created in the workspace, details here under its value (Peter, 2026-11-26) */
+    public function test_aNewCampaignGoesToTheWorkspaceAndKeepsItsDetailsHere(): void
+    {
+        $campaign = ['id' => 'CAMP7', 'name' => 'Herbst', 'parameter' => '2026_herbst', 'status' => 'draft', 'website_ids' => ['WEB1'],
+            'starts_on' => '2026-10-01', 'ends_on' => null, 'app_url' => PlatformConfig::DEFAULT_URL . '/w/W1/c/CAMP7'];
+        self::$platform->answer(200, self::WEBSITES);
+        self::$platform->answer(200, ['data' => [], 'next_cursor' => null]);
+        $this->assertSame([], API::getInstance()->getCampaigns(1, 'day', '2026-11-20'), 'the empty workspace list is cached now');
+
+        self::$platform->answer(201, ['campaign' => $campaign, 'existed' => false]);
+        $created = API::getInstance()->addPlatformCampaign(1, 'Herbst', '', '2026-10-01');
+        $details = API::getInstance()->addCampaign(1, $created['campaign']['parameter'], '', '', '', 'visits', 500, '', 'Nur hier');
+        $this->assertFalse($details['existed']);
+
+        self::$platform->answer(200, ['data' => [$campaign], 'next_cursor' => null]);
+        $row = API::getInstance()->getCampaign(1, '2026_herbst', 'day', '2026-11-20');
+        $this->assertSame(['details', true, 'Herbst', '2026-10-01', 'CAMP7', 'Nur hier'], [$row['source'], $row['hasDetails'], $row['name'],
+            $row['startDate'], $row['platform']['id'], $row['notes']], 'creating cleared the cached list; name and start from the workspace');
+    }
+
+    public function test_theAnonymousUserGetsNoWorkspaceCampaigns(): void
+    {
+        FakeAccess::$superUser = false;
+        FakeAccess::$idSitesView = [1];
+        FakeAccess::$identity = 'anonymous';
+        try {
+            $this->assertSame([], API::getInstance()->getCampaigns(1, 'day', '2026-11-20'));
+            $this->assertSame([], self::$platform->calls, 'no platform call for a public page view');
+        } finally {
+            FakeAccess::$identity = 'superUserLogin';
+        }
+    }
+
+    public function test_standaloneOrFailingTheOverviewStaysLocal(): void
+    {
+        Option::delete(Store::CONNECTION);
+        $this->assertSame([], API::getInstance()->getCampaigns(1, 'day', '2026-11-20'));
+        $this->assertSame([], self::$platform->calls, 'standalone: no call');
+
+        (new Store())->saveConnection(new ConnectionState('fwcp_secret', 'W1', 'Online', 'C1', 'https://matomo.example.com',
+            'superUserLogin', '2026-11-25 10:00:00', 'active', '2026-11-25 10:00:00'));
+        self::$platform->answer(0, null);
+        $this->assertSame([], API::getInstance()->getCampaigns(1, 'day', '2026-11-20'), 'unreachable: the local overview');
+        $calls = count(self::$platform->calls);
+        API::getInstance()->getCampaigns(1, 'day', '2026-11-20');
+        $this->assertCount($calls, self::$platform->calls, 'a failure is remembered, the page does not wait again');
+    }
+
     public function test_theUpdateAddsOnlyMissingColumns(): void
     {
         // update files are not autoloaded: Matomo includes them by file name

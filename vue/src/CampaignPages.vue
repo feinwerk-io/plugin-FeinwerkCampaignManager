@@ -38,12 +38,24 @@
             <tbody>
               <tr v-for="row in rows" :key="row.campaign">
                 <td class="fwcmp-table__main" :data-label="tr('FieldCampaign')">
-                  <a
-                    :href="pageUrl(row.campaign)"
-                    class="fwcmp-table__campaign"
-                    :aria-label="tr('OpenCampaign', label(row))"
-                  >{{ label(row) }}</a>
-                  <code v-if="row.name" class="fwcmp-card__value">{{ row.campaign }}</code>
+                  <!-- one block, so the stacked rows at phone width keep it together -->
+                  <span class="fwcmp-table__mainvalue">
+                    <a
+                      :href="pageUrl(row.campaign)"
+                      class="fwcmp-table__campaign"
+                      :aria-label="tr('OpenCampaign', label(row))"
+                    >{{ label(row) }}</a>
+                    <code v-if="row.name" class="fwcmp-card__value">{{ row.campaign }}</code>
+                    <a
+                      v-if="row.platform && row.platform.appUrl"
+                      class="fwcmp-applink"
+                      :href="row.platform.appUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      :title="tr('PlatformOpenCampaignTooltip')"
+                      :aria-label="tr('PlatformOpenCampaignOf', label(row))"
+                    >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
+                  </span>
                 </td>
                 <td :data-label="tr('LinkStatusHead')">{{ tr(`CampaignPhase_${row.phase}`) }}</td>
                 <td :data-label="tr('CampaignPeriod')">{{ tablePeriodText(row) }}</td>

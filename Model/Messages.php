@@ -207,7 +207,8 @@ class Messages
             foreach ($e->fields as $field => $messages) {
                 $text .= ' ' . $field . ': ' . implode(' ', $messages);
             }
-            return new \Piwik\Plugins\FeinwerkCampaignManager\Http\PlatformException($reason, Piwik::translate('FeinwerkCampaignManager_ApiErrorPlatform', [$reason, trim($text)]), $e->status >= 400 && $e->status < 500 ? 400 : 502);
+            // the code word leads here too (validation: ...), so the pages can react to it like to the others
+            return new \Piwik\Plugins\FeinwerkCampaignManager\Http\PlatformException($reason, $reason . ': ' . Piwik::translate('FeinwerkCampaignManager_ApiErrorPlatform', [$reason, trim($text)]), $e->status >= 400 && $e->status < 500 ? 400 : 502);
         }
         $message = match ($reason) {
             'no_website' => Piwik::translate($key, [$workspace]),

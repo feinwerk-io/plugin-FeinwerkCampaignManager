@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.2.0
+
+- Connected to Feinwerk Campaigns, the overview and All campaigns also show the campaigns of the workspace for this
+  website, with their name, dates and phase, and open them in Feinwerk Campaigns. Your own campaign details stay in
+  this Matomo and take precedence.
+- Connected, "New campaign" also creates the campaign in the workspace; goal and note stay in this Matomo. The
+  campaign value may stay empty there: Feinwerk Campaigns forms it from the name, following the naming convention.
+- The link builder offers the connection only under the link type, no longer also in the line above the page.
+
 ## 5.1.0
 
 - Connection to Feinwerk Campaigns (optional): a super user connects this Matomo to a workspace under Administration,

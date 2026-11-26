@@ -329,6 +329,33 @@ class PlatformService
         return $this->cached($connection, 'convention_' . $lang, 600, fn() => $this->client->convention($connection->token, $lang));
     }
 
+    /** seconds the overview keeps a website's workspace campaigns */
+    public const WORKSPACE_CAMPAIGNS_TTL = 300;
+
+    /**
+     * The workspace campaigns of the website this Matomo site belongs to, for the overview and All campaigns (Peter,
+     * 2026-11-26: "Q2 ja"): cached WORKSPACE_CAMPAIGNS_TTL seconds per website, so page views do not add platform calls;
+     * [] when the site maps to no website.
+     *
+     * @param list<string> $siteUrls the site's addresses (main URL and aliases)
+     * @return list<array<string, mixed>> rows of GET /campaigns
+     * @throws PlatformError when the connection does not work or the platform does not answer
+     */
+    public function campaignsForSite(int $idSite, array $siteUrls, string $lang): array
+    {
+        $website = $this->website($idSite, $siteUrls, $lang);
+        if ($website === null) {
+            return [];
+        }
+        $connection = $this->working();
+        return $this->cached(
+            $connection,
+            'wscampaigns_' . $website['id'],
+            self::WORKSPACE_CAMPAIGNS_TTL,
+            fn() => $this->campaignsOfWebsite($lang, '', $website['id'], 100)
+        );
+    }
+
     /** pages of 100 the campaign picker reads at most */
     public const CAMPAIGN_PAGES = 5;
 
@@ -376,6 +403,8 @@ class PlatformService
             'website_ids' => [$websiteId],
         ];
         $answer = $this->guarded($connection, fn() => $this->client->createCampaign($connection->token, $lang, $body, self::idempotencyKey('campaign', $body)));
+        // the overview shows the new campaign at once
+        Cache::getLazyCache()->delete('FeinwerkCampaignManager_wscampaigns_' . $websiteId . '_' . substr(sha1($connection->token), 0, 16));
         return ['campaign' => is_array($answer['campaign'] ?? null) ? $answer['campaign'] : [], 'existed' => !empty($answer['existed'])];
     }
 

@@ -6,9 +6,10 @@
 
   The small connection status above each Campaigns page (Peter's decision 1 of 2026-11-23):
   connected, "In Feinwerk Campaigns öffnen" for everyone; not connected, the status and
-  "Verbinden" for super users only (others see nothing); platform = 0 or a failed read:
-  nothing. Reads FeinwerkCampaignManager.getConnectionStatus, which makes no outbound call
-  while not connected.
+  "Verbinden" for super users only (others see nothing), except on the link builder, which offers
+  it under the link type (hide-connect; Peter, 2026-11-26: "Q1 nur unter der Link-Art");
+  platform = 0 or a failed read: nothing. Reads FeinwerkCampaignManager.getConnectionStatus,
+  which makes no outbound call while not connected.
 -->
 <template>
   <div v-if="visible" class="fwcmp-platformstatus">
@@ -48,6 +49,10 @@ interface State {
 }
 
 export default defineComponent({
+  props: {
+    /** not connected: show nothing here, the page offers Connect in its own place */
+    hideConnect: { type: Boolean, default: false },
+  },
   data(): State {
     return { status: null };
   },
@@ -70,7 +75,7 @@ export default defineComponent({
       if (s.mode === 'connected') {
         return s.connected ? !!s.links.app : !!s.connectUrl;
       }
-      return s.mode === 'standalone' && s.canConnect && !!s.connectUrl;
+      return s.mode === 'standalone' && s.canConnect && !!s.connectUrl && !this.hideConnect;
     },
   },
   methods: {

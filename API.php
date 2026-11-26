@@ -844,14 +844,21 @@ class API extends \Piwik\Plugin\API
      *               endDate: ?string, notes: ?string,
      *               period: array{visits: int, conversions: int, revenue: float}, recentVisits: int,
      *               goal: ?array{metric: string, target: float, idGoal: ?int, value: float, progress: ?float, from: string,
-     *               to: string, complete: bool}, warnings: string[]}>
+     *               to: string, complete: bool}, warnings: string[], platform: ?array{id: string, name: string,
+     *               status: string, appUrl: ?string}}>
      *         campaign: the campaign value (lower case, the key); phase: preparing (start in the future, or saved links
      *         without visits yet), running (started and not ended, or visits in the last 30 days), ended, archived;
-     *         source: details, links or report (only counted by Matomo); linkStates: its active saved links per status
-     *         (see getLink); period: numbers of the requested period;
+     *         source: details, workspace (a campaign of the connected Feinwerk Campaigns workspace's website), links or
+     *         report (only counted by Matomo); hasDetails: whether this Matomo keeps details for it; linkStates: its
+     *         active saved links per status (see getLink); period: numbers of the requested period;
      *         recentVisits: visits of the last 30 days; goal: progress from the start (at most the last 92 days, complete
      *         false when the start lies before) to the end or today; warnings: no_visits_since_start (running, started
-     *         at least 2 days ago, no visit since). Sorted: running, preparing, ended, archived, then by visits.
+     *         at least 2 days ago, no visit since); platform: while connected, the workspace campaign with this campaign
+     *         value (its id for addPlatformLink, its name, its status in Feinwerk Campaigns: draft, preparing, ready,
+     *         live, paused or ended, and appUrl to open it there), else null. A workspace campaign without details takes
+     *         its name and dates from the workspace and, without dates, its phase from that status. The workspace list
+     *         is read at most every 5 minutes; standalone there is no call. Sorted: running, preparing, ended,
+     *         archived, then by visits.
      */
     public function getCampaigns($idSite = null, string $period = '', string $date = '', string $segment = '', string $status = 'active'): array
     {
@@ -932,8 +939,8 @@ class API extends \Piwik\Plugin\API
      * @param string $period see getCampaigns (required)
      * @param string $date see getCampaigns (required)
      * @param string $segment see getCampaigns
-     * @return array one row of getCampaigns; HTTP 404 when the value has no details, no active saved link and no visits
-     *               in the period
+     * @return array one row of getCampaigns; HTTP 404 when the value has no details, no workspace campaign (while
+     *               connected), no active saved link and no visits in the period
      */
     public function getCampaign($idSite = null, string $campaign = '', string $period = '', string $date = '', string $segment = ''): array
     {
@@ -947,7 +954,9 @@ class API extends \Piwik\Plugin\API
 
     /**
      * Saves details for a campaign value: a display name, the period it runs, a goal and notes. A campaign value that
-     * has details already returns them (existed: true) instead of a second copy.
+     * has details already returns them (existed: true) instead of a second copy. Details stay in this Matomo; to also
+     * have the campaign in the connected Feinwerk Campaigns workspace (as the overview's "New campaign" does while
+     * connected), call addPlatformCampaign first and pass the parameter it answers as campaign here.
      *
      * @param int $idSite website id (required)
      * @param string $campaign the campaign value as used in links (required; stored cleaned and lower case)

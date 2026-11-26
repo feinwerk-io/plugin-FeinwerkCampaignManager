@@ -282,7 +282,7 @@ export interface CampaignRow {
   campaign: string;
   name: string | null;
   phase: Phase;
-  source: 'details' | 'links' | 'report';
+  source: 'details' | 'workspace' | 'links' | 'report';
   hasDetails: boolean;
   activeLinks: number;
   linkStates: { draft: number, live: number, ended: number };
@@ -293,6 +293,8 @@ export interface CampaignRow {
   recentVisits: number;
   goal: CampaignGoal | null;
   warnings: string[];
+  /** while connected: the workspace campaign with this value */
+  platform: { id: string, name: string, status: string, appUrl: string | null } | null;
 }
 
 export interface CampaignDetails {
@@ -523,8 +525,13 @@ export function fetchPlatformCampaigns(idSite: number, query: string): Promise<P
 export function addPlatformCampaign(
   idSite: number,
   name: string,
+  parameter = '',
+  startDate = '',
+  endDate = '',
 ): Promise<{ campaign: PlatformCampaign; existed: boolean }> {
-  return AjaxHelper.post({ method: `${MODULE}.addPlatformCampaign`, idSite }, { name }, QUIET);
+  return AjaxHelper.post({ method: `${MODULE}.addPlatformCampaign`, idSite }, {
+    name, parameter, startDate, endDate,
+  }, QUIET);
 }
 
 export interface PlatformLinkInput {

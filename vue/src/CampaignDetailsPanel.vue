@@ -18,34 +18,56 @@
     @update:open="$emit('update:open', $event)"
   >
     <form class="fwcmp-details" @submit.prevent="saveDetails">
+      <!-- connected, a new campaign starts from its name; the workspace forms the value -->
+      <template v-if="toWorkspace">
+        <label class="fwcmp-label" for="fwcmp-d-name">{{ tr('CampaignNameLabel') }}</label>
+        <input
+          id="fwcmp-d-name"
+          v-model="form.name"
+          class="fwcmp-input"
+          type="text"
+          maxlength="255"
+          autocomplete="off"
+          aria-required="true"
+        />
+      </template>
       <template v-if="!editingCampaign">
-        <label class="fwcmp-label" for="fwcmp-d-campaign">{{ tr('FieldCampaign') }}</label>
+        <label class="fwcmp-label" for="fwcmp-d-campaign">
+          {{ toWorkspace ? tr('CampaignValueOptional') : tr('FieldCampaign') }}
+        </label>
         <input
           id="fwcmp-d-campaign"
           v-model="form.campaign"
           class="fwcmp-input"
           type="text"
           autocomplete="off"
-          aria-required="true"
-          :aria-invalid="campaignMissing ? 'true' : 'false'"
+          :readonly="!!createdParameter"
+          :aria-required="toWorkspace ? 'false' : 'true'"
+          :aria-invalid="campaignMissing || valueError ? 'true' : 'false'"
           aria-describedby="fwcmp-d-campaign-help"
         />
         <div id="fwcmp-d-campaign-help" class="fwcmp-hint">
           <div v-if="campaignMissing" class="fwcmp-msg fwcmp-msg--error">
-            {{ tr('CampaignValueMissing') }}
+            {{ tr(toWorkspace ? 'CampaignNameOrValueMissing' : 'CampaignValueMissing') }}
           </div>
-          {{ tr('CampaignValueHelp') }}
+          <div v-if="valueError" class="fwcmp-msg fwcmp-msg--error" role="alert">
+            {{ valueError }}
+          </div>
+          <template v-if="toWorkspace">{{ tr('CampaignValueWorkspaceHelp') }}</template>
+          <template v-else>{{ tr('CampaignValueHelp') }}</template>
         </div>
       </template>
-      <label class="fwcmp-label" for="fwcmp-d-name">{{ tr('DisplayName') }}</label>
-      <input
-        id="fwcmp-d-name"
-        v-model="form.name"
-        class="fwcmp-input"
-        type="text"
-        maxlength="255"
-        autocomplete="off"
-      />
+      <template v-if="!toWorkspace">
+        <label class="fwcmp-label" for="fwcmp-d-name">{{ tr('DisplayName') }}</label>
+        <input
+          id="fwcmp-d-name"
+          v-model="form.name"
+          class="fwcmp-input"
+          type="text"
+          maxlength="255"
+          autocomplete="off"
+        />
+      </template>
       <div class="fwcmp-row">
         <div class="fwcmp-col">
           <label class="fwcmp-label" for="fwcmp-d-start">{{ tr('CampaignStart') }}</label>
@@ -102,6 +124,16 @@
         rows="3"
         maxlength="2000"
       />
+      <!-- while connected a new campaign is also created in the workspace (Peter, 2026-11-26) -->
+      <div v-if="checkingWorkspace" class="fwcmp-hint" role="status">
+        {{ tr('CampaignCheckingWorkspace') }}
+      </div>
+      <div v-else-if="toWorkspace" class="fwcmp-hint fwcmp-details__workspace">
+        {{ tr('CampaignAlsoInWorkspace', workspace.workspace, workspace.website) }}
+      </div>
+      <div v-else-if="workspaceError" class="fwcmp-hint fwcmp-details__workspace" role="status">
+        {{ workspaceError }}
+      </div>
       <Alert v-if="existingDetails" severity="warning">
         {{ tr('CampaignHasDetails', existingDetails.campaign) }}
         <button type="button" class="btn-flat fwcmp-retry" @click="editExisting">
@@ -117,7 +149,7 @@
       <button
         type="button"
         class="btn"
-        :disabled="saving || datesWrong || !!existingDetails"
+        :disabled="saving || checkingWorkspace || datesWrong || !!existingDetails"
         @click="saveDetails"
       >{{ tr('SaveDetails') }}</button>
     </template>
@@ -129,17 +161,21 @@ import { defineComponent, PropType } from 'vue';
 import { Alert, translate } from 'CoreHome';
 import {
   addCampaign,
+  addPlatformCampaign,
   archiveCampaign,
   CampaignDetails,
   CampaignRow,
   DetailsForm,
+  fetchConnectionStatus,
   fetchGoals,
+  fetchPlatformConvention,
   GoalMetric,
   MatomoGoal,
   updateCampaign,
 } from './api';
 import SidePanel from './SidePanel.vue';
 import plainText from './plainText';
+import { splitPlatformError } from './platformReason';
 
 const PREFIX = 'FeinwerkCampaignManager_';
 const METRICS: GoalMetric[] = ['none', 'visits', 'conversions', 'revenue'];
@@ -166,6 +202,18 @@ interface State {
   saving: boolean;
   campaignMissing: boolean;
   existingSaved: CampaignDetails | null;
+  /** while connected: the workspace and website a new campaign is also created in */
+  workspace: { workspace: string, website: string } | null;
+  /** the connection and the website mapping are being read: Save waits */
+  checkingWorkspace: boolean;
+  /** counts the checks, so a late answer of an earlier opening is ignored */
+  checkSeq: number;
+  /** connected, but Feinwerk Campaigns did not answer: saved here only, and said so */
+  workspaceError: string;
+  /** the value the workspace gave a campaign whose details failed here: a retry saves only those */
+  createdParameter: string;
+  /** the workspace refused the typed value (its naming convention) */
+  valueError: string;
 }
 
 export default defineComponent({
@@ -196,6 +244,12 @@ export default defineComponent({
       saving: false,
       campaignMissing: false,
       existingSaved: null,
+      workspace: null,
+      checkingWorkspace: false,
+      checkSeq: 0,
+      workspaceError: '',
+      createdParameter: '',
+      valueError: '',
     };
   },
   watch: {
@@ -205,6 +259,7 @@ export default defineComponent({
       }
     },
     'form.campaign': function onCampaignTyped() {
+      this.valueError = '';
       const typed = this.form.campaign.trim().toLowerCase();
       if (this.existingSaved && typed !== this.existingSaved.campaign) {
         this.existingSaved = null;
@@ -217,6 +272,10 @@ export default defineComponent({
     }
   },
   computed: {
+    /** a new campaign that is also created in the workspace */
+    toWorkspace(): boolean {
+      return !!this.workspace && !this.editingCampaign;
+    },
     metrics(): GoalMetric[] {
       return METRICS;
     },
@@ -255,6 +314,12 @@ export default defineComponent({
       this.panelError = '';
       this.campaignMissing = false;
       this.existingSaved = null;
+      this.workspace = null;
+      this.workspaceError = '';
+      this.createdParameter = '';
+      this.valueError = '';
+      this.checkSeq += 1;
+      this.checkingWorkspace = false;
       this.editingCampaign = row && row.hasDetails ? row.campaign : '';
       this.editingName = row && row.hasDetails ? (row.name || '') : '';
       this.form = emptyDetails();
@@ -275,12 +340,44 @@ export default defineComponent({
           this.goals = goals;
         }).catch(() => undefined);
       }
+      // only "New campaign" goes to the workspace (Peter, 2026-11-26); "Add details" of a value
+      // Matomo counts or links already stays in this Matomo (UI review F1)
+      if (row === null) {
+        this.checkWorkspace();
+      }
+    },
+    checkWorkspace() {
+      const seq = this.checkSeq;
+      this.checkingWorkspace = true;
+      fetchConnectionStatus().then((status) => {
+        if (status.mode !== 'connected' || !status.connected) {
+          return undefined;
+        }
+        const workspace = status.workspace ? status.workspace.name : '';
+        return fetchPlatformConvention(this.idSite).then((answer) => {
+          if (seq === this.checkSeq && !this.editingCampaign) {
+            this.workspace = { workspace, website: answer.website.name };
+          }
+        }).catch((e: Error) => {
+          // a website the workspace does not have: details only, as without a connection
+          const { reason } = splitPlatformError(e && e.message ? plainText(e.message) : '');
+          if (seq === this.checkSeq && reason !== 'no_website') {
+            this.workspaceError = this.tr('CampaignWorkspaceUnavailable');
+          }
+        });
+      }).catch(() => undefined).finally(() => {
+        if (seq === this.checkSeq) {
+          this.checkingWorkspace = false;
+        }
+      });
     },
     saveDetails() {
-      if (this.saving || this.datesWrong) {
+      if (this.saving || this.checkingWorkspace || this.datesWrong) {
         return;
       }
-      if (!this.editingCampaign && this.form.campaign.trim() === '') {
+      // with the workspace the value may stay empty: Feinwerk Campaigns forms it from the name
+      const nameOnly = this.toWorkspace && this.form.name.trim() !== '';
+      if (!this.editingCampaign && this.form.campaign.trim() === '' && !nameOnly) {
         this.campaignMissing = true;
         const field = document.getElementById('fwcmp-d-campaign');
         if (field) {
@@ -291,9 +388,35 @@ export default defineComponent({
       this.campaignMissing = false;
       this.saving = true;
       this.panelError = '';
-      const request = this.editingCampaign
-        ? updateCampaign(this.idSite, this.form).then((campaign) => ({ campaign, existed: false }))
-        : addCampaign(this.idSite, this.form);
+      this.valueError = '';
+      let request: Promise<{ campaign: CampaignDetails, existed: boolean }>;
+      if (this.editingCampaign) {
+        request = updateCampaign(this.idSite, this.form)
+          .then((campaign) => ({ campaign, existed: false }));
+      } else if (this.toWorkspace) {
+        // first in the workspace, then the details here under the value the workspace gave it;
+        // after a half-finished save only the details are tried again (UI review W1)
+        const value = this.form.campaign.trim();
+        const created = this.createdParameter
+          ? Promise.resolve(this.createdParameter)
+          : addPlatformCampaign(
+            this.idSite,
+            this.form.name.trim() || value,
+            value,
+            this.form.startDate,
+            this.form.endDate,
+          ).then((answer) => {
+            this.createdParameter = answer.campaign.parameter;
+            this.form.campaign = answer.campaign.parameter;
+            return answer.campaign.parameter;
+          });
+        request = created.then((parameter) => addCampaign(this.idSite, {
+          ...this.form,
+          campaign: parameter,
+        }));
+      } else {
+        request = addCampaign(this.idSite, this.form);
+      }
       request.then((r) => {
         if (r.existed) {
           // nothing was saved: the value has details already; the panel stays with what was typed
@@ -303,7 +426,19 @@ export default defineComponent({
         this.$emit('update:open', false);
         this.$emit('changed');
       }).catch((e: Error) => {
-        this.panelError = e && e.message ? plainText(e.message) : this.tr('CampaignSaveFailed');
+        const { reason, text } = splitPlatformError(e && e.message ? plainText(e.message) : '');
+        if (this.toWorkspace && this.createdParameter) {
+          this.panelError = this.tr('CampaignCreatedInWorkspaceOnly', this.createdParameter, text);
+        } else if (this.toWorkspace && reason === 'validation' && this.form.campaign.trim() !== '') {
+          // the typed value does not fit the workspace's naming convention: said at the field
+          this.valueError = this.tr('CampaignValueNotInConvention');
+          const field = document.getElementById('fwcmp-d-campaign');
+          if (field) {
+            field.focus();
+          }
+        } else {
+          this.panelError = text || this.tr('CampaignSaveFailed');
+        }
       }).finally(() => {
         this.saving = false;
       });

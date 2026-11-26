@@ -34,7 +34,8 @@ class CampaignService
         private LinkDao $links,
         private CampaignReports $reports,
         private Today $today,
-        private Messages $messages
+        private Messages $messages,
+        private WorkspaceCampaigns $workspace
     ) {
     }
 
@@ -54,11 +55,15 @@ class CampaignService
             $this->reports->daily($idSite, $from, $to, $segment),
             $today,
             $status,
-            $this->linkStates($idSite, $today)
+            $this->linkStates($idSite, $today),
+            $this->workspace->forSite($idSite)
         );
     }
 
-    /** @throws NotFoundException when the value has no details, no active saved link and no visits in the period */
+    /**
+     * @throws NotFoundException when the value has no details, no workspace campaign, no active saved link and no visits
+     *         in the period
+     */
     public function one(int $idSite, string $campaign, string $period, string $date, string $segment): array
     {
         $key = $this->key($campaign);
@@ -69,7 +74,8 @@ class CampaignService
         [$from, $to] = Overview::window($details, $today);
         $daily = $this->reports->daily($idSite, $from, $to, $segment);
         $states = array_intersect_key($this->linkStates($idSite, $today), [$key => true]);
-        foreach (Overview::build($details, $links, $numbers, $daily, $today, 'all', $states) as $row) {
+        $workspace = array_intersect_key($this->workspace->forSite($idSite), [$key => true]);
+        foreach (Overview::build($details, $links, $numbers, $daily, $today, 'all', $states, $workspace) as $row) {
             if ($row['campaign'] === $key) {
                 return $row;
             }

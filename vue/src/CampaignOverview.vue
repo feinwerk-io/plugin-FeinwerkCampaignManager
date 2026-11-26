@@ -144,6 +144,16 @@
               <a :href="campaignPageUrl(row.campaign)">{{ row.name || row.campaign }}</a>
             </h4>
             <code v-if="row.name" class="fwcmp-card__value">{{ row.campaign }}</code>
+            <!-- a campaign of the connected workspace: open it there (Peter, 2026-11-26) -->
+            <a
+              v-if="row.platform && row.platform.appUrl"
+              class="fwcmp-applink"
+              :href="row.platform.appUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              :title="tr('PlatformOpenCampaignTooltip')"
+              :aria-label="tr('PlatformOpenCampaignOf', label(row))"
+            >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
           </div>
           <div class="fwcmp-card__meta">
             {{ cardMeta(row) }}<template
