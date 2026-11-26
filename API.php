@@ -70,7 +70,8 @@ class API extends \Piwik\Plugin\API
      * @return array{mode: string, connected: bool, state: string, reason: string, workspace: ?array{id: string,
      *               name: string}, person: ?array{name: string, role: string}, trial: ?array{endsAt: string,
      *               daysLeft: int}, canBuy: bool, links: array{app: ?string, buy: ?string}, features: array{shortLinks:
-     *               bool, qrCodes: bool}, canConnect: bool, connectUrl: ?string, checkedAt: string}
+     *               bool, qrCodes: bool}, canConnect: bool, connectUrl: ?string, checkedAt: string, promote: bool,
+     *               moreUrl: ?string, inUse: ?array{shortLinks: int, qrCodes: int}}
      *         mode: disabled ([FeinwerkCampaignManager] platform = 0), standalone (not connected) or connected;
      *         connected: platform features can be used now; state: none, trial, active, expired (trial ended
      *         unpurchased), lost (token revoked, or the person who connected lost access), blocked, unknown (no answer
@@ -79,7 +80,10 @@ class API extends \Piwik\Plugin\API
      *         the connection (super users only); trial: end (ISO 8601 UTC) and whole days left; links: the workspace in
      *         the platform and its buy dialog (absolute URLs of the platform); canConnect: whether this user may
      *         (re)connect; connectUrl: the admin page for it, relative to Matomo (super users only); checkedAt: when
-     *         the platform was last asked (Y-m-d H:i:s UTC)
+     *         the platform was last asked (Y-m-d H:i:s UTC); promote: whether the pages show this user what the
+     *         connection adds (not connected, a user with admin access, Feinwerk promotions on); moreUrl: the
+     *         platform's page about it, only with promote; inUse: this Matomo's active platform links with a short
+     *         link and with a QR code (super users, connected only)
      */
     public function getConnectionStatus(): array
     {
@@ -88,6 +92,9 @@ class API extends \Piwik\Plugin\API
         $status = StaticContainer::get(PlatformService::class)->status($lang, Date::now()->getDatetime());
         $superUser = Piwik::hasUserSuperUserAccess();
         $connected = $status['mode'] === 'connected' && $status['reason'] === '';
+        // what the connection adds is promotion (decision 1 of 2026-11-23): admins only, Feinwerk promotions on
+        $promote = $status['mode'] === 'standalone' && !PlatformConfig::isWordPress()
+            && \Piwik\Plugins\FeinwerkCampaignManager\Promo\PromoLine::shownToCurrentUser();
 
         return [
             'mode' => $status['mode'],
@@ -103,6 +110,10 @@ class API extends \Piwik\Plugin\API
             'canConnect' => $superUser && $status['mode'] !== 'disabled' && !PlatformConfig::isWordPress(),
             'connectUrl' => $superUser && $status['mode'] !== 'disabled' ? 'index.php?module=FeinwerkCampaignManager&action=platform' : null,
             'checkedAt' => $status['checkedAt'],
+            'promote' => $promote,
+            // the landing page's section for Campaign Manager users (CampaignsWeb, 2026-11-26)
+            'moreUrl' => $promote ? \Piwik\Plugins\FeinwerkCampaignManager\Promo\PromoLine::url('campaigns', self::userLanguage()) . '#campaign-manager' : null,
+            'inUse' => $superUser && $status['mode'] === 'connected' ? (new \Piwik\Plugins\FeinwerkCampaignManager\Dao\LinkDao())->countPlatformInUse() : null,
         ];
     }
 
@@ -118,6 +129,35 @@ class API extends \Piwik\Plugin\API
         StaticContainer::get(PlatformService::class)->disconnect();
 
         return $this->getConnectionStatus();
+    }
+
+    /**
+     * This Matomo's websites against the websites of the connected Feinwerk Campaigns workspace: which workspace website
+     * each Matomo website belongs to and how it was matched, as the connected link builder and the overview use it.
+     * Super users only; needs a working connection (HTTP 409 with the reason otherwise, see getConnectionStatus). The
+     * workspace's websites are read at most every 10 minutes.
+     *
+     * @param int $limit Matomo websites per page, 1 to 500 (default 100)
+     * @param int $offset how many Matomo websites to skip, by id (default 0)
+     * @return array{sites: list<array{idSite: int, name: string, url: string, website: ?array{id: string, name: string,
+     *               url: string}, match: ?string}>, total: int, limit: int, offset: int,
+     *               websites: list<array{id: string, name: string, url: string}>}
+     *         sites: one page of this Matomo's websites; website: the workspace website it belongs to, null when none;
+     *         match: site (the workspace website reads from this Matomo site) or domain (an address matches), null
+     *         without a website; total: all Matomo websites; websites: every website of the workspace
+     */
+    public function getPlatformWebsites($limit = 100, $offset = 0): array
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $limit = $this->intParam('limit', $limit, 1, 500);
+        $offset = $this->intParam('offset', $offset, 0, 1000000);
+        try {
+            $mapping = StaticContainer::get(PlatformService::class)->siteMapping(self::platformLanguage(), $limit, $offset);
+        } catch (PlatformError $e) {
+            throw $this->platformError($e);
+        }
+        return ['sites' => $mapping['sites'], 'total' => $mapping['total'], 'limit' => $limit, 'offset' => $offset,
+            'websites' => $mapping['websites']];
     }
 
     /**
@@ -886,13 +926,16 @@ class API extends \Piwik\Plugin\API
      * @param string $date the date of the period, as in Matomo's reports (e.g. today, 2026-11-01, or
      *                     2026-11-01,2026-11-30 for a range) (required)
      * @param string $segment a Matomo segment (optional, all visits when empty)
-     * @return array{variants: list<array{suggested: string, visits: int, values: list<array{value: string, visits: int,
-     *         conversions: int, savedLinks: int, hasDetails: bool}>}>, unexplained: list<array{value: string,
+     * @return array{variants: list<array{suggested: string, visits: int, maybeDistinct: bool, values: list<array{value:
+     *         string, visits: int, conversions: int, savedLinks: int, hasDetails: bool}>}>, unexplained: list<array{value: string,
      *         visits: int, conversions: int}>, counts: array{variants: int, unexplained: int, unexplainedVisits: int,
      *         campaignVisits: int}}
      *         variants: groups of two or more values, most visits first; suggested: the spelling to keep (most saved
      *         links, then most visits), first in its group; savedLinks: active saved links with the value; hasDetails:
-     *         the value has campaign details; unexplained: at most 50, most visits first (counts has them all);
+     *         the value has campaign details; two or more known campaigns (with details, or campaigns of the connected
+     *         workspace) never form a group; maybeDistinct: every value of the group has its own saved links, so they
+     *         may be distinct campaigns and none is recommended; unexplained: at most 50, most visits first (counts has
+     *         them all);
      *         campaignVisits: all campaign visits of the period; values in lower case as Matomo counts them
      */
     public function getQualityIssues($idSite = null, string $period = '', string $date = '', string $segment = ''): array

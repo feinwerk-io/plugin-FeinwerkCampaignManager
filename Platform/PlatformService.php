@@ -322,6 +322,43 @@ class PlatformService
         return $candidates !== [] ? self::websiteOut($candidates[0], 'domain') : null;
     }
 
+    /**
+     * This Matomo's sites against the websites of the workspace, one page of sites, for the admin page and API clients
+     * (UI review R51 D3): the same mapping as website(), from the cached GET /websites and two queries for all site
+     * URLs, never one query per site.
+     *
+     * @return array{sites: list<array{idSite: int, name: string, url: string, website: ?array{id: string, name: string,
+     *               url: string}, match: ?string}>, total: int, websites: list<array{id: string, name: string, url: string}>}
+     * @throws PlatformError when the connection does not work
+     */
+    public function siteMapping(string $lang, int $limit, int $offset): array
+    {
+        $connection = $this->working();
+        $websites = array_values(array_filter(
+            $this->cached($connection, 'websites_' . $lang, 600, fn() => $this->client->websites($connection->token, $lang)),
+            'is_array'
+        ));
+        $all = $this->sites();
+        $out = [];
+        foreach (array_slice($all, $offset, $limit) as $site) {
+            $w = self::mapWebsite($websites, $site['idsite'], $site['urls']);
+            $out[] = [
+                'idSite' => $site['idsite'],
+                'name' => $site['name'],
+                'url' => $site['urls'][0] ?? '',
+                'website' => $w === null ? null : ['id' => $w['id'], 'name' => $w['name'], 'url' => $w['url']],
+                'match' => $w === null ? null : $w['match'],
+            ];
+        }
+        return [
+            'sites' => $out,
+            'total' => count($all),
+            'websites' => array_map(static fn(array $w): array => [
+                'id' => (string) ($w['id'] ?? ''), 'name' => (string) ($w['name'] ?? ''), 'url' => (string) ($w['url'] ?? ''),
+            ], $websites),
+        ];
+    }
+
     /** the workspace's naming convention (cached 10 minutes) */
     public function convention(string $lang): array
     {

@@ -72,12 +72,32 @@
           >{{ c.name }} <span class="fwcmp-chip__hint">{{ c.parameter }}</span></button>
         </div>
         <button
-          v-if="query.trim() && !exactMatch"
+          v-if="query.trim() && !exactMatch && !confirmingCampaign"
           type="button"
           class="fwcmp-linkbutton"
           :disabled="busy"
-          @click="createCampaign"
+          @click="confirmingCampaign = true"
         >{{ tr('PlatformLinkNewCampaign', query.trim()) }}</button>
+        <!-- a campaign in the workspace is shared with the team: asked first (R51 W5) -->
+        <div
+          v-if="confirmingCampaign"
+          class="fwcmp-confirm"
+          role="group"
+          :aria-label="tr('PlatformLinkNewCampaign', query.trim())"
+        >
+          <span>{{ tr('PlatformCampaignConfirm', query.trim()) }}</span>
+          <button
+            type="button"
+            class="btn"
+            :disabled="busy"
+            @click="createCampaign"
+          >{{ tr('PlatformCampaignConfirmYes') }}</button>
+          <button
+            type="button"
+            class="btn-flat"
+            @click="confirmingCampaign = false"
+          >{{ tr('Cancel') }}</button>
+        </div>
         <div v-if="chosen" class="fwcmp-hint">
           {{ tr('PlatformLinkChosen', chosen.name, chosen.parameter) }}
         </div>
@@ -117,8 +137,15 @@
       </ul>
       <div class="fwcmp-actions">
         <!-- the page's one filled button while connected: the builder hides its own Save then -->
+        <!-- once created, the next step is a new link (R51 W4) -->
         <button
-          v-if="!confirming"
+          v-if="created"
+          type="button"
+          class="btn btn-outline"
+          @click="$emit('new-link')"
+        >{{ tr('NewLink') }}</button>
+        <button
+          v-else-if="!confirming"
           ref="createButton"
           type="button"
           class="btn"
@@ -163,18 +190,23 @@
         <Alert severity="success">
           {{ createdExisted ? tr('PlatformLinkExisted') : tr('PlatformLinkCreated') }}
         </Alert>
-        <pre class="fwcmp-url">{{ created.url }}</pre>
-        <div class="fwcmp-platformlink__short">
-          <button type="button" class="btn btn-outline" @click="copy(created.url, 'full')">
-            {{ copied === 'full' ? tr('Copied') : tr('CopyLink') }}
-          </button>
-        </div>
+        <!-- a short link is what people share: it comes first (R51 W3) -->
         <div v-if="created.platform && created.platform.shortUrl" class="fwcmp-platformlink__short">
           <span>{{ tr('PlatformLinkShortUrl') }}</span>
           <code>{{ created.platform.shortUrl }}</code>
-          <button type="button" class="btn-flat" @click="copy(created.platform.shortUrl, 'short')">
-            {{ copied === 'short' ? tr('Copied') : tr('PlatformLinkCopyShort') }}
-          </button>
+          <button
+            type="button"
+            class="btn btn-outline"
+            @click="copy(created.platform.shortUrl, 'short')"
+          >{{ copied === 'short' ? tr('Copied') : tr('PlatformLinkCopyShort') }}</button>
+        </div>
+        <!-- the full link stands in "Your link" right below -->
+        <div class="fwcmp-platformlink__short">
+          <button
+            type="button"
+            :class="created.platform && created.platform.shortUrl ? 'btn-flat' : 'btn btn-outline'"
+            @click="copy(created.url, 'full')"
+          >{{ copied === 'full' ? tr('Copied') : tr('CopyLink') }}</button>
         </div>
         <div v-if="created.platform && created.platform.qrUrl" class="fwcmp-platformlink__qr">
           <span>{{ tr('PlatformLinkQrDownload') }}</span>
@@ -233,6 +265,8 @@ interface State {
   previewErrors: string[];
   /** the inline confirmation before creating */
   confirming: boolean;
+  /** the inline confirmation before a new workspace campaign */
+  confirmingCampaign: boolean;
   timer: number | null;
   searchSeq: number;
   previewTimer: number | null;
@@ -254,7 +288,7 @@ export default defineComponent({
     /** the workspace in the app (status links.app): a website gets its address there */
     appUrl: { type: String, default: '' },
   },
-  emits: ['set-field', 'ready', 'preview'],
+  emits: ['set-field', 'ready', 'preview', 'new-link'],
   data(): State {
     return {
       convention: null,
@@ -273,6 +307,7 @@ export default defineComponent({
       copied: '',
       previewErrors: [],
       confirming: false,
+      confirmingCampaign: false,
       timer: null,
       searchSeq: 0,
       previewTimer: null,
@@ -379,6 +414,22 @@ export default defineComponent({
     },
   },
   methods: {
+    /** a platform field key as the builder names the field */
+    fieldLabel(key: string): string {
+      const map: Record<string, string> = {
+        target_url: 'FieldTargetUrl',
+        source: 'FieldSource',
+        medium: 'FieldMedium',
+        campaign: 'FieldCampaign',
+        campaign_id: 'PlatformLinkCampaign',
+        content: 'FieldContent',
+        term: 'FieldKeyword',
+        keyword: 'FieldKeyword',
+        placement: 'FieldPlacement',
+        id: 'FieldCampaignId',
+      };
+      return map[key] ? this.tr(map[key]) : key;
+    },
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },
@@ -450,6 +501,7 @@ export default defineComponent({
     createCampaign() {
       this.busy = true;
       this.error = '';
+      this.confirmingCampaign = false;
       addPlatformCampaign(this.idSite, this.query.trim()).then((answer) => {
         const others = this.campaigns.filter((c) => c.id !== answer.campaign.id);
         this.campaigns = [answer.campaign, ...others];
@@ -496,7 +548,8 @@ export default defineComponent({
           }
           this.$emit('preview', answer.url || '');
           const errors = answer.errors || {};
-          this.previewErrors = Object.keys(errors).map((k) => `${k}: ${([] as string[])
+          // the builder's own field names instead of the platform's keys (R51 W6)
+          this.previewErrors = Object.keys(errors).map((k) => `${this.fieldLabel(k)}: ${([] as string[])
             .concat(errors[k] as string[]).join(' ')}`).concat(answer.warnings || []);
         }).catch((e: Error) => {
           if (current === this.previewCount) {

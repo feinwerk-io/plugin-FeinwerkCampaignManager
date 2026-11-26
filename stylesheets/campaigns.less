@@ -1155,10 +1155,6 @@ table.fwcmp-table th.fwcmp-table__actions {
   color: var(--fwcmp-text-light);
 }
 
-.fwcmp-campaign__actions {
-  margin: 8px 0 16px;
-}
-
 .fwcmp-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -1264,7 +1260,9 @@ table.fwcmp-table th.fwcmp-table__actions {
 
 // the tables of All campaigns and the campaign page stack on narrow screens: one block per row, each value with its
 // column name (the header row is hidden there)
-@media (max-width: 760px) {
+// the campaign tables stack up to 900 px: below that their columns (with revenue and the short link) no longer fit
+// (UI review 2026-11-26 F2)
+@media (max-width: 900px) {
   .fwcmp-pages table.fwcmp-table.entityTable,
   .fwcmp-pages table.fwcmp-table.entityTable tbody {
     display: block;
@@ -1464,21 +1462,6 @@ table.fwcmp-table th.fwcmp-table__actions {
   margin: 8px 0;
 }
 
-.fwcmp-table__platform {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 10px;
-  margin-top: 2px;
-  font-size: 12px;
-}
-
-.fwcmp-table__platform code {
-  color: var(--fwcmp-code);
-  background: var(--fwcmp-code-bg);
-  padding: 0 4px;
-  border-radius: 3px;
-}
-
 // filled buttons with long labels ("Mit Feinwerk Campaigns verbinden", "In Feinwerk Campaigns erstellen") wrap inside the
 // button at phone width instead of running out of it (UI review F4: Matomo 5 gives .btn a fixed height of 36px)
 .fwcmp-platform .btn,
@@ -1510,4 +1493,345 @@ table.fwcmp-table th.fwcmp-table__actions {
 .fwcmp-table__mainvalue {
   min-width: 0;
   overflow-wrap: break-word;
+}
+
+// the details panel: the workspace notice on top, a fixed value of "Add details", the value formed from the name
+.fwcmp-details .fwcmp-details__workspace {
+  margin-bottom: 12px;
+}
+
+.fwcmp-details__value {
+  margin: 8px 0 12px;
+}
+
+.fwcmp-details__value .fwcmp-label {
+  margin-right: 8px;
+}
+
+.fwcmp-details__fromname .fwcmp-linkbutton {
+  margin-left: 4px;
+}
+
+// saved links: the short link of a platform link as a pill under the name; QR code and the link in Feinwerk
+// Campaigns as small actions (R51 D5)
+.fwcmp-shortpill {
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 0 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--fwcmp-code-bg);
+  color: var(--fwcmp-code);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.fwcmp-action--icon {
+  text-decoration: none;
+}
+
+// links in Matomo's table cells lose the action's own margin and box: the same look as the buttons beside them
+.fwcmp-list table.fwcmp-table td.fwcmp-table__actions a.fwcmp-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-left: 6px;
+  line-height: normal;
+  vertical-align: middle;
+}
+
+.fwcmp-action--icon [class^="icon-"] {
+  font-size: 11px;
+}
+
+// the admin page: this Matomo's websites against the workspace's (R51 D3)
+.fwcmp-platform__sites {
+  margin-top: 24px;
+}
+
+.fwcmp-platform__host {
+  display: block;
+  color: var(--fwcmp-text-light);
+  font-size: 12px;
+}
+
+.fwcmp-platform__none {
+  color: var(--fwcmp-text-light);
+}
+
+// the campaign page: the heading is the breadcrumb, the campaign's numbers above the tabs, one primary action and a
+// menu for the rest (R50 D1)
+.fwcmp-campaign__back {
+  font-weight: normal;
+}
+
+.fwcmp-campaign__sep {
+  margin: 0 6px;
+  color: var(--fwcmp-text-light);
+  font-weight: normal;
+}
+
+.fwcmp-campaign__kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 12px 0 2px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--fwcmp-text);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    order: 1;
+  }
+
+  dt {
+    margin: 0;
+    color: var(--fwcmp-text-light);
+    font-size: 12px;
+    order: 2;
+  }
+}
+
+.fwcmp-campaign__window {
+  margin-bottom: 12px;
+}
+
+.fwcmp-campaign__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+// the "more actions" menu (ActionMenu.vue)
+.fwcmp-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.fwcmp-menu .fwcmp-menu__toggle {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.fwcmp-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 200px;
+  margin: 0;
+  padding: 4px 0;
+  border: 1px solid var(--fwcmp-border);
+  border-radius: 4px;
+  background: var(--fwcmp-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  list-style: none;
+
+  li {
+    margin: 0;
+    list-style: none;
+  }
+}
+
+.fwcmp-menu .fwcmp-menu__item {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--fwcmp-text);
+  font-size: 13px;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: var(--fwcmp-tint);
+    color: var(--fwcmp-text);
+  }
+}
+
+// what the connection adds (block G): the comparison, the trial and the steps; the previews at the locked link types
+.fwcmp-benefits__table {
+  width: 100%;
+  margin: 8px 0 12px;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--fwcmp-border);
+    color: var(--fwcmp-text);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
+    color: var(--fwcmp-text-light);
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  tbody th {
+    font-weight: normal;
+  }
+}
+
+.fwcmp-benefits__mark {
+  width: 1%;
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+.fwcmp-benefits__mark--yes {
+  color: var(--fwcmp-accent) !important;
+  font-weight: 600;
+}
+
+.fwcmp-benefits__trial {
+  margin: 0 0 6px;
+  color: var(--fwcmp-text);
+  font-weight: 600;
+}
+
+.fwcmp-benefits__card {
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 8px 0;
+}
+
+.fwcmp-benefits__previews {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  color: var(--fwcmp-text);
+  font-size: 14px;
+
+  li {
+    margin: 2px 0;
+    list-style: none;
+  }
+
+  .fwcmp-badge {
+    margin: 0 4px;
+  }
+}
+
+.fwcmp-builder .fwcmp-benefits__open {
+  margin: 0;
+}
+
+.fwcmp-benefits .fwcmp-benefits__more {
+  display: inline-block;
+  margin: 0 0 12px;
+}
+
+// All campaigns: sortable column heads, the folded group of values only Matomo counted (R50 D2)
+.fwcmp-pages__table th .fwcmp-sort {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.fwcmp-pages__table th .fwcmp-sort:hover,
+.fwcmp-pages__table th .fwcmp-sort:focus-visible {
+  text-decoration: underline;
+}
+
+.fwcmp-pages__group {
+  margin-top: 20px;
+}
+
+// "Link sent? Mark as live" right under the copied link's row (R50 W4)
+.fwcmp-list table.fwcmp-table tbody tr.fwcmp-sentrow td {
+  padding-top: 0;
+  border-top: 0;
+}
+
+// where the list stacks its rows, the offer is one block across the card
+@media (max-width: 1200px) {
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr.fwcmp-sentrow {
+    display: block;
+  }
+
+  .fwcmp-list table.fwcmp-table.entityTable tbody tr.fwcmp-sentrow td {
+    display: block;
+    grid-column: 1 / -1;
+  }
+}
+
+.fwcmp-sentrow .fwcmp-notice {
+  margin: 0;
+}
+
+// the edited link's part made in Feinwerk Campaigns (R51 W1)
+.fwcmp-editing__platform {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 8px;
+
+  .fwcmp-action {
+    margin: 0;
+    text-decoration: none;
+  }
+}
+
+// saved links: platform rows carry two more actions; the actions wrap instead of running out of the box between 1200
+// and 1400 px (UI review 2026-11-26 F1)
+.fwcmp-list table.fwcmp-table td.fwcmp-table__actions {
+  white-space: normal;
+}
+
+.fwcmp-list table.fwcmp-table td.fwcmp-table__actions .fwcmp-action {
+  margin-bottom: 4px;
+}
+
+// the benefits on the admin page: a readable width (W3)
+.fwcmp-platform .fwcmp-benefits {
+  max-width: 760px;
+}
+
+// the campaign page: the way back small, the menu toggle as high as the button beside it (W4)
+.fwcmp-campaign__name .fwcmp-campaign__back {
+  font-size: 14px;
+}
+
+.fwcmp-campaign__actions .fwcmp-menu .fwcmp-menu__toggle {
+  height: 36px;
+  padding: 0 12px;
+}
+
+// flat buttons on a phone: not indented against the text around them (F5, A16)
+@media (max-width: 600px) {
+  .fwcmp-overview .btn-flat,
+  .fwcmp-platform .btn-flat,
+  .fwcmp-platformlink .btn-flat {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

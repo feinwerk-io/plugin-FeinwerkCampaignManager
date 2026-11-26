@@ -374,8 +374,8 @@ class PlatformLinksTest extends IntegrationTestCase
             $rows['2026_herbst']['name'], $rows['2026_herbst']['hasDetails']]);
         $this->assertSame(['CAMP1', 'draft', PlatformConfig::DEFAULT_URL . '/w/W1/c/CAMP1'], [$rows['2026_herbst']['platform']['id'],
             $rows['2026_herbst']['platform']['status'], $rows['2026_herbst']['platform']['appUrl']]);
-        $this->assertSame(['ended', '2026-06-01', null], [$rows['sommer_sale']['phase'], $rows['sommer_sale']['startDate'],
-            $rows['sommer_sale']['platform']['appUrl']], 'keyed like the details, dates first, only links into the platform');
+        $this->assertSame(['running', '2026-06-01', null], [$rows['sommer_sale']['phase'], $rows['sommer_sale']['startDate'],
+            $rows['sommer_sale']['platform']['appUrl']], 'keyed like the details, the status over the dates, only links into the platform');
         $this->assertStringContainsString('website_id=WEB1', self::$platform->calls[1][1]);
 
         $calls = count(self::$platform->calls);
@@ -405,6 +405,44 @@ class PlatformLinksTest extends IntegrationTestCase
         $row = API::getInstance()->getCampaign(1, '2026_herbst', 'day', '2026-11-20');
         $this->assertSame(['details', true, 'Herbst', '2026-10-01', 'CAMP7', 'Nur hier'], [$row['source'], $row['hasDetails'], $row['name'],
             $row['startDate'], $row['platform']['id'], $row['notes']], 'creating cleared the cached list; name and start from the workspace');
+    }
+
+    /** the admin page's table: this Matomo's sites against the workspace websites (UI review R51 D3) */
+    public function test_superUsersSeeWhichSiteBelongsToWhichWebsite(): void
+    {
+        self::$platform->answer(200, self::WEBSITES);
+        $all = API::getInstance()->getPlatformWebsites();
+        $this->assertSame([3, 100, 0], [$all['total'], $all['limit'], $all['offset']]);
+        $this->assertSame([[1, 'WEB1', 'site'], [2, 'WEB9', 'domain'], [3, null, null]], array_map(
+            static fn(array $s): array => [$s['idSite'], $s['website'] === null ? null : $s['website']['id'], $s['match']],
+            $all['sites']
+        ));
+        $this->assertSame(['Lindenholz', 'https://www.lindenholz.example'], [$all['sites'][0]['name'], $all['sites'][0]['url']]);
+        $this->assertSame(['WEB1', 'WEB9'], array_column($all['websites'], 'id'));
+
+        $page = API::getInstance()->getPlatformWebsites(1, 2);
+        $this->assertSame([3], array_column($page['sites'], 'idSite'));
+        $this->assertCount(1, self::$platform->calls, 'the websites come from the cache');
+
+        foreach ([[0, 0, 'limit'], [501, 0, 'limit'], [10, -1, 'offset'], ['x', 0, 'limit']] as [$limit, $offset, $param]) {
+            try {
+                API::getInstance()->getPlatformWebsites($limit, $offset);
+                $this->fail($param);
+            } catch (InvalidInputException $e) {
+                $this->assertStringContainsString($param, $e->getMessage());
+            }
+        }
+        Option::delete(Store::CONNECTION);
+        try {
+            API::getInstance()->getPlatformWebsites();
+            $this->fail('409 expected');
+        } catch (PlatformException $e) {
+            $this->assertSame(['not_connected', 409], [$e->reason, $e->getCode()]);
+        }
+        FakeAccess::$superUser = false;
+        FakeAccess::$idSitesWrite = [1];
+        $this->expectException(\Piwik\NoAccessException::class);
+        API::getInstance()->getPlatformWebsites();
     }
 
     public function test_theAnonymousUserGetsNoWorkspaceCampaigns(): void

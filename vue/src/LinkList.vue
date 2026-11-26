@@ -37,33 +37,6 @@
 
       <ActivityIndicator :loading="loading" />
       <Alert v-if="actionError" severity="danger">{{ actionError }}</Alert>
-      <!-- after copying a draft: a quiet offer to mark it live, confirmed (Peter, 2026-11-25) -->
-      <div v-if="sent" class="fwcmp-notice" role="status">
-        <template v-if="!sent.confirming">
-          {{ tr('SentHint') }} <strong>{{ sent.label }}</strong>
-          <button
-            type="button"
-            class="fwcmp-linkbutton"
-            @click="confirmSent"
-          >{{ tr('MarkLive') }}</button>
-          <button
-            type="button"
-            class="fwcmp-linkbutton"
-            @click="sent = null"
-          >{{ tr('Close') }}</button>
-        </template>
-        <template v-else>
-          {{ tr('MarkLiveConfirm') }}
-          <button
-            ref="sentYes"
-            type="button"
-            class="btn"
-            :disabled="busy === sent.idLink"
-            @click="markLive(sent.idLink)"
-          >{{ tr('MarkLiveYes') }}</button>
-          <button type="button" class="btn-flat" @click="sent = null">{{ tr('Cancel') }}</button>
-        </template>
-      </div>
       <div v-if="notice" class="fwcmp-notice" role="status">
         {{ notice.text }}
         <button
@@ -81,7 +54,13 @@
       </Alert>
 
       <div v-else-if="!loading && page && page.total === 0" class="fwcmp-empty">
-        <p v-if="search || status !== 'active'">{{ tr('NoLinksFound') }}</p>
+        <template v-if="search || status !== 'active'">
+          <p>{{ tr('NoLinksFound') }}</p>
+          <!-- the way out of an empty filter (R50 smaller) -->
+          <button type="button" class="btn-flat" @click="resetFilters">
+            {{ tr('ResetFilters') }}
+          </button>
+        </template>
         <template v-else>
           <p>{{ tr('NoLinksYet') }}</p>
           <button type="button" class="btn" @click="openBuilder(0)">{{ tr('OpenBuilder') }}</button>
@@ -102,11 +81,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="link in page.links"
-              :key="link.idLink"
-              :class="{ 'is-archived': link.archived }"
-            >
+            <template v-for="link in page.links" :key="link.idLink">
+            <tr :class="{ 'is-archived': link.archived }">
               <td class="fwcmp-table__main">
                 <span class="fwcmp-table__campaign">{{ link.values.campaign }}</span>
                 <span v-if="link.archived" class="fwcmp-badge">{{ tr('StatusArchivedOne') }}</span>
@@ -128,22 +104,13 @@
                   class="fwcmp-table__note"
                   :title="link.note"
                 >{{ link.note }}</span>
-                <!-- made in Feinwerk Campaigns: short link and QR code (through this Matomo) -->
-                <span v-if="link.platform" class="fwcmp-table__platform">
-                  <code v-if="link.platform.shortUrl">{{ link.platform.shortUrl }}</code>
-                  <a
-                    v-if="link.platform.qrUrl"
-                    :href="`${link.platform.qrUrl}&format=svg`"
-                    download
-                    :aria-label="tr('PlatformLinkQrOf', link.values.campaign)"
-                  >{{ tr('PlatformLinkQrShort') }}</a>
-                  <a
-                    v-if="link.platform.appUrl"
-                    :href="link.platform.appUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >{{ tr('PlatformOpenLink') }}</a>
-                </span>
+                <!-- made in Feinwerk Campaigns: its short link as a pill under the name (R51 D5);
+                     QR code and the link there sit with the actions -->
+                <code
+                  v-if="link.platform && link.platform.shortUrl"
+                  class="fwcmp-shortpill"
+                  :title="link.platform.shortUrl"
+                >{{ shortPill(link.platform.shortUrl) }}</code>
                 <span class="fwcmp-table__by" :title="dateTime(link.updatedAt)">
                   {{ date(link.updatedAt) }} · {{ link.updatedBy }}
                 </span>
@@ -193,6 +160,23 @@
                   :aria-label="tr('EditLinkOf', link.values.campaign)"
                   @click="openBuilder(link.idLink)"
                 >{{ tr('Edit') }}</button>
+                <a
+                  v-if="link.platform && link.platform.qrUrl"
+                  class="fwcmp-action fwcmp-action--icon"
+                  :href="`${link.platform.qrUrl}&format=svg`"
+                  download
+                  :title="tr('PlatformLinkQrOf', link.values.campaign)"
+                  :aria-label="tr('PlatformLinkQrOf', link.values.campaign)"
+                ><span class="icon-download" aria-hidden="true" /> QR</a>
+                <a
+                  v-if="link.platform && link.platform.appUrl"
+                  class="fwcmp-action fwcmp-action--icon"
+                  :href="link.platform.appUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  :title="tr('PlatformOpenLink')"
+                  :aria-label="tr('PlatformOpenLinkOf', link.values.campaign)"
+                ><span class="icon-outlink" aria-hidden="true" /></a>
                 <button
                   v-if="canWrite"
                   type="button"
@@ -203,6 +187,41 @@
                 >{{ link.archived ? tr('Restore') : tr('Archive') }}</button>
               </td>
             </tr>
+            <!-- after copying a draft: an offer to mark it live, confirmed (Peter, 2026-11-25),
+                 under its row, also on a phone (R50 W4) -->
+            <tr v-if="sent && sent.idLink === link.idLink" class="fwcmp-sentrow">
+              <td colspan="7">
+                <div class="fwcmp-notice" role="status">
+                    <template v-if="!sent.confirming">
+                      {{ tr('SentHint') }} <strong>{{ sent.label }}</strong>
+                      <button
+                        type="button"
+                        class="fwcmp-linkbutton"
+                        @click="confirmSent"
+                      >{{ tr('MarkLive') }}</button>
+                      <button
+                        type="button"
+                        class="fwcmp-linkbutton"
+                        @click="sent = null"
+                      >{{ tr('Close') }}</button>
+                    </template>
+                    <template v-else>
+                      {{ tr('MarkLiveConfirm') }}
+                      <button
+                        ref="sentYes"
+                        type="button"
+                        class="btn"
+                        :disabled="busy === sent.idLink"
+                        @click="markLive(sent.idLink)"
+                      >{{ tr('MarkLiveYes') }}</button>
+                      <button type="button" class="btn-flat" @click="sent = null">
+                        {{ tr('Cancel') }}
+                      </button>
+                    </template>
+      </div>
+              </td>
+            </tr>
+            </template>
           </tbody>
         </table>
         <div v-if="page.total > limit" class="fwcmp-pager">
@@ -383,6 +402,14 @@ export default defineComponent({
     },
   },
   methods: {
+    resetFilters() {
+      this.search = '';
+      this.status = 'active';
+    },
+    /** a short link without its scheme, as a pill: "fw.ink/abc" */
+    shortPill(url: string): string {
+      return url.replace(/^https?:\/\//i, '');
+    },
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },

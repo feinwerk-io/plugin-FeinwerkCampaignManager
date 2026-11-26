@@ -27,7 +27,7 @@ Feinwerk Campaign Manager builds every link in Matomo itself and checks it while
 - **Draft, live, ended:** a link changes freely until it goes live; then its values stay, so its numbers stay
   comparable. The list says since when and why a link is live.
 - **A page per campaign:** preparation, progress and result of each campaign, with Matomo's own evolution graph and a
-  one-page summary for decision makers to print or save as PDF.
+  one-page summary to print or save as PDF.
 - **Data quality:** spelling variants that Matomo counts as separate campaigns, with the spelling to keep, and the
   campaign values that no saved link explains.
 - **Ready for Marketing Campaigns Reporting:** with that free plugin active, the builder offers group, placement and a
@@ -36,6 +36,13 @@ Feinwerk Campaign Manager builds every link in Matomo itself and checks it while
 - **Next to Matomo's own URL builder:** Matomo's Campaign URL Builder stays as it is; one line under it leads to the
   link builder.
 - **Light and dark mode, in English, German, French, Spanish and Italian.**
+
+**More with Feinwerk Campaigns (optional):** connect Matomo to a workspace of the Feinwerk Campaigns platform and you
+also get short links for sharing on fnwrk.com, fnwrk.ch or fnwrk.eu; QR codes whose target can change after printing
+(SVG, PNG, PDF, EPS); click and scan counts without cookies; a naming convention in which each field knows its permitted
+values, for your team and agencies; link checks of redirects, tracking parameters and Matomo's counting, with a mail when
+something breaks; and a campaign calendar. 30-day free trial, it ends automatically and needs no payment details.
+Without the connection Campaign Manager works fully on its own.
 
 **Works with Feinwerk Campaign Score (free):** Campaign Score rates the campaign values already in Matomo; Campaign
 Manager keeps new links clean from the start.
@@ -99,7 +106,7 @@ to its end or today, at most 92 days), whatever period is selected:
   links are counted by a link ID of their own, notes and learnings, and links into Matomo's visitor log with the campaign as
   segment (and into devices, pages and goals where Matomo archives segments on request).
 
-**Summary for decision makers** shows the result on one page to print or save as PDF.
+**Summary** (in the menu next to **New link**) shows the result on one page to print or save as PDF.
 
 ### Campaigns › Link builder
 
@@ -148,8 +155,10 @@ A super user connects this Matomo to a workspace of the Feinwerk Campaigns platf
 Feinwerk Campaigns*: sign in there (or create an account), choose the workspace, confirm. Connected, the link builder
 gets a second step **Create in Feinwerk Campaigns**: pick or create a campaign of the workspace, add a short link and a
 dynamic QR code, and the link is made in the workspace with its naming convention, live at once and also kept in the
-list of saved links here, with its short link and the QR code as SVG, PNG, PDF or EPS. Each page shows **Open in
-Feinwerk Campaigns**. **Disconnect** on the same admin page ends the connection; saved links and campaign details stay.
+list of saved links here, with its short link and the QR code as SVG, PNG, PDF or EPS. The overview and *All campaigns*
+also show the workspace campaigns of the website, and **New campaign** creates the campaign in the workspace too (goal
+and note stay in Matomo). The admin page lists which Matomo website belongs to which workspace website. Each page
+shows **Open in Feinwerk Campaigns**. **Disconnect** on the same admin page ends the connection; saved links and campaign details stay.
 Without a connection the plugin works as described above and contacts nobody. To hide everything about the connection:
 
 ```ini
@@ -185,6 +194,7 @@ Send changes as POST requests.
 | `getQualityIssues` | Spelling variants and campaign values without a saved link for a period | `method=FeinwerkCampaignManager.getQualityIssues&idSite=1&period=month&date=today` |
 | `getSetupChecklist` | What the website still lacks for campaign work (required steps and the recommended Marketing Campaigns Reporting) | `method=FeinwerkCampaignManager.getSetupChecklist&idSite=1` |
 | `getConnectionStatus` | Whether this Matomo is connected to the Feinwerk Campaigns platform and which platform features work | `method=FeinwerkCampaignManager.getConnectionStatus` |
+| `getPlatformWebsites` | This Matomo's websites against the websites of the Feinwerk Campaigns workspace, and how each was matched (super users) | `method=FeinwerkCampaignManager.getPlatformWebsites&limit=100&offset=0` |
 | `disconnectPlatform` | Ends the connection to Feinwerk Campaigns (super users); saved links and their short links stay | `method=FeinwerkCampaignManager.disconnectPlatform` |
 | `getPlatformConvention` | The workspace website this Matomo site belongs to and its naming convention (connected, write access) | `method=FeinwerkCampaignManager.getPlatformConvention&idSite=1` |
 | `getPlatformCampaigns` | The workspace campaigns of this site's website, with search (connected, write access) | `method=FeinwerkCampaignManager.getPlatformCampaigns&idSite=1&query=autumn&limit=20` |

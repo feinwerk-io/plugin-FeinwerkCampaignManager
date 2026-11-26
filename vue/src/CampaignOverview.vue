@@ -19,7 +19,13 @@
           class="btn"
           @click="openPanel(null)"
         >{{ tr('NewCampaign') }}</button>
-        <button type="button" class="btn-flat" @click="openBuilder('')">{{ tr('NewLink') }}</button>
+        <!-- "New link" for those who can save one, as on every page (R50 W9) -->
+        <button
+          v-if="canWrite"
+          type="button"
+          class="btn-flat"
+          @click="openBuilder('')"
+        >{{ tr('NewLink') }}</button>
       </div>
     </div>
 
@@ -41,9 +47,10 @@
           <span class="fwcmp-checklist__mark" aria-hidden="true">{{ item.done ? '✓' : '○' }}</span>
           <span class="fwcmp-sr-only">{{ item.done ? tr('Done') : tr('Open') }}</span>
           <span class="fwcmp-checklist__text">
+            <!-- "recommended" has one look on every page (R50 W8) -->
             <span
               v-if="!item.required && !item.done"
-              class="fwcmp-badge"
+              class="fwcmp-badge fwcmp-badge--live"
             >{{ tr('Recommended') }}</span>
             {{ item.done ? tr(`Checklist_${item.key}`) : tr(`ChecklistTodo_${item.key}`) }}
             <a
@@ -154,6 +161,12 @@
               :title="tr('PlatformOpenCampaignTooltip')"
               :aria-label="tr('PlatformOpenCampaignOf', label(row))"
             >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
+            <!-- its real status in the workspace (decision b, 2026-11-26) -->
+            <span
+              v-if="row.platform"
+              class="fwcmp-badge"
+              :title="tr('PlatformStatusInWorkspace')"
+            >{{ tr(statusKey(row)) }}</span>
           </div>
           <div class="fwcmp-card__meta">
             {{ cardMeta(row) }}<template
@@ -212,6 +225,7 @@
               @click="openPanel(row)"
             >{{ row.hasDetails ? tr('EditDetails') : tr('AddDetails') }}</button>
             <button
+              v-if="canWrite"
               type="button"
               class="fwcmp-action"
               :aria-label="tr('NewLinkFor', label(row))"
@@ -222,6 +236,14 @@
               :href="analyseUrl(row)"
               :aria-label="tr('AnalyseInMatomoOf', label(row))"
             >{{ tr('AnalyseInMatomo') }}</a>
+            <a
+              v-if="startUrl(row)"
+              class="fwcmp-action"
+              :href="startUrl(row)"
+              target="_blank"
+              rel="noopener noreferrer"
+              :aria-label="tr('PlatformStartCampaignOf', label(row))"
+            >{{ tr('PlatformStartCampaign') }}<span class="icon-outlink" aria-hidden="true" /></a>
             <button
               v-if="canWrite && row.hasDetails"
               type="button"
@@ -287,6 +309,7 @@ import CampaignDetailsPanel from './CampaignDetailsPanel.vue';
 import FeedbackBar, { FeedbackSettings } from './FeedbackBar.vue';
 import PromoLine, { PromoVariables } from './PromoLine.vue';
 import plainText from './plainText';
+import { startUrl, statusKey } from './workspaceStatus';
 import scopeText from './scope';
 
 const PREFIX = 'FeinwerkCampaignManager_';
@@ -408,6 +431,8 @@ export default defineComponent({
     },
   },
   methods: {
+    statusKey,
+    startUrl,
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },
@@ -503,7 +528,8 @@ export default defineComponent({
         return this.tr('FromTo', this.day(row.startDate), this.day(row.endDate));
       }
       if (row.startDate) {
-        return this.tr('Since', this.day(row.startDate));
+        // a start still to come reads "from", not "since" (UI review R52 W7)
+        return this.tr(row.phase === 'preparing' ? 'StartsOn' : 'Since', this.day(row.startDate));
       }
       if (row.endDate) {
         return this.tr('Until', this.day(row.endDate));

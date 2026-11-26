@@ -35,6 +35,32 @@
             @click="startNew"
           >{{ tr('NewLink') }}</button>
         </p>
+        <!-- made in Feinwerk Campaigns: its short link, QR code and the link there (R51 W1) -->
+        <p v-if="editingPlatform" class="fwcmp-editing__platform">
+          <template v-if="editingPlatform.shortUrl">
+            <code class="fwcmp-shortpill">{{ shortPill(editingPlatform.shortUrl) }}</code>
+            <button
+              type="button"
+              class="fwcmp-action"
+              @click="copyShort(editingPlatform.shortUrl)"
+            >{{ shortCopied ? tr('Copied') : tr('PlatformLinkCopyShort') }}</button>
+          </template>
+          <a
+            v-if="editingPlatform.qrUrl"
+            class="fwcmp-action"
+            :href="`${editingPlatform.qrUrl}&format=svg`"
+            download
+            :aria-label="tr('PlatformLinkQrOf', editingLabel)"
+          ><span class="icon-download" aria-hidden="true" /> QR</a>
+          <a
+            v-if="editingPlatform.appUrl"
+            class="fwcmp-applink"
+            :href="editingPlatform.appUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            :aria-label="tr('PlatformOpenLinkOf', editingLabel)"
+          >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
+        </p>
         <div v-if="!locked" class="fwcmp-hint">
           {{ tr('EditHint') }}
           <template v-if="canWrite">
@@ -318,6 +344,93 @@
       </details>
       </template>
 
+      <!-- the link type before "Your link", in both modes (R51 D2): connected the panel, not
+           connected the locked types -->
+      <!-- connected to Feinwerk Campaigns: the same values as a platform link -->
+      <PlatformLinkPanel
+        v-if="platform && platform.connected && canWrite && !editing"
+        :id-site="idSite"
+        :form="form"
+        :features="platform.features"
+        :app-url="platform.links.app || ''"
+        :channel-key="activeTemplate ? activeTemplate.key : ''"
+        @set-field="setField"
+        @ready="platformReady = $event"
+        @preview="platformPreview = $event"
+        @new-link="startNew"
+      />
+      <!-- not connected: short link and QR code locked, with the neutral line (decision 1 of
+           2026-11-23, in 5.1.0 by Peter's "ja" of 2026-11-26); no benefit copy, not promotion -->
+      <section
+        v-else-if="platform && platform.mode === 'standalone' && canWrite && !editing"
+        class="fwcmp-step fwcmp-platformlink fwcmp-platformlink--locked"
+      >
+        <div class="fwcmp-platformlink__types">
+          <span class="fwcmp-label" aria-hidden="true">{{ tr('PlatformLinkType') }}</span>
+          <SegmentedSwitch
+            model-value="link"
+            :options="lockedTypes"
+            :label="tr('PlatformLinkType')"
+          />
+        </div>
+        <!-- what the two locked types would give: promotion, so admins only (block G1) -->
+        <div v-if="platform.promote" class="fwcmp-notice fwcmp-benefits__card">
+          <ul class="fwcmp-benefits__previews">
+            <li>
+              <code class="fwcmp-shortpill">fnwrk.com/…</code>
+              <span class="fwcmp-badge">{{ tr('BenefitExample') }}</span>
+              {{ tr('BenefitShortPreview') }}
+            </li>
+            <li>{{ tr('BenefitQrPreview') }}</li>
+            <li class="fwcmp-benefits__trial">{{ tr('BenefitsTrial') }}</li>
+          </ul>
+          <button
+            type="button"
+            class="btn btn-outline fwcmp-benefits__open"
+            @click="benefitsOpen = true"
+          >{{ tr('BenefitsOpen') }}</button>
+        </div>
+        <div class="fwcmp-hint">
+          {{ tr('PlatformNeedsConnection') }}
+          <a
+            v-if="platform.canConnect && platform.connectUrl"
+            class="fwcmp-platformlink__connect"
+            :href="platform.connectUrl"
+          >{{ tr('PlatformConnectShort') }}</a>
+          <template v-else-if="platform.connectUrl">{{ tr('PlatformWordPress') }}</template>
+          <template v-else>{{ tr('PlatformSuperUserConnects') }}</template>
+        </div>
+        <SidePanel
+          v-if="platform.promote"
+          :open="benefitsOpen"
+          :title="tr('BenefitsTitle')"
+          :close-label="tr('Close')"
+          size="narrow"
+          scope-class="fwcmp-builder"
+          @update:open="benefitsOpen = $event"
+        >
+          <PlatformBenefits :more-url="platform.moreUrl || ''" />
+          <template #footer>
+            <a
+              v-if="platform.canConnect && platform.connectUrl"
+              class="btn"
+              :href="platform.connectUrl"
+            >{{ tr('PlatformConnect') }}</a>
+            <span v-else class="fwcmp-hint">{{ tr('PlatformSuperUserConnects') }}</span>
+          </template>
+        </SidePanel>
+      </section>
+      <!-- connected, but the platform cannot be used now (lost, blocked, trial ended) -->
+      <div
+        v-else-if="platform && platform.mode === 'connected' && !platform.connected && !editing"
+        class="fwcmp-hint fwcmp-platformlink__off"
+      >
+        {{ platformReasonText }}
+        <a
+          v-if="platform.connectUrl"
+          :href="platform.connectUrl"
+        >{{ tr(canReconnect(platform.reason) ? 'PlatformReconnect' : 'PlatformDetails') }}</a>
+      </div>
       <section class="fwcmp-result">
         <h3 class="fwcmp-step__title">{{ tr('YourLink') }}</h3>
         <p class="fwcmp-sr-only" role="status">{{ statusText }}</p>
@@ -348,7 +461,7 @@
         <div class="fwcmp-actions">
           <!-- one filled button per screen: Save for writers, Copy for view-only users -->
           <!-- connected: the preview carries the platform's placeholder link ID, so only the
-               created link is copied (in the panel below) -->
+               created link is copied (in the panel above) -->
           <button
             v-if="!(platformReady && !editing)"
             type="button"
@@ -399,54 +512,6 @@
         </Alert>
         <Alert v-if="saveError" severity="danger">{{ saveError }}</Alert>
       </section>
-      <!-- connected to Feinwerk Campaigns: the same values as a platform link -->
-      <PlatformLinkPanel
-        v-if="platform && platform.connected && canWrite && !editing"
-        :id-site="idSite"
-        :form="form"
-        :features="platform.features"
-        :app-url="platform.links.app || ''"
-        :channel-key="activeTemplate ? activeTemplate.key : ''"
-        @set-field="setField"
-        @ready="platformReady = $event"
-        @preview="platformPreview = $event"
-      />
-      <!-- not connected: short link and QR code locked, with the neutral line (decision 1 of
-           2026-11-23, in 5.1.0 by Peter's "ja" of 2026-11-26); no benefit copy, not promotion -->
-      <section
-        v-else-if="platform && platform.mode === 'standalone' && canWrite && !editing"
-        class="fwcmp-step fwcmp-platformlink fwcmp-platformlink--locked"
-      >
-        <div class="fwcmp-platformlink__types">
-          <span class="fwcmp-label" aria-hidden="true">{{ tr('PlatformLinkType') }}</span>
-          <SegmentedSwitch
-            model-value="link"
-            :options="lockedTypes"
-            :label="tr('PlatformLinkType')"
-          />
-        </div>
-        <div class="fwcmp-hint">
-          {{ tr('PlatformNeedsConnection') }}
-          <a
-            v-if="platform.canConnect && platform.connectUrl"
-            class="fwcmp-platformlink__connect"
-            :href="platform.connectUrl"
-          >{{ tr('PlatformConnectShort') }}</a>
-          <template v-else-if="platform.connectUrl">{{ tr('PlatformWordPress') }}</template>
-          <template v-else>{{ tr('PlatformSuperUserConnects') }}</template>
-        </div>
-      </section>
-      <!-- connected, but the platform cannot be used now (lost, blocked, trial ended) -->
-      <div
-        v-else-if="platform && platform.mode === 'connected' && !platform.connected && !editing"
-        class="fwcmp-hint fwcmp-platformlink__off"
-      >
-        {{ platformReasonText }}
-        <a
-          v-if="platform.connectUrl"
-          :href="platform.connectUrl"
-        >{{ tr(canReconnect(platform.reason) ? 'PlatformReconnect' : 'PlatformDetails') }}</a>
-      </div>
       <FeedbackBar
         v-if="feedback"
         class="fwcmp-page-feedback"
@@ -496,6 +561,8 @@ import {
 import copyText from './clipboard';
 import PlatformLinkPanel from './PlatformLinkPanel.vue';
 import SegmentedSwitch, { SegmentedOption } from './SegmentedSwitch.vue';
+import SidePanel from './SidePanel.vue';
+import PlatformBenefits from './PlatformBenefits.vue';
 import { canReconnect, REASON_TEXT } from './platformReason';
 import FeedbackBar, { FeedbackSettings } from './FeedbackBar.vue';
 import PromoLine, { PromoVariables } from './PromoLine.vue';
@@ -568,6 +635,8 @@ interface State {
   platform: ConnectionStatus | null;
   /** the connected panel can create links for this website: it replaces the local Save */
   platformReady: boolean;
+  /** the side panel with what the connection adds (block G2) */
+  benefitsOpen: boolean;
   /** the platform's preview of the link the panel would create */
   platformPreview: string;
   ready: boolean;
@@ -583,6 +652,9 @@ interface State {
   /** the edited link's status ('' for a new link) and its saved URL (shown while it is locked) */
   editingStatus: string;
   editingUrl: string;
+  /** the edited link's part made in Feinwerk Campaigns */
+  editingPlatform: Link['platform'] | null;
+  shortCopied: boolean;
   editingGenerated: boolean;
   /** the link went live while it was edited here */
   wentLive: boolean;
@@ -625,6 +697,8 @@ export default defineComponent({
     PromoLine,
     SaveButton,
     SegmentedSwitch,
+    SidePanel,
+    PlatformBenefits,
   },
   data(): State {
     return {
@@ -634,6 +708,7 @@ export default defineComponent({
       platform: null,
       platformReady: false,
       platformPreview: '',
+      benefitsOpen: false,
       ready: false,
       parameterSets: {
         sets: [],
@@ -652,6 +727,8 @@ export default defineComponent({
       editingLabel: '',
       editingStatus: '',
       editingUrl: '',
+      editingPlatform: null,
+      shortCopied: false,
       editingGenerated: false,
       wentLive: false,
       fromLive: '',
@@ -825,6 +902,17 @@ export default defineComponent({
     },
   },
   methods: {
+    shortPill(url: string): string {
+      return url.replace(/^https?:\/\//i, '');
+    },
+    copyShort(url: string) {
+      copyText(url).then(() => {
+        this.shortCopied = true;
+        window.setTimeout(() => {
+          this.shortCopied = false;
+        }, 2000);
+      }).catch(() => undefined);
+    },
     canReconnect,
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
@@ -896,6 +984,7 @@ export default defineComponent({
       this.fromLive = '';
       this.editingStatus = link.status || 'draft';
       this.editingUrl = link.url;
+      this.editingPlatform = link.platform || null;
       this.editingLiveSince = link.liveSince || '';
       this.editingLiveReason = link.liveReason || '';
       this.confirmLiveAt = '';
@@ -925,6 +1014,7 @@ export default defineComponent({
       this.editingLabel = '';
       this.editingStatus = '';
       this.editingUrl = '';
+      this.editingPlatform = null;
       this.wentLive = false;
       this.fromLive = '';
       this.form = emptyForm(this.parameterSets.defaultSet);
@@ -1145,6 +1235,7 @@ export default defineComponent({
       this.editingLabel = '';
       this.editingStatus = '';
       this.editingUrl = '';
+      this.editingPlatform = null;
       this.editingGenerated = false;
       this.wentLive = false;
       this.fromLive = from;

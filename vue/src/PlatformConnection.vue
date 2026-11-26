@@ -42,6 +42,8 @@
               class="fwcmp-platform__line"
             >
               {{ trialText }}
+              <!-- near the end of the trial: what is in use next to Buy (block G6) -->
+              <template v-if="inUseText">{{ inUseText }}</template>
               <a
                 v-if="status.canBuy && status.links.buy"
                 :href="status.links.buy"
@@ -49,6 +51,15 @@
                 rel="noopener noreferrer"
               >{{ tr('PlatformBuy') }}</a>
             </p>
+            <!-- right after connecting: the next step (block G6) -->
+            <div
+              v-if="status.connected && status.inUse && status.inUse.shortLinks === 0"
+              class="fwcmp-notice"
+              role="status"
+            >
+              {{ tr('PlatformFirstShortLink') }}
+              <a :href="builderUrl(currentSite)">{{ tr('OpenBuilder') }}</a>
+            </div>
             <div class="fwcmp-platform__actions">
               <a
                 v-if="status.links.app && !confirming"
@@ -75,6 +86,64 @@
                 @click="askDisconnect"
               >{{ tr('PlatformDisconnect') }}</button>
             </div>
+            <!-- which Matomo website belongs to which workspace website (R51 D3) -->
+            <section
+              v-if="status.connected"
+              class="fwcmp-platform__sites"
+              :aria-label="tr('PlatformSitesTitle')"
+            >
+              <h3 class="fwcmp-step__title">{{ tr('PlatformSitesTitle') }}</h3>
+              <div class="fwcmp-hint">{{ tr('PlatformSitesHelp') }}</div>
+              <ActivityIndicator :loading="sitesLoading" />
+              <div v-if="sitesError" class="fwcmp-msg fwcmp-msg--error">{{ sitesError }}</div>
+              <div v-if="sites.length" class="fwcmp-tablewrap">
+                <table class="entityTable dataTable fwcmp-table fwcmp-platform__table">
+                  <thead>
+                    <tr>
+                      <th>{{ tr('PlatformSiteColumn') }}</th>
+                      <th>{{ tr('PlatformWebsiteColumn') }}</th>
+                      <th>{{ tr('PlatformMatchColumn') }}</th>
+                      <th><span class="fwcmp-sr-only">{{ tr('LinkBuilder') }}</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="s in sites" :key="s.idSite">
+                      <td>
+                        {{ s.name }}
+                        <span class="fwcmp-platform__host">{{ host(s.url) }}</span>
+                      </td>
+                      <td>{{ s.website ? s.website.name : '' }}</td>
+                      <td :class="{ 'fwcmp-platform__none': !s.match }">
+                        {{ tr(`PlatformMatch_${s.match || 'none'}`) }}
+                      </td>
+                      <td>
+                        <a
+                          v-if="s.website"
+                          :href="builderUrl(s.idSite)"
+                        >{{ tr('OpenBuilder') }}</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button
+                v-if="sites.length < sitesTotal"
+                type="button"
+                class="btn-flat"
+                :disabled="sitesLoading"
+                @click="loadSites"
+              >{{ tr('PlatformSitesMore') }}</button>
+              <div v-if="sites.some((s) => !s.website) && status.links.app" class="fwcmp-hint">
+                {{ tr('PlatformSitesUnmappedHelp') }}
+                <a
+                  class="fwcmp-applink"
+                  :href="status.links.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  :title="tr('PlatformOpenTooltip')"
+                >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
+              </div>
+            </section>
             <div
               v-if="confirming"
               class="fwcmp-confirm"
@@ -97,6 +166,8 @@
           <!-- not connected: what it does, what is sent, the button -->
           <template v-else>
             <p>{{ tr('PlatformIntro') }}</p>
+            <!-- what the connection adds: promotion, so admins only (block G2, decision 1) -->
+            <PlatformBenefits v-if="status.promote" :more-url="status.moreUrl || ''" />
             <!-- a div: Morpheus' "#content .card-content p" colour would beat the quieter one -->
             <div class="fwcmp-platform__sent">{{ tr('PlatformWhatIsSent') }}</div>
             <div v-if="wordPress" class="fwcmp-hint">{{ tr('PlatformWordPress') }}</div>
@@ -121,9 +192,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActivityIndicator, Alert, translate } from 'CoreHome';
-import { ConnectionStatus, disconnectPlatform, fetchConnectionStatus } from './api';
+import {
+  ConnectionStatus,
+  disconnectPlatform,
+  fetchConnectionStatus,
+  fetchPlatformWebsites,
+  PlatformSiteRow,
+} from './api';
 import plainText from './plainText';
-import { REASON_TEXT } from './platformReason';
+import PlatformBenefits from './PlatformBenefits.vue';
+import { REASON_TEXT, splitPlatformError } from './platformReason';
 
 const PREFIX = 'FeinwerkCampaignManager_';
 
@@ -133,10 +211,16 @@ interface State {
   error: string;
   confirming: boolean;
   busy: boolean;
+  sites: PlatformSiteRow[];
+  sitesTotal: number;
+  sitesLoading: boolean;
+  sitesError: string;
 }
 
+const SITES_PAGE = 100;
+
 export default defineComponent({
-  components: { ActivityIndicator, Alert },
+  components: { ActivityIndicator, Alert, PlatformBenefits },
   props: {
     connectAction: { type: String, required: true },
     connectNonce: { type: String, required: true },
@@ -144,13 +228,35 @@ export default defineComponent({
   },
   data(): State {
     return {
-      status: null, loading: false, error: '', confirming: false, busy: false,
+      status: null,
+      loading: false,
+      error: '',
+      confirming: false,
+      busy: false,
+      sites: [],
+      sitesTotal: 0,
+      sitesLoading: false,
+      sitesError: '',
     };
   },
   created() {
     this.load();
   },
   computed: {
+    /** the site the admin page was opened for (its idSite), for the builder link */
+    currentSite(): number {
+      const m = /[?&]idSite=(\d+)/.exec(window.location.search);
+      return m ? Number(m[1]) : 1;
+    },
+    /** during the trial and after it: what this Matomo uses of the platform */
+    inUseText(): string {
+      const s = this.status;
+      if (!s || !s.inUse || (s.state !== 'trial' && s.state !== 'expired')
+        || s.inUse.shortLinks + s.inUse.qrCodes === 0) {
+        return '';
+      }
+      return this.tr('PlatformInUse', `${s.inUse.shortLinks}`, `${s.inUse.qrCodes}`);
+    },
     workspaceName(): string {
       return this.status && this.status.workspace ? this.status.workspace.name : '';
     },
@@ -181,11 +287,42 @@ export default defineComponent({
       this.error = '';
       fetchConnectionStatus().then((status) => {
         this.status = status;
+        this.sites = [];
+        this.sitesTotal = 0;
+        if (status.mode === 'connected' && status.connected) {
+          this.loadSites();
+        }
       }).catch((e: Error) => {
         this.error = e && e.message ? plainText(e.message) : this.tr('LoadFailed');
       }).finally(() => {
         this.loading = false;
       });
+    },
+    /** the next page of this Matomo's websites against the workspace's */
+    loadSites() {
+      this.sitesLoading = true;
+      this.sitesError = '';
+      fetchPlatformWebsites(SITES_PAGE, this.sites.length).then((answer) => {
+        this.sites = this.sites.concat(answer.sites);
+        this.sitesTotal = answer.total;
+      }).catch((e: Error) => {
+        const { text } = splitPlatformError(e && e.message ? plainText(e.message) : '');
+        this.sitesError = text || this.tr('LoadFailed');
+      }).finally(() => {
+        this.sitesLoading = false;
+      });
+    },
+    host(url: string): string {
+      try {
+        return new URL(url).host;
+      } catch (e) {
+        return url;
+      }
+    },
+    builderUrl(idSite: number): string {
+      const q = `idSite=${idSite}&period=day&date=yesterday`;
+      return `index.php?module=CoreHome&action=index&${q}#?${q}`
+        + '&category=FeinwerkCampaignManager_Campaigns&subcategory=FeinwerkCampaignManager_LinkBuilder';
     },
     askDisconnect() {
       this.confirming = true;

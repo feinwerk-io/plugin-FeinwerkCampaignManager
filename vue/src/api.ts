@@ -408,7 +408,7 @@ export interface QualityValue {
 
 export interface QualityIssues {
   /** values Matomo counts apart although they mean one campaign; suggested first in values */
-  variants: { suggested: string, visits: number, values: QualityValue[] }[];
+  variants: { suggested: string, visits: number, maybeDistinct: boolean, values: QualityValue[] }[];
   /** counted values without a saved link or details, most visits first (at most 50) */
   unexplained: { value: string, visits: number, conversions: number }[];
   counts: {
@@ -463,6 +463,11 @@ export interface ConnectionStatus {
   canConnect: boolean;
   connectUrl: string | null;
   checkedAt: string;
+  /** show this user what the connection adds (promotion: admins, promotions on) */
+  promote: boolean;
+  moreUrl: string | null;
+  /** connected, super users: this Matomo's active platform links */
+  inUse: { shortLinks: number; qrCodes: number } | null;
 }
 
 let statusOnce: Promise<ConnectionStatus> | null = null;
@@ -476,6 +481,28 @@ export function fetchConnectionStatus(fresh = false): Promise<ConnectionStatus> 
     });
   }
   return statusOnce;
+}
+
+export interface PlatformSiteRow {
+  idSite: number;
+  name: string;
+  url: string;
+  website: { id: string, name: string, url: string } | null;
+  match: 'site' | 'domain' | null;
+}
+
+export interface PlatformSiteMapping {
+  sites: PlatformSiteRow[];
+  total: number;
+  limit: number;
+  offset: number;
+  websites: { id: string, name: string, url: string }[];
+}
+
+export function fetchPlatformWebsites(limit: number, offset: number): Promise<PlatformSiteMapping> {
+  return AjaxHelper.fetch<PlatformSiteMapping>({
+    method: `${MODULE}.getPlatformWebsites`, limit, offset,
+  }, QUIET);
 }
 
 export function disconnectPlatform(): Promise<ConnectionStatus> {

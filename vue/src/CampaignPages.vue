@@ -21,22 +21,51 @@
     <template v-if="!campaign && rows">
       <div class="fwcmp-hint fwcmp-pages__scope">{{ scopeText }}</div>
       <div v-if="!rows.length" class="fwcmp-empty">{{ tr('NoCampaignsTable') }}</div>
-      <div v-else class="fwcmp-tablewrap">
-        <div class="fwcmp-tablewrap">
+      <!-- planned campaigns first; values only Matomo counted folded at the end, as in the overview
+           (R50 D2); sortable columns; a column every row leaves empty is not shown -->
+      <template v-for="group in tableGroups" :key="group.key">
+        <h3 v-if="group.key === 'report'" class="fwcmp-step__title fwcmp-pages__group">
+          <button
+            type="button"
+            class="fwcmp-disclosure"
+            :aria-expanded="reportOpen ? 'true' : 'false'"
+            aria-controls="fwcmp-pages-reportonly"
+            @click="reportOpen = !reportOpen"
+          >
+            <span
+              class="fwcmp-disclosure__mark"
+              aria-hidden="true"
+            >{{ reportOpen ? '▾' : '▸' }}</span>
+            {{ tr('OnlyCountedGroup') }} ({{ group.rows.length }})
+          </button>
+        </h3>
+        <div
+          v-show="group.key !== 'report' || reportOpen"
+          :id="group.key === 'report' ? 'fwcmp-pages-reportonly' : undefined"
+          class="fwcmp-tablewrap"
+        >
           <table v-content-table class="entityTable dataTable fwcmp-table fwcmp-pages__table">
             <thead>
               <tr>
-                <th>{{ tr('FieldCampaign') }}</th>
-                <th>{{ tr('LinkStatusHead') }}</th>
-                <th>{{ tr('CampaignPeriod') }}</th>
-                <th class="fwcmp-table__num">{{ tr('Visits') }}</th>
-                <th class="fwcmp-table__num">{{ tr('Conversions') }}</th>
-                <th>{{ tr('GoalMetric') }}</th>
-                <th>{{ tr('Links') }}</th>
+                <th
+                  v-for="col in columns"
+                  :key="col.key"
+                  :class="col.num ? 'fwcmp-table__num' : ''"
+                  :aria-sort="ariaSort(col.key)"
+                >
+                  <button
+                    type="button"
+                    class="fwcmp-sort"
+                    @click="sortBy(col.key)"
+                  >{{ col.label }}<span
+                    class="fwcmp-sort__mark"
+                    aria-hidden="true"
+                  >{{ sortKey === col.key ? (sortDesc ? ' ▾' : ' ▴') : '' }}</span></button>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in rows" :key="row.campaign">
+              <tr v-for="row in group.rows" :key="row.campaign">
                 <td class="fwcmp-table__main" :data-label="tr('FieldCampaign')">
                   <!-- one block, so the stacked rows at phone width keep it together -->
                   <span class="fwcmp-table__mainvalue">
@@ -57,66 +86,102 @@
                     >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
                   </span>
                 </td>
-                <td :data-label="tr('LinkStatusHead')">{{ tr(`CampaignPhase_${row.phase}`) }}</td>
-                <td :data-label="tr('CampaignPeriod')">{{ tablePeriodText(row) }}</td>
+                <td :data-label="tr('LinkStatusHead')">{{ tr(statusKey(row)) }}</td>
+                <td v-if="show.period" :data-label="tr('CampaignPeriod')">
+                  {{ tablePeriodText(row) }}
+                </td>
                 <td class="fwcmp-table__num" :data-label="tr('Visits')">
                   {{ number(row.period.visits) }}
                 </td>
                 <td class="fwcmp-table__num" :data-label="tr('Conversions')">
                   {{ number(row.period.conversions) }}
                 </td>
-                <td class="fwcmp-nowrap" :data-label="tr('GoalMetric')">
+                <td class="fwcmp-table__num fwcmp-nowrap" :data-label="tr('Revenue')">
+                  {{ money(row.period.revenue) }}
+                </td>
+                <td v-if="show.goal" class="fwcmp-nowrap" :data-label="tr('GoalProgressHead')">
                   {{ row.goal ? `${percent(row)} %` : '' }}
                 </td>
-                <td :data-label="tr('Links')">{{ statesText(row) }}</td>
+                <td v-if="show.links" :data-label="tr('Links')">{{ statesText(row) }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      </template>
     </template>
 
-    <!-- one campaign; the way back also when it could not be loaded -->
-    <nav v-if="campaign" class="fwcmp-crumbs" :aria-label="tr('AllCampaigns')">
+    <!-- the way back when the campaign could not be loaded (loaded, the heading carries it) -->
+    <nav v-if="campaign && !results" class="fwcmp-crumbs" :aria-label="tr('AllCampaigns')">
       <!-- Matomo styles nav links for its menu: the colour is set in campaigns.less -->
       <a :href="pageUrl('')">{{ tr('AllCampaigns') }}</a>
       <span aria-hidden="true"> › </span>
       <span>{{ results ? label(results.campaign) : campaign }}</span>
     </nav>
     <template v-if="campaign && results">
+      <!-- the heading is the breadcrumb: no second title (R50 D1) -->
       <div class="fwcmp-campaign__head">
-        <h3 class="fwcmp-campaign__name">{{ label(results.campaign) }}</h3>
+        <h3 class="fwcmp-campaign__name">
+          <a class="fwcmp-campaign__back" :href="pageUrl('')">{{ tr('AllCampaigns') }}</a>
+          <span class="fwcmp-campaign__sep" aria-hidden="true">›</span>
+          {{ label(results.campaign) }}
+        </h3>
         <code
           v-if="results.campaign.name"
           class="fwcmp-card__value"
         >{{ results.campaign.campaign }}</code>
-        <span class="fwcmp-badge">{{ tr(`CampaignPhase_${results.campaign.phase}`) }}</span>
+        <!-- a campaign of the connected workspace: open it there (UI review R52 W8) -->
+        <a
+          v-if="results.campaign.platform && results.campaign.platform.appUrl"
+          class="fwcmp-applink"
+          :href="results.campaign.platform.appUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="tr('PlatformOpenCampaignTooltip')"
+          :aria-label="tr('PlatformOpenCampaignOf', label(results.campaign))"
+        >Feinwerk Campaigns<span class="icon-outlink" aria-hidden="true" /></a>
+        <span class="fwcmp-badge">{{ tr(statusKey(results.campaign)) }}</span>
+        <!-- not live in the workspace yet: started there, with its checklist (decision b) -->
+        <a
+          v-if="startUrl(results.campaign)"
+          class="fwcmp-applink fwcmp-startlink"
+          :href="startUrl(results.campaign)"
+          target="_blank"
+          rel="noopener noreferrer"
+          :aria-label="tr('PlatformStartCampaignOf', label(results.campaign))"
+        >{{ tr('PlatformStartCampaign') }}<span class="icon-outlink" aria-hidden="true" /></a>
         <span class="fwcmp-campaign__when">
           {{ periodText(results.campaign) }}<template v-if="dayOf">, {{ dayOf }}</template>
         </span>
       </div>
-      <div class="fwcmp-card__actions fwcmp-campaign__actions">
+      <!-- the campaign's own days at a glance, above the tabs (R50 D1) -->
+      <dl class="fwcmp-campaign__kpis">
+        <div>
+          <dt>{{ tr('Visits') }}</dt>
+          <dd>{{ number(results.totals.visits) }}</dd>
+        </div>
+        <div>
+          <dt>{{ tr('Conversions') }}</dt>
+          <dd>{{ number(results.totals.conversions) }}</dd>
+        </div>
+        <div>
+          <dt>{{ tr('Revenue') }}</dt>
+          <dd>{{ money(results.totals.revenue) }}</dd>
+        </div>
+      </dl>
+      <div class="fwcmp-hint fwcmp-campaign__window">{{ windowText }}</div>
+      <!-- one primary action, the rest in a menu (R50 D1) -->
+      <div ref="actions" class="fwcmp-campaign__actions">
         <button
           v-if="canWrite"
           type="button"
-          class="fwcmp-action"
+          class="btn"
           @click="openBuilder(results.campaign.campaign)"
         >{{ tr('NewLink') }}</button>
-        <button
-          v-if="canWrite"
-          type="button"
-          class="fwcmp-action"
-          @click="panelOpen = true"
-        >{{ results.campaign.hasDetails ? tr('EditDetails') : tr('AddDetails') }}</button>
-        <a class="fwcmp-action" :href="analyseUrl('General_Visitors', 'Live_VisitorLog')">
-          {{ tr('AnalyseInMatomo') }}
-        </a>
-        <button
-          ref="summaryButton"
-          type="button"
-          class="fwcmp-action"
-          @click="openSummary"
-        >{{ tr('Summary') }}</button>
+        <ActionMenu
+          :items="menuItems"
+          :label="tr('MoreActionsOf', label(results.campaign))"
+          @select="menuSelect"
+        />
       </div>
 
       <div class="fwcmp-tabs" role="tablist" :aria-label="label(results.campaign)">
@@ -192,7 +257,15 @@
               </thead>
               <tbody>
                 <tr v-for="item in results.links" :key="item.link.idLink">
-                  <td :data-label="tr('Channel')">{{ channel(item.link) }}</td>
+                  <td :data-label="tr('Channel')">
+                    {{ channel(item.link) }}
+                    <!-- a link made in Feinwerk Campaigns: its short link (R51 W1) -->
+                    <code
+                      v-if="item.link.platform && item.link.platform.shortUrl"
+                      class="fwcmp-shortpill"
+                      :title="item.link.platform.shortUrl"
+                    >{{ item.link.platform.shortUrl.replace(/^https?:\/\//i, '') }}</code>
+                  </td>
                   <td :data-label="tr('FieldContent')">{{ detail(item.link) }}</td>
                   <td class="fwcmp-table__target" :data-label="tr('FieldTargetUrl')">
                     <span :title="item.link.url">{{ shortTarget(item.link.targetUrl) }}</span>
@@ -206,6 +279,13 @@
                     </span>
                   </td>
                   <td class="fwcmp-table__actions" :data-label="tr('Actions')">
+                    <!-- Copy takes the short link where there is one, as in the saved links -->
+                    <button
+                      type="button"
+                      class="fwcmp-action"
+                      :aria-label="tr('CopyLinkOf', item.link.values.campaign)"
+                      @click="copyLink(item.link)"
+                    >{{ copiedLink === item.link.idLink ? tr('Copied') : tr('Copy') }}</button>
                     <button
                       v-if="canWrite"
                       type="button"
@@ -229,24 +309,6 @@
         aria-labelledby="fwcmp-tab-progress"
         class="fwcmp-tabpanel"
       >
-        <div class="fwcmp-hint">{{ windowText }}</div>
-        <dl class="fwcmp-quality__tiles fwcmp-campaign__tiles">
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Visits') }}</dt>
-            <dd class="fwcmp-quality__big">{{ number(results.totals.visits) }}</dd>
-            <dd>{{ goalOf('visits') }}</dd>
-          </div>
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Conversions') }}</dt>
-            <dd class="fwcmp-quality__big">{{ number(results.totals.conversions) }}</dd>
-            <dd>{{ goalOf('conversions') }}</dd>
-          </div>
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Revenue') }}</dt>
-            <dd class="fwcmp-quality__big">{{ money(results.totals.revenue) }}</dd>
-            <dd>{{ goalOf('revenue') }}</dd>
-          </div>
-        </dl>
         <div v-if="results.campaign.goal" class="fwcmp-goal">
           <div class="fwcmp-goal__label">
             {{ goalText }}<template
@@ -320,7 +382,9 @@
                     {{ item.results ? number(item.results.conversions) : '-' }}
                   </td>
                   <td :data-label="tr('LastVisit')">
-                    {{ item.lastVisitDay ? day(item.lastVisitDay) : '' }}
+                    <template v-if="item.lastVisitDay">{{ day(item.lastVisitDay) }}</template>
+                    <!-- an empty cell says why (R50 W6) -->
+                    <span v-else class="fwcmp-table__note">{{ tr('NoVisitYet') }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -337,22 +401,21 @@
         aria-labelledby="fwcmp-tab-result"
         class="fwcmp-tabpanel"
       >
-        <h4 class="fwcmp-campaign__verdict">{{ verdict }}</h4>
-        <div v-if="results.campaign.goal" class="fwcmp-hint">{{ goalText }}</div>
-        <dl class="fwcmp-quality__tiles fwcmp-campaign__tiles">
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Visits') }}</dt>
-            <dd class="fwcmp-quality__big">{{ number(results.totals.visits) }}</dd>
-          </div>
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Conversions') }}</dt>
-            <dd class="fwcmp-quality__big">{{ number(results.totals.conversions) }}</dd>
-          </div>
-          <div class="fwcmp-quality__tile">
-            <dt>{{ tr('Revenue') }}</dt>
-            <dd class="fwcmp-quality__big">{{ money(results.totals.revenue) }}</dd>
-          </div>
-        </dl>
+        <!-- with a goal the verdict leads; without one a quiet hint (R50 W5);
+             the numbers stand above the tabs -->
+        <template v-if="results.campaign.goal">
+          <h4 class="fwcmp-campaign__verdict">{{ verdict }}</h4>
+          <div class="fwcmp-hint">{{ goalText }}</div>
+        </template>
+        <div v-else class="fwcmp-hint fwcmp-campaign__nogoal">
+          {{ tr('ResultGoalHint') }}
+          <button
+            v-if="canWrite"
+            type="button"
+            class="fwcmp-linkbutton"
+            @click="panelOpen = true"
+          >{{ tr('SetGoal') }}</button>
+        </div>
         <template v-if="ownLinks.length > 1">
           <div class="fwcmp-campaign__best">{{ tr('BestLink', linkSummary(ownLinks[0])) }}</div>
           <div class="fwcmp-campaign__best">
@@ -467,12 +530,15 @@ import {
   fetchCampaigns,
   Link,
 } from './api';
+import ActionMenu, { ActionMenuItem } from './ActionMenu.vue';
 import CampaignDetailsPanel from './CampaignDetailsPanel.vue';
 import FeedbackBar, { FeedbackSettings } from './FeedbackBar.vue';
 import PromoLine, { PromoVariables } from './PromoLine.vue';
+import copyText from './clipboard';
 import plainText from './plainText';
 import scopeText from './scope';
 import shortDay from './shortDay';
+import { startUrl, statusKey } from './workspaceStatus';
 
 const PREFIX = 'FeinwerkCampaignManager_';
 const CATEGORY = 'FeinwerkCampaignManager_Campaigns';
@@ -507,6 +573,13 @@ let loadCount = 0;
 
 interface State {
   rows: CampaignRow[] | null;
+  /** the link just copied from the campaign's links table */
+  copiedLink: number;
+  /** the table's sort column ('' keeps the API's order: phase, then visits) */
+  sortKey: string;
+  sortDesc: boolean;
+  /** the folded group of values only Matomo counted */
+  reportOpen: boolean;
   results: CampaignResults | null;
   loading: boolean;
   error: string;
@@ -540,6 +613,7 @@ export default defineComponent({
     FeedbackBar,
     PromoLine,
     WidgetLoader,
+    ActionMenu,
   },
   directives: {
     ContentTable,
@@ -547,6 +621,10 @@ export default defineComponent({
   data(): State {
     return {
       rows: null,
+      copiedLink: 0,
+      sortKey: '',
+      sortDesc: false,
+      reportOpen: false,
       results: null,
       loading: false,
       error: '',
@@ -570,6 +648,80 @@ export default defineComponent({
     },
   },
   computed: {
+    /** columns every row would leave empty are not shown (R51 W10) */
+    show(): { period: boolean, goal: boolean, links: boolean } {
+      const rows = this.rows || [];
+      return {
+        period: rows.some((r) => !!(r.startDate || r.endDate)),
+        goal: rows.some((r) => !!r.goal),
+        links: rows.some((r) => r.activeLinks > 0),
+      };
+    },
+    columns(): { key: string, label: string, num: boolean }[] {
+      // key, label key, a number column, shown
+      const all: [string, string, boolean, boolean][] = [
+        ['name', 'FieldCampaign', false, true],
+        ['phase', 'LinkStatusHead', false, true],
+        ['period', 'CampaignPeriod', false, this.show.period],
+        ['visits', 'Visits', true, true],
+        ['conversions', 'Conversions', true, true],
+        ['revenue', 'Revenue', true, true],
+        ['goal', 'GoalProgressHead', false, this.show.goal],
+        ['links', 'Links', false, this.show.links],
+      ];
+      return all.filter((c) => c[3])
+        .map(([key, label, num]) => ({ key, label: this.tr(label), num }));
+    },
+    /** planned campaigns, then the folded values only Matomo counted, each sorted (R50 D2) */
+    tableGroups(): { key: string, rows: CampaignRow[] }[] {
+      const rows = [...(this.rows || [])];
+      if (this.sortKey) {
+        const order = ['running', 'preparing', 'ended', 'archived'];
+        const value = (r: CampaignRow): string | number => {
+          switch (this.sortKey) {
+            case 'name': return this.label(r).toLowerCase();
+            case 'phase': return order.indexOf(r.phase);
+            case 'period': return r.startDate || r.endDate || '';
+            case 'visits': return r.period.visits;
+            case 'conversions': return r.period.conversions;
+            case 'revenue': return r.period.revenue;
+            case 'goal': return r.goal && r.goal.progress !== null ? r.goal.progress : -1;
+            default: return r.activeLinks;
+          }
+        };
+        rows.sort((a, b) => {
+          const va = value(a);
+          const vb = value(b);
+          const cmp = typeof va === 'number' && typeof vb === 'number'
+            ? va - vb : `${va}`.localeCompare(`${vb}`);
+          return this.sortDesc ? -cmp : cmp;
+        });
+      }
+      return [
+        { key: 'planned', rows: rows.filter((r) => r.source !== 'report') },
+        { key: 'report', rows: rows.filter((r) => r.source === 'report') },
+      ].filter((g) => g.rows.length > 0);
+    },
+    /** the campaign page's further actions (R50 D1) */
+    menuItems(): ActionMenuItem[] {
+      if (!this.results) {
+        return [];
+      }
+      const items: ActionMenuItem[] = [];
+      if (this.canWrite) {
+        items.push({
+          key: 'details',
+          label: this.results.campaign.hasDetails ? this.tr('EditDetails') : this.tr('AddDetails'),
+        });
+      }
+      items.push({
+        key: 'analyse',
+        label: this.tr('AnalyseInMatomo'),
+        href: this.analyseUrl('General_Visitors', 'Live_VisitorLog'),
+      });
+      items.push({ key: 'summary', label: this.tr('Summary') });
+      return items;
+    },
     /** the campaign value of the open page ('' for the table) */
     campaign(): string {
       const value = MatomoUrl.hashParsed.value.campaignPage;
@@ -737,6 +889,39 @@ export default defineComponent({
     },
   },
   methods: {
+    statusKey,
+    startUrl,
+    copyLink(link: Link) {
+      const url = link.platform && link.platform.shortUrl ? link.platform.shortUrl : link.url;
+      copyText(url).then(() => {
+        this.copiedLink = link.idLink;
+        window.setTimeout(() => {
+          this.copiedLink = 0;
+        }, 2000);
+      }).catch(() => undefined);
+    },
+    ariaSort(key: string): string | undefined {
+      if (this.sortKey !== key) {
+        return undefined;
+      }
+      return this.sortDesc ? 'descending' : 'ascending';
+    },
+    /** a click on a column head: sort by it, again to turn the order; numbers start high */
+    sortBy(key: string) {
+      if (this.sortKey === key) {
+        this.sortDesc = !this.sortDesc;
+      } else {
+        this.sortKey = key;
+        this.sortDesc = ['visits', 'conversions', 'revenue', 'goal', 'links'].includes(key);
+      }
+    },
+    menuSelect(key: string) {
+      if (key === 'details') {
+        this.panelOpen = true;
+      } else if (key === 'summary') {
+        this.openSummary();
+      }
+    },
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },
@@ -762,6 +947,8 @@ export default defineComponent({
         ).then((rows) => {
           if (current === loadCount) {
             this.rows = rows.filter((r) => r.source !== 'report' || r.period.visits > 0);
+            // only values Matomo counted: their group is open
+            this.reportOpen = !this.rows.some((r) => r.source !== 'report');
           }
         });
       request.catch((e: Error) => {
@@ -811,7 +998,8 @@ export default defineComponent({
         return this.tr('FromTo', this.day(row.startDate), this.day(row.endDate));
       }
       if (row.startDate) {
-        return this.tr('Since', this.day(row.startDate));
+        // a start still to come reads "from", not "since" (UI review R52 W7)
+        return this.tr(row.phase === 'preparing' ? 'StartsOn' : 'Since', this.day(row.startDate));
       }
       if (row.endDate) {
         return this.tr('Until', this.day(row.endDate));
@@ -946,8 +1134,10 @@ export default defineComponent({
       window.removeEventListener('keydown', this.closeOnEscape);
       this.afterPrint();
       if (wasOpen) {
+        // back to the menu the summary was opened from
         this.$nextTick(() => {
-          const button = this.$refs.summaryButton as HTMLElement | undefined;
+          const actions = this.$refs.actions as HTMLElement | undefined;
+          const button = actions ? actions.querySelector<HTMLElement>('.fwcmp-menu__toggle') : null;
           if (button) {
             button.focus();
           }

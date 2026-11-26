@@ -26,10 +26,13 @@ final class Overview
     public const QUIET_DAYS = 2;
     public const STATUSES = ['active', 'archived', 'all'];
 
-    /** the phase of a workspace campaign without dates, by its status in Feinwerk Campaigns */
+    /**
+     * The phase of a workspace campaign, by its status in Feinwerk Campaigns, which wins over its period (Peter,
+     * 2026-11-26, relayed by CampaignsApp: "b mit ergänzung": the real status, not one derived from the dates).
+     */
     private const WORKSPACE_PHASES = [
         'draft' => Phase::PREPARING, 'preparing' => Phase::PREPARING, 'ready' => Phase::PREPARING,
-        'live' => Phase::RUNNING, 'paused' => Phase::RUNNING, 'ended' => Phase::ENDED,
+        'live' => Phase::RUNNING, 'paused' => Phase::RUNNING, 'ended' => Phase::ENDED, 'archived' => Phase::ARCHIVED,
     ];
 
     /**
@@ -61,8 +64,7 @@ final class Overview
      * @param array<string, array{draft: int, live: int, ended: int}> $linkStates key => active saved links per status
      * @param array<string, array{id: string, name: string, status: string, startsOn: ?string, endsOn: ?string, appUrl: ?string}> $workspace
      *        key => the campaign of the connected workspace's website with that campaign value (Peter, 2026-11-26: "Q2 ja");
-     *        its name and dates stand in where the details have none, its status gives the phase of a campaign without
-     *        dates and details
+     *        its name and dates stand in where the details have none, its status gives the phase (over the dates)
      * @return list<array> see API::getCampaigns
      */
     public static function build(array $details, array $links, array $period, array $daily, string $today, string $status, array $linkStates = [], array $workspace = []): array
@@ -106,8 +108,8 @@ final class Overview
                 continue;
             }
             $recentVisits = self::sum($daily, $key, $recentFrom, $today, 'visits', null);
-            $phase = $local === null && $w !== null && $d['startDate'] === null && $d['endDate'] === null
-                && isset(self::WORKSPACE_PHASES[$w['status']])
+            // a workspace campaign stands where its status in the workspace puts it; archived details here still win
+            $phase = $w !== null && isset(self::WORKSPACE_PHASES[$w['status']]) && !$archived
                 ? self::WORKSPACE_PHASES[$w['status']]
                 : Phase::of($d, $today, $recentVisits, (int) ($links[$key] ?? 0));
             $p = $period[$key] ?? ['visits' => 0, 'conversions' => 0, 'revenue' => 0.0];

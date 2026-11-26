@@ -296,6 +296,38 @@ class PlatformConnectionTest extends IntegrationTestCase
         $this->assertFalse(Option::get(Store::PENDING));
     }
 
+    /** what the connection adds: promotion, so admins only and off with promotions = 0 (decision 1 of 2026-11-23) */
+    public function test_theBenefitsAreForAdminsWhilePromotionsAreOn(): void
+    {
+        $status = API::getInstance()->getConnectionStatus();
+        $this->assertTrue($status['promote'], 'standalone super user');
+        $this->assertStringContainsString('mtm_campaign=plugin-promo', (string) $status['moreUrl']);
+        $this->assertStringEndsWith('#campaign-manager', (string) $status['moreUrl'], 'the anchor after the query');
+        $this->assertNull($status['inUse']);
+
+        \Piwik\Config::getInstance()->FeinwerkCampaignManager = ['promotions' => 0];
+        try {
+            $this->assertFalse(API::getInstance()->getConnectionStatus()['promote'], 'promotions = 0');
+            $this->assertNull(API::getInstance()->getConnectionStatus()['moreUrl']);
+        } finally {
+            \Piwik\Config::getInstance()->FeinwerkCampaignManager = [];
+        }
+
+        FakeAccess::$superUser = false;
+        FakeAccess::$idSitesView = [1];
+        try {
+            $this->assertFalse(API::getInstance()->getConnectionStatus()['promote'], 'a view user');
+        } finally {
+            FakeAccess::$superUser = true;
+            FakeAccess::$idSitesView = [];
+        }
+
+        self::connect();
+        $connected = API::getInstance()->getConnectionStatus();
+        $this->assertFalse($connected['promote'], 'connected: nothing to promote');
+        $this->assertSame(['shortLinks' => 0, 'qrCodes' => 0], $connected['inUse']);
+    }
+
     public function test_platformOffHidesEverything(): void
     {
         self::connect();

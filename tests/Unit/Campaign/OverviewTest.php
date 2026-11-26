@@ -205,7 +205,10 @@ class OverviewTest extends TestCase
         $byKey = array_column($rows, null, 'campaign');
 
         $this->assertSame(['workspace', 'workspace', 'workspace', 'workspace', 'details'], array_map(static fn($k) => $byKey[$k]['source'], ['herbst', 'winter', 'sommer', 'fruehling', 'lokal']));
-        $this->assertSame([Phase::RUNNING, Phase::PREPARING, Phase::ENDED, Phase::PREPARING], array_map(static fn($k) => $byKey[$k]['phase'], ['herbst', 'winter', 'sommer', 'fruehling']), 'dates first, else the status');
+        $this->assertSame([Phase::RUNNING, Phase::PREPARING, Phase::ENDED, Phase::PREPARING], array_map(static fn($k) => $byKey[$k]['phase'], ['herbst', 'winter', 'sommer', 'fruehling']), 'the status gives the phase');
+        // the status wins over the period: a live campaign whose dates ended is still running (decision b, 2026-11-26)
+        $late = Overview::build([], [], [], [], self::TODAY, 'active', [], ['alt' => $ws('Alt', 'live', '2026-01-01', '2026-02-01')]);
+        $this->assertSame(Phase::RUNNING, $late[0]['phase']);
         $this->assertSame(['Herbst 2026', '2026-11-01', 12], [$byKey['herbst']['name'], $byKey['herbst']['startDate'], $byKey['herbst']['period']['visits']]);
         $this->assertFalse($byKey['herbst']['hasDetails'], 'no local details yet');
         $this->assertNull($byKey['herbst']['goal']);

@@ -1,5 +1,29 @@
 # Changelog
 
+## 5.3.0
+
+- What the connection to Feinwerk Campaigns adds is easier to see: the admin page compares Matomo alone with the
+  platform, the link builder shows what short links and QR codes would give, and Data quality points to the naming
+  convention. Only for users with admin access; `promotions = 0` switches it off.
+- The admin page lists which website of this Matomo belongs to which website of the workspace, with a link to each
+  one's link builder (new API method `getPlatformWebsites`).
+- Campaign page: the campaign's numbers stand above the tabs, the heading leads back to All campaigns, New link is the
+  main action and the rest sits in a small menu.
+- All campaigns: sortable columns, a revenue column, empty columns left out, values only Matomo counted folded at the
+  end.
+- New campaign while connected: the name comes first and the workspace forms the value unless you set it yourself;
+  Add details keeps the campaign value as it is.
+- Saved links: the short link of a platform link as a small label, QR code and the link in Feinwerk Campaigns as small
+  actions; "Link sent?" right under its link; Reset filters when a search finds nothing.
+- Link builder while connected: the short link comes first in the result, New link after creating, a question before a
+  new workspace campaign; editing a platform link shows its short link and QR code; the link type stands before Your
+  link in both modes.
+- Workspace campaigns show their real status in Feinwerk Campaigns (draft, ready, live, paused and so on) instead of a
+  phase derived from their period, and while one is not live, "Start in Feinwerk Campaigns" opens it there.
+- Data quality no longer takes two known campaigns for spelling variants of each other.
+- Smaller: future start dates read "from" and carry the year, Data quality says why a spelling is recommended and no
+  longer repeats its values, "Summary" without naming an audience, New link only for users who can save links.
+
 ## 5.2.0
 
 - Connected to Feinwerk Campaigns, the overview and All campaigns also show the campaigns of the workspace for this

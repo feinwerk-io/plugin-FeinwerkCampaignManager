@@ -182,6 +182,22 @@ class LinkDao
      * Active saved links with this link ID, other than the given link and the link with the given fingerprint (the same
      * link saved again).
      */
+    /**
+     * Active platform links of this Matomo with a short link and with a QR code (all sites), for the admin page's
+     * "in use" line near the trial end; one query.
+     *
+     * @return array{shortLinks: int, qrCodes: int}
+     */
+    public function countPlatformInUse(): array
+    {
+        $row = Db::fetchRow(
+            'SELECT SUM(CASE WHEN short_url IS NOT NULL THEN 1 ELSE 0 END) AS short_links,'
+            . ' SUM(CASE WHEN platform_qr = 1 THEN 1 ELSE 0 END) AS qr_codes FROM ' . self::tableName()
+            . ' WHERE archived_at IS NULL AND platform_link_id IS NOT NULL'
+        );
+        return ['shortLinks' => (int) ($row['short_links'] ?? 0), 'qrCodes' => (int) ($row['qr_codes'] ?? 0)];
+    }
+
     public function countOthersWithId(int $idSite, string $campaignId, int $exceptIdLink, string $exceptFingerprint): int
     {
         return (int) Db::fetchOne(

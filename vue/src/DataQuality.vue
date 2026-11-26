@@ -40,6 +40,19 @@
           {{ tr('VariantsTitle') }} ({{ issues.counts.variants }})
         </h3>
         <div class="fwcmp-hint fwcmp-quality__intro">{{ tr('VariantsIntro') }}</div>
+        <!-- at the moment of need, once and dismissible: promotion, so admins only (block G3) -->
+        <div
+          v-if="issues.variants.length && promoteUrl && !hintHidden"
+          class="fwcmp-notice fwcmp-quality__hint"
+        >
+          {{ tr('HintQualityConvention') }}
+          <a :href="promoteUrl">{{ tr('BenefitsOpen') }}</a>
+          <button
+            type="button"
+            class="fwcmp-linkbutton"
+            @click="hideHint"
+          >{{ tr('HintDismiss') }}</button>
+        </div>
         <div v-if="!issues.variants.length" class="fwcmp-quality__none">
           {{ tr('VariantsNone') }}
         </div>
@@ -53,7 +66,7 @@
               >
                 <code class="fwcmp-variants__value">{{ v.value }}</code>
                 <span
-                  v-if="v.value === group.suggested"
+                  v-if="v.value === group.suggested && !group.maybeDistinct"
                   class="fwcmp-badge fwcmp-badge--live"
                 >{{ tr('Recommended') }}</span>
                 <span class="fwcmp-variants__numbers">
@@ -63,6 +76,8 @@
                 </span>
               </li>
             </ul>
+            <!-- why this spelling (R50 D3) -->
+            <div class="fwcmp-hint fwcmp-variants__why">{{ whyRecommended(group) }}</div>
             <div class="fwcmp-card__actions">
               <button
                 v-if="canWrite"
@@ -78,19 +93,17 @@
 
       <section class="fwcmp-phase" :aria-label="tr('UnexplainedTitle')">
         <h3 class="fwcmp-step__title">
-          {{ tr('UnexplainedTitle') }} ({{ issues.counts.unexplained }})
+          {{ tr('UnexplainedTitle') }} ({{ issues.counts.unexplained - inGroupsCount }})
         </h3>
         <div class="fwcmp-hint fwcmp-quality__intro">{{ tr('UnexplainedIntro') }}</div>
-        <div v-if="!issues.unexplained.length" class="fwcmp-quality__none">
+        <div v-if="!unexplainedRows.length" class="fwcmp-quality__none">
           {{ tr('UnexplainedNone') }}
         </div>
+        <!-- values of a variant group stand in their group above, not again here (R50 D3) -->
         <ul v-else class="fwcmp-cards">
-          <li v-for="row in issues.unexplained" :key="row.value" class="fwcmp-card">
+          <li v-for="row in unexplainedRows" :key="row.value" class="fwcmp-card">
             <div class="fwcmp-card__head">
               <code class="fwcmp-variants__value">{{ row.value }}</code>
-            </div>
-            <div v-if="spellingOf[row.value]" class="fwcmp-msg fwcmp-msg--warning">
-              {{ tr('SpellingOf', spellingOf[row.value]) }}
             </div>
             <div class="fwcmp-card__meta">
               {{ countText(row.visits, 'OneVisit', 'VisitsCount') }},
@@ -141,7 +154,7 @@ import {
   MatomoUrl,
   translate,
 } from 'CoreHome';
-import { fetchQualityIssues, QualityIssues } from './api';
+import { fetchConnectionStatus, fetchQualityIssues, QualityIssues } from './api';
 import FeedbackBar, { FeedbackSettings } from './FeedbackBar.vue';
 import PromoLine, { PromoVariables } from './PromoLine.vue';
 import plainText from './plainText';
@@ -158,6 +171,20 @@ interface State {
   issues: QualityIssues | null;
   loading: boolean;
   error: string;
+  /** where "What does the connection add?" leads: the admin page or the platform's page */
+  promoteUrl: string;
+  hintHidden: boolean;
+}
+
+/** the hint's dismissal, per browser (a convenience, never needed for the page to work) */
+const HINT_KEY = 'fwcmp-hint-quality-convention';
+
+function hintDismissed(): boolean {
+  try {
+    return window.localStorage.getItem(HINT_KEY) === '1';
+  } catch (e) {
+    return false;
+  }
 }
 
 export default defineComponent({
@@ -180,10 +207,17 @@ export default defineComponent({
       issues: null,
       loading: false,
       error: '',
+      promoteUrl: '',
+      hintHidden: hintDismissed(),
     };
   },
   created() {
     this.load();
+    fetchConnectionStatus().then((status) => {
+      if (status.promote) {
+        this.promoteUrl = status.connectUrl || status.moreUrl || '';
+      }
+    }).catch(() => undefined);
   },
   computed: {
     period(): string {
@@ -219,16 +253,20 @@ export default defineComponent({
       );
     },
     /** value => the recommended spelling of its group, for values that are a variant of another */
-    spellingOf(): Record<string, string> {
-      const out: Record<string, string> = {};
-      (this.issues ? this.issues.variants : []).forEach((group) => {
-        group.values.forEach((v) => {
-          if (v.value !== group.suggested) {
-            out[v.value] = group.suggested;
-          }
-        });
-      });
+    /** the unexplained values that are no spelling variant (those stand in their group) */
+    unexplainedRows(): QualityIssues['unexplained'] {
+      return this.issues ? this.issues.unexplained.filter((r) => !this.inGroups[r.value]) : [];
+    },
+    inGroups(): Record<string, boolean> {
+      const out: Record<string, boolean> = {};
+      (this.issues ? this.issues.variants : []).forEach((g) => g.values.forEach((v) => {
+        out[v.value] = true;
+      }));
       return out;
+    },
+    /** unexplained values left out above because their group shows them */
+    inGroupsCount(): number {
+      return this.issues ? this.issues.unexplained.length - this.unexplainedRows.length : 0;
     },
     hiddenUnexplained(): number {
       return this.issues ? this.issues.counts.unexplained - this.issues.unexplained.length : 0;
@@ -242,6 +280,25 @@ export default defineComponent({
     },
   },
   methods: {
+    /** the rule of getQualityIssues: most saved links, then most visits */
+    whyRecommended(group: QualityIssues['variants'][number]): string {
+      // every value with its own saved links: maybe distinct campaigns, none recommended (F3)
+      if (group.maybeDistinct) {
+        return this.tr('VariantsMaybeDistinct');
+      }
+      const best = group.values.find((v) => v.value === group.suggested);
+      return best && best.savedLinks > 0
+        ? this.tr('RecommendedWhyLinks')
+        : this.tr('RecommendedWhyVisits');
+    },
+    hideHint() {
+      this.hintHidden = true;
+      try {
+        window.localStorage.setItem(HINT_KEY, '1');
+      } catch (e) {
+        // hidden for this page view only
+      }
+    },
     tr(key: string, ...args: string[]): string {
       return translate(PREFIX + key, ...args);
     },
